@@ -1,35 +1,36 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Posting } from '../../postings/schemas/posting.schema';
-import { Review } from '../../reviews/schemas/review.schema';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema()
 export class Company {
-  @Prop({ required: true, unique: true, index: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: true, unique: true })
   email: string;
 
   @Prop()
+  website: string;
+
+  @Prop()
   description: string;
 
-  @Prop()
-  country: string;
+  @Prop([
+    raw({
+      country: { type: String, required: true },
+      city: { type: Number, required: true },
+      address: { type: Number },
+    }),
+  ])
+  offices: Record<string, any>[];
 
   @Prop()
-  city: string;
+  ratingsSum: number;
 
   @Prop()
-  address: string;
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Posting' }] })
-  postings: Posting[];
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }] })
-  reviews: Review[];
+  ratingsCount: number;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);

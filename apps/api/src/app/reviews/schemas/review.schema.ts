@@ -7,10 +7,10 @@ export type ReviewDocument = HydratedDocument<Review>;
 
 @Schema()
 export class Review {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company ' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true })
   company: Company;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User ' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
 
   @Prop({ min: 1, max: 5 })
