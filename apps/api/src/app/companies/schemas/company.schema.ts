@@ -1,5 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Location, LocationSchema } from '../../utils/location.schema';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
@@ -17,14 +18,8 @@ export class Company {
   @Prop()
   description: string;
 
-  @Prop([
-    raw({
-      country: { type: String, required: true },
-      city: { type: Number, required: true },
-      address: { type: Number },
-    }),
-  ])
-  offices: Record<string, any>[];
+  @Prop({ type: [LocationSchema] })
+  offices: Location[];
 
   @Prop()
   ratingsSum: number;

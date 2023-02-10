@@ -1,5 +1,10 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Location, LocationSchema } from '../../utils/location.schema';
+import {
+  WorkExperience,
+  WorkExperienceSchema,
+} from '../../utils/workExperience.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -11,25 +16,14 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop(
-    raw({
-      country: { type: String, required: true },
-      city: { type: String, required: true },
-    })
-  )
-  location: Record<string, any>;
+  @Prop({ type: LocationSchema })
+  location: Location;
 
   @Prop([String])
   skills: string[];
 
-  @Prop([
-    raw({
-      companyName: { type: String, required: true },
-      yearFrom: { type: Number, required: true },
-      yearTo: { type: Number },
-    }),
-  ])
-  prevExperience: Record<string, any>[];
+  @Prop({ type: [WorkExperienceSchema] })
+  prevExperience: WorkExperience[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
