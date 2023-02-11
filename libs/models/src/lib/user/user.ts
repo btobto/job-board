@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Location } from '../location/location';
-import { WorkExperience } from '../workExperience/workExperience';
+import { WorkExperience } from '../workExperience/work-experience';
 
 export class User {
   @IsNotEmpty()

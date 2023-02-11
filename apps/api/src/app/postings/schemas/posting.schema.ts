@@ -2,7 +2,7 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Company } from '../../companies/schemas/company.schema';
 import { User } from '../../users/schemas/user.schema';
-import { Location, LocationSchema } from '../../utils/location.schema';
+import { Location, LocationSchema } from '../../utils/schemas/location.schema';
 
 export type PostingDocument = HydratedDocument<Posting>;
 

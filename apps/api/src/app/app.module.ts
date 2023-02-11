@@ -13,7 +13,6 @@ import { ReviewsModule } from './reviews/reviews.module';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      connectionName: 'jobBoardDB',
       useFactory: async (configServce: ConfigService) => ({
         uri: configServce.get<string>('MONGODB_URI'),
       }),

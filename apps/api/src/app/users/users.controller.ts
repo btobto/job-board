@@ -1,14 +1,20 @@
-import { UserRegisterDto, UserUpdateDto } from '@nbp-it-job-board/models';
+import { UserCreateDto, UserUpdateDto } from '@nbp-it-job-board/models';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  Logger,
+  NotFoundException,
+  NotImplementedException,
   Param,
   Patch,
   Post,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
+import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
 
@@ -17,25 +23,59 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post('register')
-  async register(@Body() dto: UserRegisterDto) {
-    this.usersService.register(dto);
+  async register(@Body() dto: UserCreateDto): Promise<User> {
+    try {
+      return await this.usersService.create(dto);
+    } catch (error) {
+      throw new BadRequestException(
+        'User with that email address already exists.'
+      );
+    }
+  }
+
+  @Post('login')
+  async login(@Body('email') email: string): Promise<User> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email address.');
+    }
+
+    return user;
   }
 
   @Get(':id')
-  async getUser(@Param('id') id: string): Promise<User> {
-    return this.usersService.getUser(id);
+  async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<User> {
+    const user = await this.usersService.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('No user with such ID');
+    }
+
+    return user;
   }
 
   @Get()
-  async searchUsers(@Query('q') query: string) {}
+  async searchUsers(@Query('q') query: string): Promise<User[]> {
+    return await this.usersService.search(query);
+  }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: UserUpdateDto) {
-    return this.usersService.update(id, dto);
+  async update(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body() dto: UserUpdateDto
+  ) {
+    return await this.usersService.update(id, dto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.usersService.delete(id);
+  async delete(@Param('id', ParseObjectIdPipe) id: string) {
+    const user = await this.usersService.delete(id);
+
+    if (!user) {
+      throw new NotFoundException("User doesn't exist.");
+    }
+
+    return user;
   }
 }

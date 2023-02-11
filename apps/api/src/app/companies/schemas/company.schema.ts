@@ -1,6 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Location, LocationSchema } from '../../utils/location.schema';
+import { Location, LocationSchema } from '../../utils/schemas/location.schema';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
@@ -9,7 +9,7 @@ export class Company {
   @Prop({ required: true, unique: true })
   name: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, lowercase: true, unique: true })
   email: string;
 
   @Prop()
@@ -18,7 +18,7 @@ export class Company {
   @Prop()
   description: string;
 
-  @Prop({ type: [LocationSchema] })
+  @Prop({ type: [LocationSchema], _id: false })
   offices: Location[];
 
   @Prop()
