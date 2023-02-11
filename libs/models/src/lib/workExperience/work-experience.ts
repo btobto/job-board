@@ -7,10 +7,10 @@ export class WorkExperience {
   @IsNotEmpty()
   @IsInt()
   @IsPositive()
-  fromYear: number;
+  yearFrom: number;
 
   @IsOptional()
   @IsInt()
   @IsPositive()
-  toYear: number;
+  yearTo: number;
 }

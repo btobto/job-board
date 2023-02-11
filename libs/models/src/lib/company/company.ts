@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEmail,
@@ -32,6 +33,7 @@ export class Company {
 
   @IsOptional()
   @IsArray()
+  @Type(() => Location)
   @ValidateNested()
   offices: Location[];
 

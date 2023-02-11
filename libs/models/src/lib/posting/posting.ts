@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -7,6 +8,7 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator';
+import { Company } from '../company/company';
 import { Location } from '../location/location';
 import { User } from '../user/user';
 
@@ -15,11 +17,12 @@ export class Posting {
   @IsNotEmpty()
   id: string;
 
-  @IsMongoId()
   @IsNotEmpty()
-  companyId: string;
+  @Type(() => Company)
+  company: Company;
 
   @IsOptional()
+  @Type(() => Location)
   @ValidateNested()
   location: Location;
 
@@ -43,6 +46,7 @@ export class Posting {
 
   @IsOptional()
   @IsArray()
+  @Type(() => User)
   @ValidateNested()
   applicants: User[];
 }

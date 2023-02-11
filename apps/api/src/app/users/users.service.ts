@@ -1,4 +1,8 @@
-import { UserCreateDto, UserUpdateDto } from '@nbp-it-job-board/models';
+import {
+  UserSearchQueryDto,
+  UserCreateDto,
+  UserUpdateDto,
+} from '@nbp-it-job-board/models';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -22,8 +26,26 @@ export class UsersService {
     return await this.userModel.findOne({ email }).exec();
   }
 
-  async search(query: string = ''): Promise<User[]> {
-    throw new NotImplementedException();
+  async search(queryDto: UserSearchQueryDto): Promise<User[]> {
+    let query: Record<string, any> = {};
+
+    if (queryDto.name) {
+      query.name = { $regex: queryDto.name + '.*' };
+    }
+    if (queryDto.skills) {
+      query.skills = { $all: queryDto.skills };
+    }
+    if (queryDto.location) {
+      query['location.country'] = queryDto.location.country;
+
+      if (queryDto.location.city) {
+        query['location.city'] = queryDto.location.city;
+      }
+    }
+
+    console.log(query);
+
+    return await this.userModel.find(query).limit(10).exec();
   }
 
   async update(id: string, dto: UserUpdateDto): Promise<User> {

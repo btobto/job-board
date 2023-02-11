@@ -1,4 +1,9 @@
-import { UserCreateDto, UserUpdateDto } from '@nbp-it-job-board/models';
+import {
+  UserSearchQueryDto,
+  UserCreateDto,
+  UserUpdateDto,
+  Location,
+} from '@nbp-it-job-board/models';
 import {
   BadRequestException,
   Body,
@@ -44,6 +49,12 @@ export class UsersController {
     return user;
   }
 
+  @Get('search')
+  async searchUsers(@Body() queryDto: UserSearchQueryDto): Promise<User[]> {
+    console.log(queryDto);
+    return await this.usersService.search(queryDto);
+  }
+
   @Get(':id')
   async getUser(@Param('id', ParseObjectIdPipe) id: string): Promise<User> {
     const user = await this.usersService.findById(id);
@@ -53,11 +64,6 @@ export class UsersController {
     }
 
     return user;
-  }
-
-  @Get()
-  async searchUsers(@Query('q') query: string): Promise<User[]> {
-    return await this.usersService.search(query);
   }
 
   @Patch(':id')

@@ -4,7 +4,7 @@ export class Location {
   @IsNotEmpty()
   country: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   city: string;
 
   @IsOptional()

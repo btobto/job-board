@@ -26,6 +26,9 @@ export class Posting {
   @Prop()
   remote: boolean;
 
+  @Prop()
+  salary: string;
+
   @Prop([String])
   requirements: string[];
 

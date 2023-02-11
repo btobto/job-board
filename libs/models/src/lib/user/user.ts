@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Location } from '../location/location';
 import { WorkExperience } from '../workExperience/work-experience';
+import { Type } from 'class-transformer';
 
 export class User {
   @IsNotEmpty()
@@ -17,7 +18,6 @@ export class User {
   id: string;
 
   @IsNotEmpty()
-  @MinLength(3)
   name: string;
 
   @IsNotEmpty()
@@ -26,6 +26,7 @@ export class User {
 
   @IsOptional()
   @ValidateNested()
+  @Type(() => Location)
   location: Location;
 
   @IsOptional()
@@ -35,6 +36,7 @@ export class User {
 
   @IsOptional()
   @IsArray()
+  @Type(() => WorkExperience)
   @ValidateNested()
   prevExperience: WorkExperience[];
 }
