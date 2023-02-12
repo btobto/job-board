@@ -48,7 +48,7 @@ export class CompaniesController {
   @Get('search')
   async searchCompanies(
     @Body() queryDto: CompanySearchQueryDto
-  ): Promise<Company[]> {
+  ): Promise<any[]> {
     console.log(queryDto);
     return await this.companiesService.search(queryDto);
   }

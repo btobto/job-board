@@ -6,6 +6,7 @@ import {
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User } from '../users/schemas/user.schema';
 import { Posting, PostingDocument } from './schemas/posting.schema';
 
 @Injectable()
@@ -54,7 +55,38 @@ export class PostingsService {
       });
   }
 
-  async apply(postingId: string, userId: string) {}
+  async apply(postingId: string, userId: string): Promise<Posting> {
+    // const posting = await this.postingModel.findById(postingId);
+
+    // let operator = posting.applicants.includes(userId as unknown as User)
+    //   ? '$pull'
+    //   : '$addToSet';
+
+    // return posting
+    //   .updateOne(
+    //     { [operator]: { applicants: userId } },
+    //     { returnDocument: 'after' }
+    //   )
+    //   .exec();
+
+    return await this.postingModel
+      .findByIdAndUpdate(
+        postingId,
+        { $addToSet: { applicants: userId } },
+        { new: true }
+      )
+      .exec();
+  }
+
+  async unapply(postingId: string, userId: string): Promise<Posting> {
+    return await this.postingModel
+      .findByIdAndUpdate(
+        postingId,
+        { $pull: { applicants: userId } },
+        { new: true }
+      )
+      .exec();
+  }
 
   async findById(id: string): Promise<Posting> {
     return await this.postingModel

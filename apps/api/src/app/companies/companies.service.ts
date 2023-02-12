@@ -46,47 +46,31 @@ export class CompaniesService {
   }
 
   async search(queryDto: CompanySearchQueryDto): Promise<Company[]> {
-    let query: Record<string, any> = {};
+    const match: Record<string, any> = {};
 
     if (queryDto.name) {
-      query['name'] = { $regex: queryDto.name + '.*' };
-    }
-    if (queryDto.location) {
-      query['location.country'] = queryDto.location.country;
-
-      if (queryDto.location.city) {
-        query['location.city'] = queryDto.location.city;
-      }
+      match['name'] = { $regex: queryDto.name + '.*', $options: 'i' };
     }
     if (queryDto.rating) {
-      // query['']
+      match['rating'] = { $gte: queryDto.rating };
     }
 
-    throw new NotImplementedException();
+    console.log(match);
 
-    // let match: Record<string, any> = {};
-
-    // if (queryDto.name) {
-    //   match['name'] = { $regex: queryDto.name + '.*' };
-    // }
-    // if (queryDto.location) {
-    //   match['location.country'] = queryDto.location.country;
-
-    //   if (queryDto.location.city) {
-    //     match['location.city'] = queryDto.location.city;
-    //   }
-    // }
-
-    // let fields: Record<string, any> = {};
-    // if (queryDto.rating) {
-    //   fields['rating'] = { $divide: ['$ratingsSum', '$ratingsCount'] };
-    // }
-
-    // console.log(match);
-
-    // console.log(query);
-
-    // return await this.companyModel.find(query).limit(10).exec();
+    return await this.companyModel
+      .aggregate()
+      .addFields({
+        rating: {
+          $cond: [
+            { $eq: ['$ratingsCount', 0] },
+            0,
+            { $divide: ['$ratingsSum', '$ratingsCount'] },
+          ],
+        },
+      })
+      .match(match)
+      .limit(10)
+      .exec();
   }
 
   async update(id: string, dto: CompanyUpdateDto): Promise<Company> {

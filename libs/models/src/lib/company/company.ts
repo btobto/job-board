@@ -17,7 +17,6 @@ export class Company {
   id: string;
 
   @IsNotEmpty()
-  @MinLength(3)
   name: string;
 
   @IsNotEmpty()

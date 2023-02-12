@@ -8,10 +8,6 @@ export class CompanySearchQueryDto extends PartialType(
   PickType(Company, ['name'])
 ) {
   @IsOptional()
-  @Type(() => Location)
-  location: Location;
-
-  @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(5)
