@@ -1,8 +1,7 @@
-import { PickType } from '@nestjs/mapped-types';
+import { OmitType } from '@nestjs/mapped-types';
 import { Review } from '../review';
 
-export class ReviewCreateDto extends PickType(Review, [
-  'userId',
-  'rating',
-  'description',
+export class ReviewCreateDto extends OmitType(Review, [
+  'id',
+  'datePosted',
 ] as const) {}

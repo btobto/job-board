@@ -2,7 +2,6 @@ import {
   UserSearchQueryDto,
   UserCreateDto,
   UserUpdateDto,
-  Location,
 } from '@nbp-it-job-board/models';
 import {
   BadRequestException,

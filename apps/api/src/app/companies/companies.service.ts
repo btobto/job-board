@@ -5,13 +5,17 @@ import {
 } from '@nbp-it-job-board/models';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Error, Model } from 'mongoose';
+import { PostingsService } from '../postings/postings.service';
+import { ReviewsService } from '../reviews/reviews.service';
 import { Company, CompanyDocument } from './schemas/company.schema';
 
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>
+    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+    private reviewsService: ReviewsService,
+    private postingsService: PostingsService
   ) {}
 
   async create(dto: CompanyCreateDto): Promise<Company> {
@@ -24,27 +28,29 @@ export class CompaniesService {
     return await this.companyModel.findById(id).exec();
   }
 
+  async findByEmail(email: string): Promise<Company> {
+    return await this.companyModel.findOne({ email }).exec();
+  }
+
   async search(queryDto: CompanySearchQueryDto): Promise<Company[]> {
-    throw new NotImplementedException();
+    let query: Record<string, any> = {};
 
-    // let query: Record<string, any> = {};
+    if (queryDto.name) {
+      query['name'] = { $regex: queryDto.name + '.*' };
+    }
+    if (queryDto.rating) {
+    }
+    if (queryDto.location) {
+      query['location.country'] = queryDto.location.country;
 
-    // if (queryDto.name) {
-    //   query.name = { $regex: queryDto.name + '.*' };
-    // }
-    // if (queryDto.rating) {
-    // }
-    // if (queryDto.location) {
-    //   query['location.country'] = queryDto.location.country;
+      if (queryDto.location.city) {
+        query['location.city'] = queryDto.location.city;
+      }
+    }
 
-    //   if (queryDto.location.city) {
-    //     query['location.city'] = queryDto.location.city;
-    //   }
-    // }
+    console.log(query);
 
-    // console.log(query);
-
-    // return await this.companyModel.find(query).limit(10).exec();
+    return await this.companyModel.find(query).limit(10).exec();
   }
 
   async update(id: string, dto: CompanyUpdateDto): Promise<Company> {
@@ -56,6 +62,16 @@ export class CompaniesService {
   }
 
   async delete(id: string) {
-    return await this.companyModel.findByIdAndRemove(id).exec();
+    await this.companyModel
+      .findByIdAndDelete(id)
+      .exec()
+      .then((c) => {
+        if (!c) throw new Error.DocumentNotFoundError("Document doesn't exist");
+        this.postingsService.deleteAll(c.id);
+        this.reviewsService.deleteAll(c.id);
+      })
+      .catch((e) => {
+        throw e;
+      });
   }
 }

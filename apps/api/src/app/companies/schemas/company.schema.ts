@@ -21,10 +21,10 @@ export class Company {
   @Prop({ type: [LocationSchema], _id: false })
   offices: Location[];
 
-  @Prop()
+  @Prop({ default: 0 })
   ratingsSum: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   ratingsCount: number;
 }
 

@@ -27,25 +27,43 @@ export class UsersService {
   }
 
   async search(queryDto: UserSearchQueryDto): Promise<User[]> {
-    let query: Record<string, any> = {};
+    // let query: Record<string, any> = {};
+
+    // if (queryDto.name) {
+    //   query['name'] = { $regex: queryDto.name + '.*' };
+    // }
+    // if (queryDto.skills) {
+    //   query['skills'] = { $all: queryDto.skills };
+    // }
+    // if (queryDto.location) {
+    //   query['location.country'] = queryDto.location.country;
+
+    //   if (queryDto.location.city) {
+    //     query['location.city'] = queryDto.location.city;
+    //   }
+    // }
+
+    // console.log(query);
+
+    // return await this.userModel.find(query).limit(10).exec();
+
+    let query = this.userModel.find();
 
     if (queryDto.name) {
-      query.name = { $regex: queryDto.name + '.*' };
+      query = query.where('name').equals({ $regex: queryDto.name + '.*' });
     }
     if (queryDto.skills) {
-      query.skills = { $all: queryDto.skills };
+      query = query.where('skills').all(queryDto.skills);
     }
     if (queryDto.location) {
-      query['location.country'] = queryDto.location.country;
+      query = query.where('location.country').equals(queryDto.location.country);
 
       if (queryDto.location.city) {
-        query['location.city'] = queryDto.location.city;
+        query = query.where('location.city').equals(queryDto.location.city);
       }
     }
 
-    console.log(query);
-
-    return await this.userModel.find(query).limit(10).exec();
+    return await query.limit(10).select('name skills location').exec();
   }
 
   async update(id: string, dto: UserUpdateDto): Promise<User> {
