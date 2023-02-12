@@ -1,5 +1,6 @@
 import { ReviewCreateDto, ReviewUpdateDto } from '@nbp-it-job-board/models';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -28,7 +29,13 @@ export class ReviewsController {
     @Param('companyId', ParseObjectIdPipe) companyId,
     @Body() dto: ReviewCreateDto
   ): Promise<Review> {
-    return await this.reviewsService.create(companyId, dto);
+    try {
+      return await this.reviewsService.create(companyId, dto);
+    } catch (error) {
+      throw new BadRequestException(
+        'User has already posted a review for that company.'
+      );
+    }
   }
 
   @Patch()

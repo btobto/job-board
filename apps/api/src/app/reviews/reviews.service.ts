@@ -43,7 +43,7 @@ export class ReviewsService {
   async update(dto: ReviewUpdateDto): Promise<Review> {
     return await this.reviewModel.findOneAndUpdate(
       { company: dto.companyId, user: dto.userId },
-      { ...dto, datePosted: Date.now },
+      { ...dto, datePosted: Date.now() },
       { new: true }
     );
   }
