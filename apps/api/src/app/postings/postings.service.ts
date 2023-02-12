@@ -30,7 +30,7 @@ export class PostingsService {
     if (queryDto.datePosted) {
       query['datePosted'] = { $gte: queryDto.datePosted };
     }
-    if (queryDto.remote) {
+    if (queryDto.remote != null) {
       query['remote'] = queryDto.remote;
     }
     if (queryDto.requirements) {
@@ -41,7 +41,7 @@ export class PostingsService {
 
     return await this.postingModel
       .find(query)
-      .populate('applicants', 'name email')
+      .populate('company', 'name website ratingsSum ratingsCount')
       .limit(10)
       .exec();
   }
@@ -54,8 +54,13 @@ export class PostingsService {
       });
   }
 
+  async apply(postingId: string, userId: string) {}
+
   async findById(id: string): Promise<Posting> {
-    return await this.postingModel.findById(id).exec();
+    return await this.postingModel
+      .findById(id)
+      .populate('applicants', 'name email')
+      .exec();
   }
 
   async findAllCompanyPostings(companyId: string): Promise<Posting[]> {
@@ -68,7 +73,7 @@ export class PostingsService {
 
   async update(id: string, dto: PostingUpdateDto): Promise<Posting> {
     return await this.postingModel
-      .findByIdAndUpdate(id, dto, { new: true })
+      .findByIdAndUpdate(id, { ...dto, datePosted: Date.now() }, { new: true })
       .exec();
   }
 

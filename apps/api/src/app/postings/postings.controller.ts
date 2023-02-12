@@ -4,6 +4,7 @@ import {
   PostingUpdateDto,
 } from '@nbp-it-job-board/models';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -50,12 +51,24 @@ export class PostingsController {
     return await this.postingsService.create(companyId, dto);
   }
 
+  @Post(':postingId/:userId')
+  async apply(
+    @Param('postingId', ParseObjectIdPipe) postingId,
+    @Param('userId', ParseObjectIdPipe) userId
+  ) {
+    return await this.postingsService.apply(postingId, userId);
+  }
+
   @Patch(':id')
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: PostingUpdateDto
   ): Promise<Posting> {
-    return await this.postingsService.update(id, dto);
+    const updatedPosting = await this.postingsService.update(id, dto);
+
+    if (!updatedPosting) throw new BadRequestException("Posting doesn't exist");
+
+    return updatedPosting;
   }
 
   @Delete(':id')

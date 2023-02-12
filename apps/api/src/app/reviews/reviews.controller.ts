@@ -42,7 +42,11 @@ export class ReviewsController {
 
   @Patch()
   async update(@Body() dto: ReviewUpdateDto): Promise<Review> {
-    return await this.reviewsService.update(dto);
+    const updatedReview = await this.reviewsService.update(dto);
+
+    if (!updatedReview) throw new NotFoundException("Review doesn't exist");
+
+    return updatedReview;
   }
 
   @HttpCode(204)
