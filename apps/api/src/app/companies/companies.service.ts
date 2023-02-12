@@ -30,10 +30,10 @@ export class CompaniesService {
     });
   }
 
-  async updateRating(id: string, rating: number) {
+  async updateRating(id: string, rating: number, decrement = false) {
     const company = await this.companyModel.findById(id);
-    company.ratingsCount += 1;
-    company.ratingsSum += rating;
+    company.ratingsCount += decrement ? -1 : 1;
+    company.ratingsSum += decrement ? -rating : rating;
     await company.save();
   }
 

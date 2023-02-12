@@ -1,9 +1,8 @@
 import { ReviewCreateDto, ReviewUpdateDto } from '@nbp-it-job-board/models';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Error, Model } from 'mongoose';
 import { CompaniesService } from '../companies/companies.service';
-import { Company, CompanyDocument } from '../companies/schemas/company.schema';
 import { Review, ReviewDocument } from './schemas/review.schema';
 
 @Injectable()
@@ -49,7 +48,22 @@ export class ReviewsService {
   }
 
   async delete(id: string) {
-    return await this.reviewModel.findByIdAndDelete(id).exec();
+    await this.reviewModel
+      .findByIdAndDelete(id)
+      .exec()
+      .then((review) => {
+        if (!review)
+          throw new Error.DocumentNotFoundError("Review doesn't exist.");
+
+        this.companiesService.updateRating(
+          (review.company as unknown as mongoose.Types.ObjectId).toString(),
+          review.rating,
+          true
+        );
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   async deleteAll(companyId: string) {

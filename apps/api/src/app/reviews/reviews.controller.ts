@@ -5,6 +5,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -43,8 +45,13 @@ export class ReviewsController {
     return await this.reviewsService.update(dto);
   }
 
+  @HttpCode(204)
   @Delete(':reviewId')
   async delete(@Param('reviewId', ParseObjectIdPipe) reviewId) {
-    await this.reviewsService.delete(reviewId);
+    try {
+      await this.reviewsService.delete(reviewId);
+    } catch (error) {
+      throw new NotFoundException("Review doesn't exist");
+    }
   }
 }
