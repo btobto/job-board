@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   async search(queryDto: UserSearchQueryDto): Promise<User[]> {
-    // let query: Record<string, any> = {};
+    // const query: Record<string, any> = {};
 
     // if (queryDto.name) {
     //   query['name'] = { $regex: queryDto.name + '.*' };
@@ -50,7 +50,7 @@ export class UsersService {
     let query = this.userModel.find();
 
     if (queryDto.name) {
-      query = query.where('name').equals({ $regex: queryDto.name + '.*' });
+      query = query.where('name').regex(queryDto.name + '.*');
     }
     if (queryDto.skills) {
       query = query.where('skills').all(queryDto.skills);

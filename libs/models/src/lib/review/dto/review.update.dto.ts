@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { ReviewCreateDto } from './review.create.dto';
+import { OmitType } from '@nestjs/mapped-types';
+import { Review } from '../review';
 
-export class ReviewUpdateDto extends PartialType(ReviewCreateDto) {}
+export class ReviewUpdateDto extends OmitType(Review, [
+  'id',
+  'datePosted',
+] as const) {}

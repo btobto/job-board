@@ -38,8 +38,6 @@ export class CompaniesService {
     if (queryDto.name) {
       query['name'] = { $regex: queryDto.name + '.*' };
     }
-    if (queryDto.rating) {
-    }
     if (queryDto.location) {
       query['location.country'] = queryDto.location.country;
 
@@ -47,10 +45,35 @@ export class CompaniesService {
         query['location.city'] = queryDto.location.city;
       }
     }
+    if (queryDto.rating) {
+      // query['']
+    }
 
-    console.log(query);
+    throw new NotImplementedException();
 
-    return await this.companyModel.find(query).limit(10).exec();
+    // let match: Record<string, any> = {};
+
+    // if (queryDto.name) {
+    //   match['name'] = { $regex: queryDto.name + '.*' };
+    // }
+    // if (queryDto.location) {
+    //   match['location.country'] = queryDto.location.country;
+
+    //   if (queryDto.location.city) {
+    //     match['location.city'] = queryDto.location.city;
+    //   }
+    // }
+
+    // let fields: Record<string, any> = {};
+    // if (queryDto.rating) {
+    //   fields['rating'] = { $divide: ['$ratingsSum', '$ratingsCount'] };
+    // }
+
+    // console.log(match);
+
+    // console.log(query);
+
+    // return await this.companyModel.find(query).limit(10).exec();
   }
 
   async update(id: string, dto: CompanyUpdateDto): Promise<Company> {
@@ -67,7 +90,7 @@ export class CompaniesService {
       .exec()
       .then((c) => {
         if (!c) throw new Error.DocumentNotFoundError("Document doesn't exist");
-        this.postingsService.deleteAll(c.id);
+        this.postingsService.deleteAllCompanyPostings(c.id);
         this.reviewsService.deleteAll(c.id);
       })
       .catch((e) => {

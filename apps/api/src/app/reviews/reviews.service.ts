@@ -10,26 +10,36 @@ export class ReviewsService {
     @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
   ) {}
 
-  async create(dto: ReviewCreateDto): Promise<Review> {
-    return await this.reviewModel.create(dto).catch((e) => {
-      throw e;
-    });
+  async create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
+    return await this.reviewModel
+      .create({ ...dto, company: companyId })
+      .catch((e) => {
+        throw e;
+      });
   }
 
   async findById(id: string): Promise<Review> {
     return await this.reviewModel.findById(id).exec();
   }
 
-  async update(id: string, dto: ReviewUpdateDto): Promise<Review> {
+  async findAllCompanyReviews(companyId: string): Promise<Review[]> {
     return await this.reviewModel
-      .findByIdAndUpdate(id, dto, {
-        new: true,
-      })
+      .find()
+      .where('company')
+      .equals(companyId)
       .exec();
   }
 
+  async update(dto: ReviewUpdateDto): Promise<Review> {
+    return await this.reviewModel.findOneAndUpdate(
+      { company: dto.companyId, user: dto.userId },
+      { ...dto, datePosted: Date.now },
+      { new: true }
+    );
+  }
+
   async delete(id: string) {
-    return await this.reviewModel.findByIdAndRemove(id).exec();
+    return await this.reviewModel.findByIdAndDelete(id).exec();
   }
 
   async deleteAll(companyId: string) {

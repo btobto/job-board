@@ -2,6 +2,7 @@ import {
   CompanyCreateDto,
   CompanySearchQueryDto,
   CompanyUpdateDto,
+  ReviewCreateDto,
 } from '@nbp-it-job-board/models';
 import {
   BadRequestException,
