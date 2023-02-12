@@ -3,7 +3,12 @@ import {
   CompanySearchQueryDto,
   CompanyUpdateDto,
 } from '@nbp-it-job-board/models';
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotImplementedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Error, Model } from 'mongoose';
 import { PostingsService } from '../postings/postings.service';
@@ -14,6 +19,7 @@ import { Company, CompanyDocument } from './schemas/company.schema';
 export class CompaniesService {
   constructor(
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+    @Inject(forwardRef(() => ReviewsService))
     private reviewsService: ReviewsService,
     private postingsService: PostingsService
   ) {}
@@ -22,6 +28,13 @@ export class CompaniesService {
     return await this.companyModel.create(dto).catch((e) => {
       throw e;
     });
+  }
+
+  async updateRating(id: string, rating: number) {
+    const company = await this.companyModel.findById(id);
+    company.ratingsCount += 1;
+    company.ratingsSum += rating;
+    await company.save();
   }
 
   async findById(id: string): Promise<Company> {

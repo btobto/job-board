@@ -30,9 +30,7 @@ export class CompaniesController {
     try {
       return await this.companiesService.create(dto);
     } catch (error) {
-      throw new BadRequestException(
-        'Company with that email address already exists.'
-      );
+      throw new BadRequestException('Company already exists.');
     }
   }
 

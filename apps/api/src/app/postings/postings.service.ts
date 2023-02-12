@@ -1,5 +1,9 @@
-import { PostingCreateDto, PostingUpdateDto } from '@nbp-it-job-board/models';
-import { Injectable } from '@nestjs/common';
+import {
+  PostingCreateDto,
+  PostingSearchQueryDto,
+  PostingUpdateDto,
+} from '@nbp-it-job-board/models';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas/posting.schema';
@@ -9,6 +13,38 @@ export class PostingsService {
   constructor(
     @InjectModel(Posting.name) private postingModel: Model<PostingDocument>
   ) {}
+
+  async search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
+    const query: Record<string, any> = {};
+
+    if (queryDto.location) {
+      query['location.country'] = queryDto.location.country;
+
+      if (queryDto.location.city) {
+        query['location.city'] = queryDto.location.city;
+      }
+    }
+    if (queryDto.position) {
+      query['position'] = { $regex: queryDto.position, $options: 'i' };
+    }
+    if (queryDto.datePosted) {
+      query['datePosted'] = { $gte: queryDto.datePosted };
+    }
+    if (queryDto.remote) {
+      query['remote'] = queryDto.remote;
+    }
+    if (queryDto.requirements) {
+      query['requirements'] = { $all: queryDto.requirements };
+    }
+
+    console.log(query);
+
+    return await this.postingModel
+      .find(query)
+      .populate('applicants', 'name email')
+      .limit(10)
+      .exec();
+  }
 
   async create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
     return await this.postingModel

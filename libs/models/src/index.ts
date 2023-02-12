@@ -8,6 +8,7 @@ export * from './lib/location/location';
 export * from './lib/posting/posting';
 export * from './lib/posting/dto/posting.create.dto';
 export * from './lib/posting/dto/posting.update.dto';
+export * from './lib/posting/dto/posting.search-query.dto';
 
 export * from './lib/review/review';
 export * from './lib/review/dto/review.create.dto';
