@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "src/app/app-routing.module.ts"],
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
+}

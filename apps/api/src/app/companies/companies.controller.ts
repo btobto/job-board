@@ -45,7 +45,7 @@ export class CompaniesController {
     return company;
   }
 
-  @Get('search')
+  @Post('search')
   async searchCompanies(
     @Body() queryDto: CompanySearchQueryDto
   ): Promise<any[]> {

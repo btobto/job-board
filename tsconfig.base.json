@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nbp-it-job-board/models": ["libs/models/src/index.ts"]
+      "@nbp-it-job-board/models": ["libs/models/src/index.ts"],
+      "@nbp-it-job-board/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
