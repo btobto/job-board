@@ -6,7 +6,7 @@ export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema()
 export class Company {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, index: true, unique: true })
   name: string;
 
   @Prop({ required: true, lowercase: true, unique: true })

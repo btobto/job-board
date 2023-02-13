@@ -6,7 +6,6 @@ import {
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../users/schemas/user.schema';
 import { Posting, PostingDocument } from './schemas/posting.schema';
 
 @Injectable()
