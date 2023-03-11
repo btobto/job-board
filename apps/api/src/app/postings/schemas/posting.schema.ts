@@ -8,7 +8,12 @@ export type PostingDocument = HydratedDocument<Posting>;
 
 @Schema()
 export class Posting {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+    index: true,
+    required: true,
+  })
   company: Company;
 
   @Prop({ type: LocationSchema })
@@ -20,8 +25,11 @@ export class Posting {
   @Prop()
   description: string;
 
-  @Prop({ default: Date.now })
+  @Prop({ default: Date.now, immutable: true })
   datePosted: Date;
+
+  @Prop()
+  dateUpdated: Date;
 
   @Prop()
   remote: boolean;
@@ -38,4 +46,4 @@ export class Posting {
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);
 
-PostingSchema.index({ location: 1, position: 1 });
+// PostingSchema.index({ location: 1, position: 1 });

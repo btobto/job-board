@@ -2,7 +2,7 @@ import {
   PostingCreateDto,
   PostingSearchQueryDto,
   PostingUpdateDto,
-} from '@nbp-it-job-board/models';
+} from '@nbp-it-job-board/models/posting';
 import {
   BadRequestException,
   Body,
@@ -21,7 +21,7 @@ import { Posting } from './schemas/posting.schema';
 export class PostingsController {
   constructor(private postingsService: PostingsService) {}
 
-  @Get('search')
+  @Post('search')
   async searchPostings(
     @Body() queryDto: PostingSearchQueryDto
   ): Promise<Posting[]> {

@@ -1,4 +1,7 @@
-import { ReviewCreateDto, ReviewUpdateDto } from '@nbp-it-job-board/models';
+import {
+  ReviewCreateDto,
+  ReviewUpdateDto,
+} from '@nbp-it-job-board/models/review';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Error, Model } from 'mongoose';
@@ -8,9 +11,7 @@ import { Review, ReviewDocument } from './schemas/review.schema';
 @Injectable()
 export class ReviewsService {
   constructor(
-    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
-    @Inject(forwardRef(() => CompaniesService))
-    private companiesService: CompaniesService
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
   ) {}
 
   async create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
@@ -20,54 +21,38 @@ export class ReviewsService {
         throw err;
       });
 
-    if (review) {
-      this.companiesService.updateRating(companyId, dto.rating);
-    }
-
     return review;
   }
 
-  async findById(id: string): Promise<Review> {
-    return await this.reviewModel.findById(id).exec();
+  findById(id: string): Promise<Review> {
+    return this.reviewModel.findById(id).exec();
   }
 
-  async findAllCompanyReviews(companyId: string): Promise<Review[]> {
-    return await this.reviewModel
-      .find()
-      .where('company')
-      .equals(companyId)
+  findAllCompanyReviews(companyId: string): Promise<Review[]> {
+    return this.reviewModel.where('company').equals(companyId).exec();
+  }
+
+  update(dto: ReviewUpdateDto): Promise<Review> {
+    return this.reviewModel
+      .findOneAndUpdate(
+        { company: dto.companyId, user: dto.userId },
+        { ...dto, dateUpdated: Date.now() },
+        { new: true }
+      )
       .exec();
   }
 
-  async update(dto: ReviewUpdateDto): Promise<Review> {
-    return await this.reviewModel.findOneAndUpdate(
-      { company: dto.companyId, user: dto.userId },
-      { ...dto, datePosted: Date.now() },
-      { new: true }
-    );
-  }
-
-  async delete(id: string) {
-    await this.reviewModel
+  delete(id: string) {
+    this.reviewModel
       .findByIdAndDelete(id)
       .exec()
-      .then((review) => {
-        if (!review)
-          throw new Error.DocumentNotFoundError("Review doesn't exist.");
-
-        this.companiesService.updateRating(
-          (review.company as unknown as mongoose.Types.ObjectId).toString(),
-          review.rating,
-          true
-        );
-      })
       .catch((err) => {
         throw err;
       });
   }
 
-  async deleteAll(companyId: string) {
-    return await this.reviewModel
+  deleteAllCompanyReviews(companyId: string) {
+    return this.reviewModel
       .deleteMany()
       .where('company')
       .equals(companyId)

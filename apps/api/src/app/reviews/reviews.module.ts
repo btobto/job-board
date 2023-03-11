@@ -8,8 +8,30 @@ import { CompaniesService } from '../companies/companies.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
-    forwardRef(() => CompaniesModule),
+    MongooseModule.forFeatureAsync([
+      {
+        name: Review.name,
+        imports: [forwardRef(() => CompaniesModule)],
+        useFactory: (companiesService: CompaniesService) => {
+          const schema = ReviewSchema;
+
+          schema.post('save', (doc, next) => {
+            console.log('post save working');
+            companiesService.updateRating(doc.company.toString(), doc.rating);
+            next();
+          });
+
+          schema.post('findOneAndDelete', (doc, next) => {
+            console.log('post findOneAndDelete working');
+            companiesService.updateRating(doc.company, doc.rating, true);
+            next();
+          });
+
+          return schema;
+        },
+        inject: [CompaniesService],
+      },
+    ]),
   ],
   providers: [ReviewsService],
   controllers: [ReviewsController],

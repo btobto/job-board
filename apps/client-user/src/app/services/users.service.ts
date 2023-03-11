@@ -5,7 +5,7 @@ import {
   UserCreateDto,
   UserSearchQueryDto,
   UserUpdateDto,
-} from '@nbp-it-job-board/models';
+} from '@nbp-it-job-board/models/user';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -30,6 +30,7 @@ export class UsersService {
   }
 
   getUser(id: string): Observable<User> {
+    console.log(id);
     return this.http.get<User>(`${environment.API_URL}/users/${id}`);
   }
 
@@ -45,17 +46,19 @@ export class UsersService {
     return this.http
       .post<User>(
         environment.API_URL + '/users/login',
-        email,
+        { email: email },
         environment.HTTP_OPTIONS
       )
       .pipe(
         tap((user) => {
+          console.log(user);
           this.loggedInUser$.next(user);
         })
       );
   }
 
   register(dto: UserCreateDto): Observable<User> {
+    console.log(dto);
     return this.http
       .post<User>(
         environment.API_URL + '/users/register',

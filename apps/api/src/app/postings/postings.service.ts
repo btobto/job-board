@@ -2,7 +2,7 @@ import {
   PostingCreateDto,
   PostingSearchQueryDto,
   PostingUpdateDto,
-} from '@nbp-it-job-board/models';
+} from '@nbp-it-job-board/models/posting';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -14,7 +14,7 @@ export class PostingsService {
     @InjectModel(Posting.name) private postingModel: Model<PostingDocument>
   ) {}
 
-  async search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
+  search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
     const query: Record<string, any> = {};
 
     if (queryDto.location) {
@@ -39,22 +39,22 @@ export class PostingsService {
 
     console.log(query);
 
-    return await this.postingModel
+    return this.postingModel
       .find(query)
       .populate('company', 'name website ratingsSum ratingsCount')
       .limit(10)
       .exec();
   }
 
-  async create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
-    return await this.postingModel
+  create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
+    return this.postingModel
       .create({ ...dto, company: companyId })
       .catch((e) => {
         throw e;
       });
   }
 
-  async apply(postingId: string, userId: string): Promise<Posting> {
+  apply(postingId: string, userId: string): Promise<Posting> {
     // const posting = await this.postingModel.findById(postingId);
 
     // let operator = posting.applicants.includes(userId as unknown as User)
@@ -68,7 +68,7 @@ export class PostingsService {
     //   )
     //   .exec();
 
-    return await this.postingModel
+    return this.postingModel
       .findByIdAndUpdate(
         postingId,
         { $addToSet: { applicants: userId } },
@@ -77,8 +77,8 @@ export class PostingsService {
       .exec();
   }
 
-  async unapply(postingId: string, userId: string): Promise<Posting> {
-    return await this.postingModel
+  unapply(postingId: string, userId: string): Promise<Posting> {
+    return this.postingModel
       .findByIdAndUpdate(
         postingId,
         { $pull: { applicants: userId } },
@@ -87,33 +87,29 @@ export class PostingsService {
       .exec();
   }
 
-  async findById(id: string): Promise<Posting> {
-    return await this.postingModel
+  findById(id: string): Promise<Posting> {
+    return this.postingModel
       .findById(id)
       .populate('applicants', 'name email')
       .exec();
   }
 
-  async findAllCompanyPostings(companyId: string): Promise<Posting[]> {
-    return await this.postingModel
-      .find()
-      .where('company')
-      .equals(companyId)
+  findAllCompanyPostings(companyId: string): Promise<Posting[]> {
+    return this.postingModel.where('company').equals(companyId).exec();
+  }
+
+  update(id: string, dto: PostingUpdateDto): Promise<Posting> {
+    return this.postingModel
+      .findByIdAndUpdate(id, { ...dto, dateUpdated: Date.now() }, { new: true })
       .exec();
   }
 
-  async update(id: string, dto: PostingUpdateDto): Promise<Posting> {
-    return await this.postingModel
-      .findByIdAndUpdate(id, { ...dto, datePosted: Date.now() }, { new: true })
-      .exec();
+  delete(id: string) {
+    return this.postingModel.findByIdAndDelete(id).exec();
   }
 
-  async delete(id: string) {
-    return await this.postingModel.findByIdAndDelete(id).exec();
-  }
-
-  async deleteAllCompanyPostings(companyId: string) {
-    return await this.postingModel
+  deleteAllCompanyPostings(companyId: string) {
+    return this.postingModel
       .deleteMany()
       .where('company')
       .equals(companyId)

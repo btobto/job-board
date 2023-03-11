@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { UiModule } from '@nbp-it-job-board/ui';
 import { CompanyComponent } from 'libs/ui/src/lib/pages/company/company.component';
 import { HomeComponent } from 'libs/ui/src/lib/pages/home/home.component';
-import { LoginComponent } from 'libs/ui/src/lib/pages/login/login.component';
 import { PostingComponent } from 'libs/ui/src/lib/pages/posting/posting.component';
-import { RegisterComponent } from 'libs/ui/src/lib/pages/register/register.component';
 import { SearchComponent } from 'libs/ui/src/lib/pages/search/search.component';
-import { UserComponent } from 'libs/ui/src/lib/pages/user/user.component';
-import { NavigationComponent } from '../../../../libs/ui/src/lib/pages/navigation/navigation.component';
+import { UserComponent } from 'apps/client-user/src/app/pages/user/user.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginComponent } from './pages/login/login.component';
+import { NavigationComponent } from './pages/navigation/navigation.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

@@ -8,5 +8,5 @@ export class Location {
   city: string;
 
   @IsOptional()
-  address: string;
+  address?: string;
 }

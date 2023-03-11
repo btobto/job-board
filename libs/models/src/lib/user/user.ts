@@ -9,13 +9,13 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Location } from '../location/location';
-import { WorkExperience } from '../workExperience/work-experience';
+import { WorkExperience } from '../work-experience/work-experience';
 import { Type } from 'class-transformer';
 
 export class User {
   @IsNotEmpty()
   @IsMongoId()
-  id: string;
+  _id: string;
 
   @IsNotEmpty()
   name: string;

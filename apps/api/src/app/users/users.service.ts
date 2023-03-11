@@ -2,7 +2,7 @@ import {
   UserSearchQueryDto,
   UserCreateDto,
   UserUpdateDto,
-} from '@nbp-it-job-board/models';
+} from '@nbp-it-job-board/models/user';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,21 +12,21 @@ import { User, UserDocument } from './schemas/user.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(dto: UserCreateDto): Promise<User> {
-    return await this.userModel.create(dto).catch((e) => {
+  create(dto: UserCreateDto): Promise<User> {
+    return this.userModel.create(dto).catch((e) => {
       throw e;
     });
   }
 
-  async findById(id: string): Promise<User> {
-    return await this.userModel.findById(id).exec();
+  findById(id: string): Promise<User> {
+    return this.userModel.findById(id).exec();
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return await this.userModel.findOne({ email }).exec();
+  findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
   }
 
-  async search(queryDto: UserSearchQueryDto): Promise<User[]> {
+  search(queryDto: UserSearchQueryDto): Promise<User[]> {
     const query: Record<string, any> = {};
 
     if (queryDto.name) {
@@ -45,22 +45,22 @@ export class UsersService {
 
     console.log(query);
 
-    return await this.userModel
+    return this.userModel
       .find(query)
       .limit(10)
       .select('name skills location')
       .exec();
   }
 
-  async update(id: string, dto: UserUpdateDto): Promise<User> {
-    return await this.userModel
+  update(id: string, dto: UserUpdateDto): Promise<User> {
+    return this.userModel
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
       .exec();
   }
 
-  async delete(id: string) {
-    return await this.userModel.findByIdAndRemove(id).exec();
+  delete(id: string) {
+    return this.userModel.findByIdAndRemove(id).exec();
   }
 }

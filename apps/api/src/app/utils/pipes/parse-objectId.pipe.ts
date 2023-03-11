@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 export class ParseObjectIdPipe implements PipeTransform<string> {
   transform(value: string, metadata: ArgumentMetadata): string {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-      throw new BadRequestException('Invalid ObjectId');
+      throw new BadRequestException('Not an ObjectId');
     }
     return value;
   }

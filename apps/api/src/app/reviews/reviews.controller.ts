@@ -1,4 +1,7 @@
-import { ReviewCreateDto, ReviewUpdateDto } from '@nbp-it-job-board/models';
+import {
+  ReviewCreateDto,
+  ReviewUpdateDto,
+} from '@nbp-it-job-board/models/review';
 import {
   BadRequestException,
   Body,
@@ -26,7 +29,7 @@ export class ReviewsController {
     return await this.reviewsService.findAllCompanyReviews(companyId);
   }
 
-  @Post(':companyId/')
+  @Post(':companyId')
   async post(
     @Param('companyId', ParseObjectIdPipe) companyId,
     @Body() dto: ReviewCreateDto
