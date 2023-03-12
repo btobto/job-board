@@ -37,9 +37,7 @@ export class ReviewsController {
     try {
       return await this.reviewsService.create(companyId, dto);
     } catch (error) {
-      throw new BadRequestException(
-        'User has already posted a review for that company.'
-      );
+      throw new BadRequestException(error.message);
     }
   }
 

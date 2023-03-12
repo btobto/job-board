@@ -1,7 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Company } from '../../companies/schemas/company.schema';
 import { User } from '../../users/schemas/user.schema';
+import { referenceValidator } from '../../utils/validators';
 
 export type ReviewDocument = HydratedDocument<Review>;
 
@@ -12,6 +13,7 @@ export class Review {
     ref: 'Company',
     index: true,
     required: true,
+    validate: referenceValidator,
   })
   company: Company | mongoose.Types.ObjectId;
 
@@ -19,6 +21,7 @@ export class Review {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+    validate: referenceValidator,
   })
   user: User | mongoose.Types.ObjectId;
 

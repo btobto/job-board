@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Review, ReviewSchema } from './schemas/review.schema';
@@ -16,13 +17,11 @@ import { CompaniesService } from '../companies/companies.service';
           const schema = ReviewSchema;
 
           schema.post('save', (doc, next) => {
-            console.log('post save working');
             companiesService.updateRating(doc.company.toString(), doc.rating);
             next();
           });
 
           schema.post('findOneAndDelete', (doc, next) => {
-            console.log('post findOneAndDelete working');
             companiesService.updateRating(doc.company, doc.rating, true);
             next();
           });

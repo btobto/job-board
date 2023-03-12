@@ -8,7 +8,6 @@ import { UsersModule } from './users/users.module';
 import { CompaniesModule } from './companies/companies.module';
 import { PostingsModule } from './postings/postings.module';
 import { ReviewsModule } from './reviews/reviews.module';
-import { Review } from './reviews/schemas/review.schema';
 
 @Module({
   imports: [
