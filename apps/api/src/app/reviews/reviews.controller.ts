@@ -3,22 +3,23 @@ import {
   ReviewUpdateDto,
 } from '@nbp-it-job-board/models/review';
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   Patch,
   Post,
+  UseFilters,
 } from '@nestjs/common';
+import { MongoExceptionFilter } from '../utils/filters/mongo-exception.filter';
 import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schemas/review.schema';
 
 @Controller('reviews')
+@UseFilters(MongoExceptionFilter)
 export class ReviewsController {
   constructor(private reviewsService: ReviewsService) {}
 
@@ -34,29 +35,17 @@ export class ReviewsController {
     @Param('companyId', ParseObjectIdPipe) companyId,
     @Body() dto: ReviewCreateDto
   ): Promise<Review> {
-    try {
-      return await this.reviewsService.create(companyId, dto);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return await this.reviewsService.create(companyId, dto);
   }
 
   @Patch()
   async update(@Body() dto: ReviewUpdateDto): Promise<Review> {
-    const updatedReview = await this.reviewsService.update(dto);
-
-    if (!updatedReview) throw new NotFoundException("Review doesn't exist");
-
-    return updatedReview;
+    return await this.reviewsService.update(dto);
   }
 
   @HttpCode(204)
   @Delete(':reviewId')
   async delete(@Param('reviewId', ParseObjectIdPipe) reviewId) {
-    try {
-      await this.reviewsService.delete(reviewId);
-    } catch (error) {
-      throw new NotFoundException("Review doesn't exist");
-    }
+    await this.reviewsService.delete(reviewId);
   }
 }

@@ -13,8 +13,8 @@ import { ReviewsModule } from './reviews/reviews.module';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configServce: ConfigService) => ({
-        uri: configServce.get<string>('MONGODB_URI'),
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),

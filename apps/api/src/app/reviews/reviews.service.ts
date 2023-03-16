@@ -2,10 +2,9 @@ import {
   ReviewCreateDto,
   ReviewUpdateDto,
 } from '@nbp-it-job-board/models/review';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Error, Model } from 'mongoose';
-import { CompaniesService } from '../companies/companies.service';
+import { Model } from 'mongoose';
 import { Review, ReviewDocument } from './schemas/review.schema';
 
 @Injectable()
@@ -14,14 +13,12 @@ export class ReviewsService {
     @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
   ) {}
 
-  async create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
-    const review = await this.reviewModel
-      .create({ ...dto, company: companyId, user: dto.userId })
-      .catch((err) => {
-        throw err;
-      });
-
-    return review;
+  create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
+    return this.reviewModel.create({
+      ...dto,
+      company: companyId,
+      user: dto.userId,
+    });
   }
 
   findById(id: string): Promise<Review> {
@@ -39,16 +36,12 @@ export class ReviewsService {
         { ...dto, dateUpdated: Date.now() },
         { new: true }
       )
+      .orFail()
       .exec();
   }
 
-  delete(id: string) {
-    this.reviewModel
-      .findByIdAndDelete(id)
-      .exec()
-      .catch((err) => {
-        throw err;
-      });
+  async delete(id: string) {
+    await this.reviewModel.findByIdAndDelete(id).orFail().exec();
   }
 
   deleteAllCompanyReviews(companyId: string) {

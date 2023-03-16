@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection, Mongoose } from 'mongoose';
 import { forwardRef, Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Review, ReviewSchema } from './schemas/review.schema';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
@@ -16,14 +16,12 @@ import { CompaniesService } from '../companies/companies.service';
         useFactory: (companiesService: CompaniesService) => {
           const schema = ReviewSchema;
 
-          schema.post('save', (doc, next) => {
+          schema.post('save', (doc) => {
             companiesService.updateRating(doc.company.toString(), doc.rating);
-            next();
           });
 
-          schema.post('findOneAndDelete', (doc, next) => {
+          schema.post('findOneAndDelete', (doc) => {
             companiesService.updateRating(doc.company, doc.rating, true);
-            next();
           });
 
           return schema;
