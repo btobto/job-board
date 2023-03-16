@@ -1,18 +1,15 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import mongoose from 'mongoose';
 
 import { AppModule } from './app/app.module';
+import { MongoExceptionFilter } from './app/utils/filters/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalFilters(new MongoExceptionFilter());
   mongoose.set('runValidators', true);
 
   const globalPrefix = 'api';

@@ -35,45 +35,8 @@ export class MongoExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      errorMessage: message,
+      error: HttpStatus[status],
+      message,
     });
   }
 }
-
-/*
-import { Catch } from '@nestjs/common';
-import { ArgumentsHost, ExceptionFilter } from '@nestjs/common/interfaces';
-import mongoose, { MongooseError } from 'mongoose';
-import { MongoServerError  } from 'mongodb';
-import { ConflictException } from '@nestjs/common/exceptions';
-
-@Catch(MongooseError, mongoose.mongo.MongoServerError)
-export class MongooseExceptionFilter implements ExceptionFilter {
-  catch(exception: MongooseError | MongoServerError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
-
-    if (exception instanceof MongooseError) {
-    } else if (exception instanceof MongoError) {
-      switch (exception.code) {
-        case 11000:
-          throw new ConflictException('Duplicate: ' + Object.keys(exception.keyValue))
-      }
-    } else {
-    }
-
-    const status = 400;
-    const message = ' ';
-    const type = ' ';
-
-    response.status(status).json({
-      statusCode: status,
-      path: request.url,
-      timestamp: new Date().toISOString(),
-      errorType: type,
-      errorMessage: message,
-    });
-  }
-}
-*/
