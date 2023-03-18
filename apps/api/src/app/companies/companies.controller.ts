@@ -26,43 +26,23 @@ export class CompaniesController {
 
   @Post('register')
   async register(@Body() dto: CompanyCreateDto): Promise<Company> {
-    try {
-      return await this.companiesService.create(dto);
-    } catch (error) {
-      throw new BadRequestException('Company already exists.');
-    }
+    return await this.companiesService.create(dto);
   }
 
   @Post('login')
   async login(@Body('email') email: string): Promise<Company> {
-    const company = await this.companiesService.findByEmail(email);
-
-    if (!company) {
-      throw new UnauthorizedException('Invalid email address.');
-    }
-
-    return company;
+    return await this.companiesService.findByEmail(email);
   }
 
   @Post('search')
-  async searchCompanies(
-    @Body() queryDto: CompanySearchQueryDto
-  ): Promise<any[]> {
+  async search(@Body() queryDto: CompanySearchQueryDto): Promise<any[]> {
     console.log(queryDto);
     return await this.companiesService.search(queryDto);
   }
 
   @Get(':id')
-  async getCompany(
-    @Param('id', ParseObjectIdPipe) id: string
-  ): Promise<Company> {
-    const company = await this.companiesService.findById(id);
-
-    if (!company) {
-      throw new NotFoundException('No company with such ID');
-    }
-
-    return company;
+  async get(@Param('id', ParseObjectIdPipe) id: string): Promise<Company> {
+    return await this.companiesService.findById(id);
   }
 
   @Patch(':id')
@@ -76,10 +56,6 @@ export class CompaniesController {
   @HttpCode(204)
   @Delete(':id')
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
-    try {
-      await this.companiesService.delete(id);
-    } catch (error) {
-      throw new NotFoundException("Company doesn't exist.");
-    }
+    await this.companiesService.delete(id);
   }
 }

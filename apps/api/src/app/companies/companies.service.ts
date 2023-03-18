@@ -19,29 +19,37 @@ export class CompaniesService {
     private postingsService: PostingsService
   ) {}
 
-  create(dto: CompanyCreateDto): Promise<Company> {
-    return this.companyModel.create(dto).catch((e) => {
-      throw e;
-    });
-  }
-
-  async updateRating(
-    id: string | mongoose.Types.ObjectId,
-    rating: number,
-    decrement = false
+  async updateReviewRating(
+    companyId: string,
+    newRating: number,
+    oldRating: number
   ) {
-    const company = await this.companyModel.findById(id).exec();
-    company.ratingsCount += decrement ? -1 : 1;
-    company.ratingsSum += decrement ? -rating : rating;
+    const company = await this.companyModel.findById(companyId).exec();
+    company.ratingsSum += newRating - oldRating;
     await company.save();
   }
 
+  async updateCompanyRating(
+    id: string,
+    reviewRating: number,
+    deleteRating = false
+  ) {
+    const company = await this.companyModel.findById(id).exec();
+    company.ratingsCount += deleteRating ? -1 : 1;
+    company.ratingsSum += deleteRating ? -reviewRating : reviewRating;
+    await company.save();
+  }
+
+  create(dto: CompanyCreateDto): Promise<Company> {
+    return this.companyModel.create(dto);
+  }
+
   findById(id: string): Promise<Company> {
-    return this.companyModel.findById(id).exec();
+    return this.companyModel.findById(id).orFail().exec();
   }
 
   findByEmail(email: string): Promise<Company> {
-    return this.companyModel.findOne({ email }).exec();
+    return this.companyModel.findOne({ email }).orFail().exec();
   }
 
   search(queryDto: CompanySearchQueryDto): Promise<Company[]> {
@@ -78,20 +86,18 @@ export class CompaniesService {
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
+      .orFail()
       .exec();
   }
 
   delete(id: string) {
     this.companyModel
       .findByIdAndDelete(id)
+      .orFail()
       .exec()
-      .then((c) => {
-        if (!c) throw new Error.DocumentNotFoundError("Document doesn't exist");
-        this.postingsService.deleteAllCompanyPostings(c.id);
-        this.reviewsService.deleteAllCompanyReviews(c.id);
-      })
-      .catch((e) => {
-        throw e;
+      .then((doc) => {
+        this.postingsService.deleteAllCompanyPostings(id);
+        this.reviewsService.deleteAllCompanyReviews(id);
       });
   }
 }
