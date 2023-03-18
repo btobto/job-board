@@ -83,9 +83,7 @@ export class CompaniesService {
 
   update(id: string, dto: CompanyUpdateDto): Promise<Company> {
     return this.companyModel
-      .findByIdAndUpdate(id, dto, {
-        new: true,
-      })
+      .findByIdAndUpdate(id, dto, { new: true })
       .orFail()
       .exec();
   }
@@ -95,7 +93,7 @@ export class CompaniesService {
       .findByIdAndDelete(id)
       .orFail()
       .exec()
-      .then((doc) => {
+      .then(() => {
         this.postingsService.deleteAllCompanyPostings(id);
         this.reviewsService.deleteAllCompanyReviews(id);
       });

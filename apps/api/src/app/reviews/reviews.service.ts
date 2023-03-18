@@ -48,14 +48,18 @@ export class ReviewsService {
         { new: false }
       )
       .orFail()
+      .lean()
       .exec()
       .then((doc) => {
-        this.companiesService.updateReviewRating(
-          doc.company.toString(),
-          dto.rating,
-          doc.rating
-        );
-        return { ...doc, rating: dto.rating };
+        if (doc.rating != dto.rating) {
+          this.companiesService.updateReviewRating(
+            doc.company.toString(),
+            dto.rating,
+            doc.rating
+          );
+        }
+
+        return { ...doc, rating: dto.rating, description: dto.description };
       });
   }
 
@@ -70,7 +74,6 @@ export class ReviewsService {
           doc.rating,
           true
         );
-        return doc;
       });
   }
 
