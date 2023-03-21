@@ -15,6 +15,9 @@ import { ReviewsModule } from './reviews/reviews.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
+        user: configService.get<string>('DB_USER'),
+        pass: configService.get<string>('DB_PASSWORD'),
+        dbName: configService.get<string>('DB_NAME'),
       }),
       inject: [ConfigService],
     }),

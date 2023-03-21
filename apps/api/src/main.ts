@@ -1,4 +1,5 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import mongoose from 'mongoose';
 
@@ -7,6 +8,7 @@ import { MongoExceptionFilter } from './app/utils/filters/mongo-exception.filter
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalFilters(new MongoExceptionFilter());
@@ -15,11 +17,12 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors();
-  const port = process.env.PORT || 3333;
+  const host = configService.get<string>('HOST') || 'localhost';
+  const port = configService.get<number>('PORT') || 3333;
   await app.listen(port);
 
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://${host}:${port}/${globalPrefix}`
   );
 }
 

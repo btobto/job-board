@@ -2,34 +2,23 @@ import {
   ReviewCreateDto,
   ReviewUpdateDto,
 } from '@nbp-it-job-board/models/review';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CompaniesService } from '../companies/companies.service';
 import { Review, ReviewDocument } from './schemas/review.schema';
 
 @Injectable()
 export class ReviewsService {
   constructor(
-    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
-    @Inject(forwardRef(() => CompaniesService))
-    private companiesService: CompaniesService
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument> // @Inject(forwardRef(() => CompaniesService)) // private companiesService: CompaniesService // @InjectModel(Company.name) private companyModel: Model<CompanyDocument>
   ) {}
 
   create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
-    return this.reviewModel
-      .create({
-        ...dto,
-        company: companyId,
-        user: dto.userId,
-      })
-      .then((doc) => {
-        this.companiesService.updateCompanyRating(
-          doc.company.toString(),
-          doc.rating
-        );
-        return doc;
-      });
+    return this.reviewModel.create({
+      ...dto,
+      company: companyId,
+      user: dto.userId,
+    });
   }
 
   findById(id: string): Promise<Review> {
@@ -41,44 +30,38 @@ export class ReviewsService {
   }
 
   update(dto: ReviewUpdateDto): Promise<Review> {
+    const now = new Date();
+
     return this.reviewModel
       .findOneAndUpdate(
         { company: dto.companyId, user: dto.userId },
-        { ...dto, dateUpdated: Date.now() },
-        { new: false }
+        { ...dto, dateUpdated: now },
+        {
+          new: false,
+          $locals: {
+            newRating: dto.rating,
+          },
+        }
       )
       .orFail()
       .lean()
       .exec()
       .then((doc) => {
-        if (doc.rating != dto.rating) {
-          this.companiesService.updateReviewRating(
-            doc.company.toString(),
-            dto.rating,
-            doc.rating
-          );
-        }
-
-        return { ...doc, rating: dto.rating, description: dto.description };
+        return {
+          ...doc,
+          rating: dto.rating,
+          description: dto.description,
+          dateUpdated: now,
+        };
       });
   }
 
-  async delete(id: string) {
-    await this.reviewModel
-      .findByIdAndDelete(id)
-      .orFail()
-      .exec()
-      .then((doc) => {
-        this.companiesService.updateCompanyRating(
-          doc.company.toString(),
-          doc.rating,
-          true
-        );
-      });
+  delete(id: string) {
+    return this.reviewModel.findByIdAndDelete(id).orFail().exec();
   }
 
-  async deleteAllCompanyReviews(companyId: string) {
-    await this.reviewModel
+  deleteAllCompanyReviews(companyId: string) {
+    return this.reviewModel
       .deleteMany()
       .where('company')
       .equals(companyId)

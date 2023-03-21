@@ -8,6 +8,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -43,7 +44,7 @@ export class ReviewsController {
     return await this.reviewsService.update(dto);
   }
 
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':reviewId')
   async delete(@Param('reviewId', ParseObjectIdPipe) reviewId) {
     await this.reviewsService.delete(reviewId);

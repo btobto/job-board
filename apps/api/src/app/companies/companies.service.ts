@@ -3,7 +3,7 @@ import {
   CompanySearchQueryDto,
   CompanyUpdateDto,
 } from '@nbp-it-job-board/models/company';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Error, Model } from 'mongoose';
 import { PostingsService } from '../postings/postings.service';
@@ -13,32 +13,8 @@ import { Company, CompanyDocument } from './schemas/company.schema';
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
-    @Inject(forwardRef(() => ReviewsService))
-    private reviewsService: ReviewsService,
-    private postingsService: PostingsService
+    @InjectModel(Company.name) private companyModel: Model<CompanyDocument> // @Inject(forwardRef(() => ReviewsService)) // private reviewsService: ReviewsService, // private postingsService: PostingsService
   ) {}
-
-  async updateReviewRating(
-    companyId: string,
-    newRating: number,
-    oldRating: number
-  ) {
-    const company = await this.companyModel.findById(companyId).exec();
-    company.ratingsSum += newRating - oldRating;
-    await company.save();
-  }
-
-  async updateCompanyRating(
-    id: string,
-    reviewRating: number,
-    deleteRating = false
-  ) {
-    const company = await this.companyModel.findById(id).exec();
-    company.ratingsCount += deleteRating ? -1 : 1;
-    company.ratingsSum += deleteRating ? -reviewRating : reviewRating;
-    await company.save();
-  }
 
   create(dto: CompanyCreateDto): Promise<Company> {
     return this.companyModel.create(dto);
@@ -89,13 +65,6 @@ export class CompaniesService {
   }
 
   delete(id: string) {
-    this.companyModel
-      .findByIdAndDelete(id)
-      .orFail()
-      .exec()
-      .then(() => {
-        this.postingsService.deleteAllCompanyPostings(id);
-        this.reviewsService.deleteAllCompanyReviews(id);
-      });
+    return this.companyModel.findByIdAndDelete(id).orFail().exec();
   }
 }

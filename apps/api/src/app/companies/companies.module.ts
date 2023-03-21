@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostingsModule } from '../postings/postings.module';
 import { PostingsService } from '../postings/postings.service';
@@ -10,9 +11,27 @@ import { Company, CompanySchema } from './schemas/company.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }]),
-    forwardRef(() => ReviewsModule),
-    PostingsModule,
+    MongooseModule.forFeatureAsync([
+      {
+        name: Company.name,
+        imports: [ReviewsModule, PostingsModule],
+        useFactory: (
+          reviewsService: ReviewsService,
+          postingsService: PostingsService
+        ) => {
+          const schema = CompanySchema;
+
+          schema.post('findOneAndDelete', async function (doc, next) {
+            await postingsService.deleteAllCompanyPostings(doc.id);
+            await reviewsService.deleteAllCompanyReviews(doc.id);
+            next();
+          });
+
+          return schema;
+        },
+        inject: [ReviewsService, PostingsService],
+      },
+    ]),
   ],
   controllers: [CompaniesController],
   providers: [CompaniesService],

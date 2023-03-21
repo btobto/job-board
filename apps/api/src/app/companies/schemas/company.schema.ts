@@ -4,7 +4,13 @@ import { Location, LocationSchema } from '../../utils/schemas/location.schema';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
-@Schema()
+@Schema({
+  virtuals: {
+    rating: function (): number {
+      return this.ratingsCount === 0 ? 0 : this.ratingsSum / this.ratingsCount;
+    },
+  },
+})
 export class Company {
   @Prop({ required: true, index: true, unique: true })
   name: string;
