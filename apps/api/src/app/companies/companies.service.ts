@@ -6,14 +6,12 @@ import {
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Error, Model } from 'mongoose';
-import { PostingsService } from '../postings/postings.service';
-import { ReviewsService } from '../reviews/reviews.service';
 import { Company, CompanyDocument } from './schemas/company.schema';
 
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel(Company.name) private companyModel: Model<CompanyDocument> // @Inject(forwardRef(() => ReviewsService)) // private reviewsService: ReviewsService, // private postingsService: PostingsService
+    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>
   ) {}
 
   create(dto: CompanyCreateDto): Promise<Company> {

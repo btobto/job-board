@@ -10,7 +10,7 @@ import { Review, ReviewDocument } from './schemas/review.schema';
 @Injectable()
 export class ReviewsService {
   constructor(
-    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument> // @Inject(forwardRef(() => CompaniesService)) // private companiesService: CompaniesService // @InjectModel(Company.name) private companyModel: Model<CompanyDocument>
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
   ) {}
 
   create(companyId: string, dto: ReviewCreateDto): Promise<Review> {

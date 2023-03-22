@@ -13,13 +13,11 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   create(dto: UserCreateDto): Promise<User> {
-    return this.userModel.create(dto).catch((e) => {
-      throw e;
-    });
+    return this.userModel.create(dto);
   }
 
   findById(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).orFail().exec();
   }
 
   findByEmail(email: string): Promise<User> {
@@ -57,10 +55,11 @@ export class UsersService {
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
+      .orFail()
       .exec();
   }
 
   delete(id: string) {
-    return this.userModel.findByIdAndRemove(id).exec();
+    return this.userModel.findByIdAndRemove(id).orFail().exec();
   }
 }

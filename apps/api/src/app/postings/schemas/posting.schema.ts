@@ -14,7 +14,7 @@ export class Posting {
     index: true,
     required: true,
   })
-  company: Company;
+  company: Company | mongoose.Types.ObjectId;
 
   @Prop({ type: LocationSchema })
   location: Location;
@@ -41,7 +41,7 @@ export class Posting {
   requirements: string[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  applicants: User[];
+  applicants: User[] | mongoose.Types.ObjectId[];
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);

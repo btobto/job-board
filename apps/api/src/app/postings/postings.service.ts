@@ -47,11 +47,7 @@ export class PostingsService {
   }
 
   create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
-    return this.postingModel
-      .create({ ...dto, company: companyId })
-      .catch((e) => {
-        throw e;
-      });
+    return this.postingModel.create({ ...dto, company: companyId });
   }
 
   apply(postingId: string, userId: string): Promise<Posting> {
@@ -74,6 +70,7 @@ export class PostingsService {
         { $addToSet: { applicants: userId } },
         { new: true }
       )
+      .orFail()
       .exec();
   }
 
@@ -84,12 +81,14 @@ export class PostingsService {
         { $pull: { applicants: userId } },
         { new: true }
       )
+      .orFail()
       .exec();
   }
 
   findById(id: string): Promise<Posting> {
     return this.postingModel
       .findById(id)
+      .orFail()
       .populate('applicants', 'name email')
       .exec();
   }
@@ -101,11 +100,12 @@ export class PostingsService {
   update(id: string, dto: PostingUpdateDto): Promise<Posting> {
     return this.postingModel
       .findByIdAndUpdate(id, { ...dto, dateUpdated: Date.now() }, { new: true })
+      .orFail()
       .exec();
   }
 
   delete(id: string) {
-    return this.postingModel.findByIdAndDelete(id).exec();
+    return this.postingModel.findByIdAndDelete(id).orFail().exec();
   }
 
   deleteAllCompanyPostings(companyId: string) {
