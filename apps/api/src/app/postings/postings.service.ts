@@ -5,7 +5,7 @@ import {
 } from '@nbp-it-job-board/models/posting';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas/posting.schema';
 
 @Injectable()
@@ -108,11 +108,12 @@ export class PostingsService {
     return this.postingModel.findByIdAndDelete(id).orFail().exec();
   }
 
-  deleteAllCompanyPostings(companyId: string) {
+  deleteAllCompanyPostings(companyId: string, session: ClientSession = null) {
     return this.postingModel
       .deleteMany()
       .where('company')
       .equals(companyId)
+      .session(session)
       .exec();
   }
 }

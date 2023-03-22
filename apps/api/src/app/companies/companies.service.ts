@@ -4,14 +4,16 @@ import {
   CompanyUpdateDto,
 } from '@nbp-it-job-board/models/company';
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Error, Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import mongoose, { Connection, Error, Model } from 'mongoose';
+import { mongooseTransactionHandler } from '../utils/mongoose-helpers/mongoose-transaction.handler';
 import { Company, CompanyDocument } from './schemas/company.schema';
 
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>
+    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+    @InjectConnection() private readonly connection: Connection
   ) {}
 
   create(dto: CompanyCreateDto): Promise<Company> {
@@ -63,6 +65,12 @@ export class CompaniesService {
   }
 
   delete(id: string) {
-    return this.companyModel.findByIdAndDelete(id).orFail().exec();
+    return mongooseTransactionHandler(this.connection, async (session) => {
+      return this.companyModel
+        .findByIdAndDelete(id)
+        .orFail()
+        .session(session)
+        .exec();
+    });
   }
 }

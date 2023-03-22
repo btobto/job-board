@@ -12,10 +12,8 @@ import {
   Param,
   Patch,
   Post,
-  UseFilters,
 } from '@nestjs/common';
-import { ConflictException } from '@nestjs/common/exceptions';
-import { MongoExceptionFilter } from '../utils/filters/mongo-exception.filter';
+import mongoose from 'mongoose';
 import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schemas/review.schema';

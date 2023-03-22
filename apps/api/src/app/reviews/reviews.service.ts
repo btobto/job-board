@@ -3,22 +3,34 @@ import {
   ReviewUpdateDto,
 } from '@nbp-it-job-board/models/review';
 import { Injectable, Scope } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { ClientSession, Connection, Model } from 'mongoose';
+import { mongooseTransactionHandler } from '../utils/mongoose-helpers/mongoose-transaction.handler';
 import { Review, ReviewDocument } from './schemas/review.schema';
 
 @Injectable()
 export class ReviewsService {
   constructor(
-    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
+    @InjectConnection() private readonly connection: Connection
   ) {}
 
   create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
-    return this.reviewModel.create({
-      ...dto,
-      company: companyId,
-      user: dto.userId,
-    });
+    return mongooseTransactionHandler(
+      this.connection,
+      async (session: ClientSession) => {
+        return this.reviewModel.create(
+          [
+            {
+              ...dto,
+              company: companyId,
+              user: dto.userId,
+            },
+          ],
+          { session }
+        );
+      }
+    ).then((r) => r[0]);
   }
 
   findById(id: string): Promise<Review> {
@@ -30,41 +42,51 @@ export class ReviewsService {
   }
 
   update(dto: ReviewUpdateDto): Promise<Review> {
-    const now = new Date();
+    return mongooseTransactionHandler(this.connection, async (session) => {
+      const now = new Date();
 
-    return this.reviewModel
-      .findOneAndUpdate(
-        { company: dto.companyId, user: dto.userId },
-        { ...dto, dateUpdated: now },
-        {
-          new: false,
-          $locals: {
-            newRating: dto.rating,
-          },
-        }
-      )
-      .orFail()
-      .lean()
-      .exec()
-      .then((doc) => {
-        return {
-          ...doc,
-          rating: dto.rating,
-          description: dto.description,
-          dateUpdated: now,
-        };
-      });
+      return this.reviewModel
+        .findOneAndUpdate(
+          { company: dto.companyId, user: dto.userId },
+          { ...dto, dateUpdated: now },
+          {
+            new: false,
+            $locals: {
+              newRating: dto.rating,
+            },
+          }
+        )
+        .orFail()
+        .lean()
+        .session(session)
+        .exec()
+        .then((doc) => {
+          return {
+            ...doc,
+            rating: dto.rating,
+            description: dto.description,
+            dateUpdated: now,
+          };
+        });
+    });
   }
 
   delete(id: string) {
-    return this.reviewModel.findByIdAndDelete(id).orFail().exec();
+    return mongooseTransactionHandler(this.connection, async (session) => {
+      return this.reviewModel
+        .findByIdAndDelete(id)
+        .orFail()
+        .session(session)
+        .exec();
+    });
   }
 
-  deleteAllCompanyReviews(companyId: string) {
+  deleteAllCompanyReviews(companyId: string, session: ClientSession = null) {
     return this.reviewModel
       .deleteMany()
       .where('company')
       .equals(companyId)
+      .session(session)
       .exec();
   }
 }
