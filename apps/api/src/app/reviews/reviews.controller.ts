@@ -12,8 +12,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
+import { PaginationOptionsDto } from '../utils/dtos/pagination-options.dto';
+import { PaginationResultDto } from '../utils/dtos/pagination-result.dto';
 import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schemas/review.schema';
@@ -24,9 +27,10 @@ export class ReviewsController {
 
   @Get(':companyId')
   async getCompanyReviews(
-    @Param('companyId', ParseObjectIdPipe) companyId: string
-  ): Promise<Review[]> {
-    return await this.reviewsService.findAllCompanyReviews(companyId);
+    @Param('companyId', ParseObjectIdPipe) companyId: string,
+    @Query() searchQuery: PaginationOptionsDto
+  ): Promise<PaginationResultDto<Review[]>> {
+    return await this.reviewsService.findCompanyReviews(companyId, searchQuery);
   }
 
   @Post(':companyId')

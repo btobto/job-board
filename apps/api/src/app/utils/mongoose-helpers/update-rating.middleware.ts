@@ -1,5 +1,5 @@
-import mongoose, { ClientSession, Connection } from 'mongoose';
-import { Company } from '../../companies/schemas/company.schema';
+import mongoose, { ClientSession, Connection, Model } from 'mongoose';
+import { Company, CompanySchema } from '../../companies/schemas/company.schema';
 
 export async function updateCompanyRatingMiddleware(
   connection: Connection,
@@ -9,7 +9,7 @@ export async function updateCompanyRatingMiddleware(
   deleteReview: boolean = false
 ) {
   const company = await connection
-    .model(Company.name)
+    .model<typeof CompanySchema>(Company.name)
     .findById(companyId)
     .session(session)
     .exec();

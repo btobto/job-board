@@ -3,13 +3,14 @@ import { ArgumentsHost, ExceptionFilter } from '@nestjs/common/interfaces';
 import mongoose, { MongooseError } from 'mongoose';
 import { MongoError, MongoServerError } from 'mongodb';
 import { HttpStatus } from '@nestjs/common/enums';
+import { Request, Response } from 'express';
 
 @Catch(mongoose.Error, MongoServerError)
 export class MongoExceptionFilter implements ExceptionFilter {
   catch(exception: mongoose.Error | MongoServerError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error.';

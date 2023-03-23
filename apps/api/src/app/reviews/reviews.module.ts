@@ -4,7 +4,7 @@ import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Review, ReviewSchema } from './schemas/review.schema';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
-import { Company } from '../companies/schemas/company.schema';
+import { Company, CompanySchema } from '../companies/schemas/company.schema';
 import { updateCompanyRatingMiddleware } from '../utils/mongoose-helpers/update-rating.middleware';
 
 @Module({
@@ -25,7 +25,7 @@ import { updateCompanyRatingMiddleware } from '../utils/mongoose-helpers/update-
 
             if (doc.rating != newRating) {
               const company = await connection
-                .model(Company.name)
+                .model<typeof CompanySchema>(Company.name)
                 .findById(doc.company)
                 .session(session)
                 .exec();

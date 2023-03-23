@@ -5,6 +5,8 @@ import {
 import { Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Connection, Model } from 'mongoose';
+import { PaginationOptionsDto } from '../utils/dtos/pagination-options.dto';
+import { PaginationResultDto } from '../utils/dtos/pagination-result.dto';
 import { mongooseTransactionHandler } from '../utils/mongoose-helpers/mongoose-transaction.handler';
 import { Review, ReviewDocument } from './schemas/review.schema';
 
@@ -37,8 +39,30 @@ export class ReviewsService {
     return this.reviewModel.findById(id).orFail().exec();
   }
 
-  findAllCompanyReviews(companyId: string): Promise<Review[]> {
-    return this.reviewModel.where('company').equals(companyId).exec();
+  async findCompanyReviews(
+    companyId: string,
+    searchQuery: PaginationOptionsDto
+  ): Promise<PaginationResultDto<Review[]>> {
+    console.log(searchQuery);
+    console.log(searchQuery.skip);
+
+    const query = this.reviewModel.where('company').equals(companyId);
+
+    const total = await query.clone().countDocuments().exec();
+
+    const reviews = await query
+      .clone()
+      .sort({ datePosted: -1 })
+      .skip(searchQuery.skip)
+      .limit(searchQuery.take)
+      .exec();
+
+    return {
+      data: reviews.map((r) => r.toObject()),
+      page: searchQuery.page,
+      take: searchQuery.take,
+      totalCount: total,
+    };
   }
 
   update(dto: ReviewUpdateDto): Promise<Review> {
