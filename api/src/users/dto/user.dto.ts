@@ -1,0 +1,40 @@
+import {
+  ArrayUnique,
+  IsArray,
+  IsEmail,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { LocationDto, WorkExperienceDto } from 'src/common/dto';
+
+export class UserDto {
+  @IsNotEmpty()
+  @IsMongoId()
+  _id: string;
+
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location: LocationDto;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  skills: string[];
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => WorkExperienceDto)
+  @ValidateNested()
+  prevExperience: WorkExperienceDto[];
+}
