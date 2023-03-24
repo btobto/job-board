@@ -1,5 +1,5 @@
 import mongoose, { ClientSession, Connection, Model } from 'mongoose';
-import { Company, CompanySchema } from '../../companies/schemas/company.schema';
+import { Company, CompanySchema } from '../../companies/schemas';
 
 export async function updateCompanyRatingMiddleware(
   connection: Connection,

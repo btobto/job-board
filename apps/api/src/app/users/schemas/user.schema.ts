@@ -1,10 +1,10 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Location, LocationSchema } from '../../utils/schemas/location.schema';
+import { Location, LocationSchema } from '../../common/schemas';
 import {
   WorkExperience,
   WorkExperienceSchema,
-} from '../../utils/schemas/work-experience.schema';
+} from '../../common/schemas/work-experience.schema';
 
 export type UserDocument = HydratedDocument<User>;
 

@@ -7,7 +7,7 @@ import { ReviewsModule } from '../reviews/reviews.module';
 import { ReviewsService } from '../reviews/reviews.service';
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
-import { Company, CompanySchema } from './schemas/company.schema';
+import { Company, CompanySchema } from './schemas';
 
 @Module({
   imports: [

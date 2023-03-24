@@ -5,10 +5,12 @@ import {
 import { Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Connection, Model } from 'mongoose';
-import { PaginationOptionsDto } from '../utils/dtos/pagination-options.dto';
-import { PaginationResultDto } from '../utils/dtos/pagination-result.dto';
-import { mongooseTransactionHandler } from '../utils/mongoose-helpers/mongoose-transaction.handler';
-import { Review, ReviewDocument } from './schemas/review.schema';
+import {
+  PaginationOptionsDto,
+  PaginationResultDto,
+} from '../common/dtos/pagination';
+import { mongooseTransactionHandler } from '../common/mongoose-helpers';
+import { Review, ReviewDocument } from './schemas';
 
 @Injectable()
 export class ReviewsService {

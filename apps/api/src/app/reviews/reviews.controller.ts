@@ -15,11 +15,13 @@ import {
   Query,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
-import { PaginationOptionsDto } from '../utils/dtos/pagination-options.dto';
-import { PaginationResultDto } from '../utils/dtos/pagination-result.dto';
-import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
+import {
+  PaginationOptionsDto,
+  PaginationResultDto,
+} from '../common/dtos/pagination';
+import { ParseObjectIdPipe } from '../common/pipes';
 import { ReviewsService } from './reviews.service';
-import { Review } from './schemas/review.schema';
+import { Review } from './schemas';
 
 @Controller('reviews')
 export class ReviewsController {

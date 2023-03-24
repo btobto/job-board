@@ -1,8 +1,9 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Company } from '../../companies/schemas/company.schema';
-import { User } from '../../users/schemas/user.schema';
-import { Location, LocationSchema } from '../../utils/schemas/location.schema';
+import { Company } from '../../companies/schemas';
+import { User } from '../../users/schemas';
+import { referenceValidator } from '../../common/mongoose-validators';
+import { Location, LocationSchema } from '../../common/schemas';
 
 export type PostingDocument = HydratedDocument<Posting>;
 
@@ -13,6 +14,7 @@ export class Posting {
     ref: 'Company',
     index: true,
     required: true,
+    validate: referenceValidator,
   })
   company: Company | mongoose.Types.ObjectId;
 

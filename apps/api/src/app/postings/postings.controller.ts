@@ -13,9 +13,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
+import { ParseObjectIdPipe } from '../common/pipes';
 import { PostingsService } from './postings.service';
-import { Posting } from './schemas/posting.schema';
+import { Posting } from './schemas';
 
 @Controller('postings')
 export class PostingsController {

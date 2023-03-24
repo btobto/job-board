@@ -1,11 +1,11 @@
 import mongoose, { Connection, Mongoose } from 'mongoose';
 import { forwardRef, Module } from '@nestjs/common';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
-import { Review, ReviewSchema } from './schemas/review.schema';
+import { Review, ReviewSchema } from './schemas';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
-import { Company, CompanySchema } from '../companies/schemas/company.schema';
-import { updateCompanyRatingMiddleware } from '../utils/mongoose-helpers/update-rating.middleware';
+import { Company, CompanySchema } from '../companies/schemas';
+import { updateCompanyRatingMiddleware } from '../common/mongoose-helpers';
 
 @Module({
   imports: [

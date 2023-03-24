@@ -18,8 +18,8 @@ import {
   Query,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
-import { User } from './schemas/user.schema';
+import { ParseObjectIdPipe } from '../common/pipes';
+import { User } from './schemas';
 import { UsersService } from './users.service';
 
 @Controller('users')

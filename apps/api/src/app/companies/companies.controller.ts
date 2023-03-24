@@ -16,9 +16,9 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ParseObjectIdPipe } from '../utils/pipes/parse-objectId.pipe';
+import { ParseObjectIdPipe } from '../common/pipes';
 import { CompaniesService } from './companies.service';
-import { Company } from './schemas/company.schema';
+import { Company } from './schemas';
 
 @Controller('companies')
 export class CompaniesController {

@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import mongoose from 'mongoose';
 
 import { AppModule } from './app/app.module';
-import { MongoExceptionFilter } from './app/utils/filters/mongo-exception.filter';
+import { MongoExceptionFilter } from './app/common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

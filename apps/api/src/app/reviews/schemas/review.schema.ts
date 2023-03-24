@@ -1,8 +1,8 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Company } from '../../companies/schemas/company.schema';
-import { User } from '../../users/schemas/user.schema';
-import { referenceValidator } from '../../utils/mongoose-validators/referenceValidator';
+import { Company } from '../../companies/schemas';
+import { User } from '../../users/schemas';
+import { referenceValidator } from '../../common/mongoose-validators';
 
 export type ReviewDocument = HydratedDocument<Review>;
 

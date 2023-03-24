@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
-import { DefaultValue } from '../decorators/default-value.decorator';
+import { DefaultValue } from '../../decorators/default-value.decorator';
 
 export class PaginationOptionsDto {
   @IsOptional()

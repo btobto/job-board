@@ -6,8 +6,8 @@ import {
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Connection, Error, Model } from 'mongoose';
-import { mongooseTransactionHandler } from '../utils/mongoose-helpers/mongoose-transaction.handler';
-import { Company, CompanyDocument } from './schemas/company.schema';
+import { mongooseTransactionHandler } from '../common/mongoose-helpers';
+import { Company, CompanyDocument } from './schemas';
 
 @Injectable()
 export class CompaniesService {
