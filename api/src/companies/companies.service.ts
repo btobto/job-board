@@ -6,7 +6,7 @@ import {
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Connection, Error, Model } from 'mongoose';
-import { mongooseTransactionHandler } from '../common/mongoose-helpers';
+import { transactionHandler } from '../common/mongoose-helpers';
 import { Company, CompanyDocument } from './schemas';
 
 @Injectable()
@@ -65,7 +65,7 @@ export class CompaniesService {
   }
 
   delete(id: string) {
-    return mongooseTransactionHandler(this.connection, async (session) => {
+    return transactionHandler(this.connection, async (session) => {
       return this.companyModel
         .findByIdAndDelete(id)
         .orFail()

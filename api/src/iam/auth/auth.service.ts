@@ -58,7 +58,7 @@ export class AuthService {
     }
 
     const accessToken = await this.jwtService.sign({
-      sub: user.id,
+      sub: user._id.toHexString(),
       email: user.email,
     });
 

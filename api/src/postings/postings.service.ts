@@ -7,13 +7,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
-import { ModelType } from 'src/common/types';
 
 @Injectable()
 export class PostingsService {
   constructor(
     @InjectModel(Posting.name)
-    private postingModel: ModelType<PostingDocument>,
+    private postingModel: Model<PostingDocument>,
   ) {}
 
   search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
@@ -92,7 +91,6 @@ export class PostingsService {
       .findById(id)
       .orFail()
       .populate('applicants', '_id name email')
-      .leanAndStrip()
       .exec();
   }
 

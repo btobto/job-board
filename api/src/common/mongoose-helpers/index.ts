@@ -1,2 +1,2 @@
-export * from './mongoose-transaction.handler';
+export * from './transaction.handler';
 export * from './update-rating.middleware';

@@ -3,7 +3,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Connection, Model } from 'mongoose';
 import { PaginationOptionsDto, PaginationResultDto } from '../common/dto';
-import { mongooseTransactionHandler } from '../common/mongoose-helpers';
+import { transactionHandler } from '../common/mongoose-helpers';
 import { Review, ReviewDocument } from './schemas';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ReviewsService {
   ) {}
 
   create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
-    return mongooseTransactionHandler(
+    return transactionHandler(
       this.connection,
       async (session: ClientSession) => {
         return this.reviewModel.create(
@@ -37,11 +37,8 @@ export class ReviewsService {
 
   async findCompanyReviews(
     companyId: string,
-    searchQuery: PaginationOptionsDto,
+    { page, take, skip }: PaginationOptionsDto,
   ): Promise<PaginationResultDto<Review[]>> {
-    const { page, take, skip } = searchQuery;
-    // console.log(page, take, skip);
-
     const query = this.reviewModel.where('company').equals(companyId);
 
     const total = await query.clone().countDocuments().exec();
@@ -63,7 +60,7 @@ export class ReviewsService {
   }
 
   update(dto: ReviewUpdateDto): Promise<Review> {
-    return mongooseTransactionHandler(this.connection, async (session) => {
+    return transactionHandler(this.connection, async (session) => {
       const now = new Date();
 
       return this.reviewModel
@@ -93,7 +90,7 @@ export class ReviewsService {
   }
 
   delete(id: string) {
-    return mongooseTransactionHandler(this.connection, async (session) => {
+    return transactionHandler(this.connection, async (session) => {
       return this.reviewModel
         .findByIdAndDelete(id)
         .orFail()

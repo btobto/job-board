@@ -9,7 +9,7 @@ export type PostingDocument = HydratedDocument<Posting>;
 
 @Schema()
 export class Posting {
-  id: string;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

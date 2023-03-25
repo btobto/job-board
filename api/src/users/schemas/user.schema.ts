@@ -9,15 +9,15 @@ import {
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({
-  // toObject: {
-  //   transform: (doc, ret, options) => {
-  //     delete ret.hashedPassword;
-  //     return ret;
-  //   },
-  // },
+  toObject: {
+    transform: (doc, ret, options) => {
+      delete ret.hashedPassword;
+      return ret;
+    },
+  },
 })
 export class User {
-  id: string;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   name: string;

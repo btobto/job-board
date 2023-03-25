@@ -12,14 +12,13 @@ export type CompanyDocument = HydratedDocument<Company>;
   },
   toObject: {
     transform: (doc, ret, options) => {
-      delete ret.__v;
       delete ret.ratingsSum;
       return { ...ret, rating: doc.rating };
     },
   },
 })
 export class Company {
-  id: string;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({ required: true, index: true, unique: true })
   name: string;

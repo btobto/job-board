@@ -8,6 +8,8 @@ export type ReviewDocument = HydratedDocument<Review>;
 
 @Schema()
 export class Review {
+  _id: mongoose.Types.ObjectId;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',

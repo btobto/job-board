@@ -9,14 +9,10 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async create(dto: UserCreateDto): Promise<User> {
-    return this.userModel
-      .create({
-        ...dto,
-        hashedPassword: dto.password,
-      })
-      .then((userDoc) => {
-        return userDoc.toObject();
-      });
+    return this.userModel.create({
+      ...dto,
+      hashedPassword: dto.password,
+    });
   }
 
   findById(id: string): Promise<User> {
@@ -24,10 +20,7 @@ export class UsersService {
   }
 
   findByEmail(email: string): Promise<User> {
-    return this.userModel
-      .findOne({ email })
-      .exec()
-      .then((userDoc) => userDoc.toObject());
+    return this.userModel.findOne({ email }).exec();
   }
 
   search(queryDto: UserSearchQueryDto): Promise<User[]> {

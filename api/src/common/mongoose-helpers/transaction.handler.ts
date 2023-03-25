@@ -1,8 +1,8 @@
 import { ClientSession, Connection } from 'mongoose';
 
-export async function mongooseTransactionHandler<T>(
+export async function transactionHandler<T>(
   connection: Connection,
-  method: (session: ClientSession) => Promise<T>
+  method: (session: ClientSession) => Promise<T>,
 ): Promise<T> {
   const session = await connection.startSession();
   session.startTransaction();
