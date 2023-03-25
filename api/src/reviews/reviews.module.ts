@@ -5,7 +5,7 @@ import { Review, ReviewSchema } from './schemas';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
 import { Company, CompanySchema } from '../companies/schemas';
-import { updateCompanyRatingMiddleware } from '../common/mongoose-helpers';
+import { updateCompanyRating } from '../common/mongoose-helpers';
 
 @Module({
   imports: [
@@ -41,11 +41,11 @@ import { updateCompanyRatingMiddleware } from '../common/mongoose-helpers';
           schema.post('save', async (doc, next) => {
             // console.log(doc);
 
-            await updateCompanyRatingMiddleware(
+            await updateCompanyRating(
               connection,
               doc.company.toString(),
               doc.rating,
-              doc.$session()
+              doc.$session(),
             );
 
             next();
@@ -55,12 +55,12 @@ import { updateCompanyRatingMiddleware } from '../common/mongoose-helpers';
             // console.log(doc);
             // console.log(!!doc.$session());
 
-            await updateCompanyRatingMiddleware(
+            await updateCompanyRating(
               connection,
               doc.company.toString(),
               doc.rating,
               doc.$session(),
-              true
+              true,
             );
 
             next();

@@ -39,8 +39,8 @@ export class ReviewsService {
     companyId: string,
     searchQuery: PaginationOptionsDto,
   ): Promise<PaginationResultDto<Review[]>> {
-    console.log(searchQuery);
-    console.log(searchQuery.skip);
+    const { page, take, skip } = searchQuery;
+    // console.log(page, take, skip);
 
     const query = this.reviewModel.where('company').equals(companyId);
 
@@ -49,15 +49,16 @@ export class ReviewsService {
     const reviews = await query
       .clone()
       .sort({ datePosted: -1 })
-      .skip(searchQuery.skip)
-      .limit(searchQuery.take)
+      .skip(skip)
+      .limit(take)
       .exec();
 
     return {
       data: reviews.map((r) => r.toObject()),
-      page: searchQuery.page,
-      take: searchQuery.take,
+      page: page,
+      take: take,
       totalCount: total,
+      pageCount: Math.ceil(total / take),
     };
   }
 

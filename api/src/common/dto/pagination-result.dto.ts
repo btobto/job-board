@@ -3,4 +3,5 @@ export interface PaginationResultDto<T> {
   page: number;
   take: number;
   totalCount: number;
+  pageCount: number;
 }

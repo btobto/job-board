@@ -4,6 +4,7 @@ import mongoose, { MongooseError } from 'mongoose';
 import { MongoError, MongoServerError } from 'mongodb';
 import { HttpStatus } from '@nestjs/common/enums';
 import { Request, Response } from 'express';
+import { MongoErrorCodes } from '../constants';
 
 @Catch(mongoose.Error, MongoServerError)
 export class MongoExceptionFilter implements ExceptionFilter {
@@ -23,7 +24,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
       message = `Document doesn't exist: ${exception.message}`;
     } else if (exception instanceof MongoError) {
       switch (exception.code) {
-        case 11000:
+        case MongoErrorCodes.DUPLICATE_KEY:
           status = HttpStatus.CONFLICT;
           // prettier-ignore
           message = `Duplicate key error for: ${

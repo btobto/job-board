@@ -10,8 +10,17 @@ export type CompanyDocument = HydratedDocument<Company>;
       return this.ratingsCount === 0 ? 0 : this.ratingsSum / this.ratingsCount;
     },
   },
+  toObject: {
+    transform: (doc, ret, options) => {
+      delete ret.__v;
+      delete ret.ratingsSum;
+      return { ...ret, rating: doc.rating };
+    },
+  },
 })
 export class Company {
+  id: string;
+
   @Prop({ required: true, index: true, unique: true })
   name: string;
 

@@ -8,8 +8,15 @@ import { User, UserDocument } from './schemas';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  create(dto: UserCreateDto): Promise<User> {
-    return this.userModel.create(dto);
+  async create(dto: UserCreateDto): Promise<User> {
+    return this.userModel
+      .create({
+        ...dto,
+        hashedPassword: dto.password,
+      })
+      .then((userDoc) => {
+        return userDoc.toObject();
+      });
   }
 
   findById(id: string): Promise<User> {
@@ -17,7 +24,10 @@ export class UsersService {
   }
 
   findByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel
+      .findOne({ email })
+      .exec()
+      .then((userDoc) => userDoc.toObject());
   }
 
   search(queryDto: UserSearchQueryDto): Promise<User[]> {
@@ -56,6 +66,6 @@ export class UsersService {
   }
 
   delete(id: string) {
-    return this.userModel.findByIdAndRemove(id).orFail().exec();
+    return this.userModel.findByIdAndDelete(id).orFail().exec();
   }
 }

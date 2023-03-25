@@ -8,13 +8,25 @@ import {
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({
+  // toObject: {
+  //   transform: (doc, ret, options) => {
+  //     delete ret.hashedPassword;
+  //     return ret;
+  //   },
+  // },
+})
 export class User {
+  id: string;
+
   @Prop({ required: true })
   name: string;
 
   @Prop({ required: true, lowercase: true, unique: true })
   email: string;
+
+  @Prop({ required: true })
+  hashedPassword: string;
 
   @Prop({ type: LocationSchema, _id: false })
   location: Location;

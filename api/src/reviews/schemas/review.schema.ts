@@ -2,7 +2,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Company } from '../../companies/schemas';
 import { User } from '../../users/schemas';
-import { referenceValidator } from '../../common/mongoose-validators';
+import { referenceValidator } from '../../common/validators';
 
 export type ReviewDocument = HydratedDocument<Review>;
 

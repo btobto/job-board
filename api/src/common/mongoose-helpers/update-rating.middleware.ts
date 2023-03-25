@@ -1,12 +1,12 @@
 import mongoose, { ClientSession, Connection, Model } from 'mongoose';
 import { Company, CompanySchema } from '../../companies/schemas';
 
-export async function updateCompanyRatingMiddleware(
+export async function updateCompanyRating(
   connection: Connection,
   companyId: string | mongoose.Types.ObjectId,
   rating: number,
   session: ClientSession = null,
-  deleteReview: boolean = false
+  deleteReview: boolean = false,
 ) {
   const company = await connection
     .model<typeof CompanySchema>(Company.name)

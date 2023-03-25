@@ -3,15 +3,17 @@ import {
   PostingSearchQueryDto,
   PostingUpdateDto,
 } from './dto';
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
+import { ModelType } from 'src/common/types';
 
 @Injectable()
 export class PostingsService {
   constructor(
-    @InjectModel(Posting.name) private postingModel: Model<PostingDocument>,
+    @InjectModel(Posting.name)
+    private postingModel: ModelType<PostingDocument>,
   ) {}
 
   search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
@@ -89,7 +91,8 @@ export class PostingsService {
     return this.postingModel
       .findById(id)
       .orFail()
-      .populate('applicants', 'name email')
+      .populate('applicants', '_id name email')
+      .leanAndStrip()
       .exec();
   }
 

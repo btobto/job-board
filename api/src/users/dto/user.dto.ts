@@ -5,6 +5,7 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsOptional,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -21,6 +22,10 @@ export class UserDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  @MinLength(10)
+  password: string;
 
   @IsOptional()
   @ValidateNested()

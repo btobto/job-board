@@ -5,6 +5,9 @@ import { CompaniesModule } from './companies/companies.module';
 import { PostingsModule } from './postings/postings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
+import { IamModule } from './iam/iam.module';
+import { Connection, connection } from 'mongoose';
+import { stripObjectPlugin, leanAndStripQueryPlugin } from './common/plugins';
 
 @Module({
   imports: [
@@ -16,6 +19,11 @@ import { UsersModule } from './users/users.module';
         user: configService.get<string>('DB_USER'),
         pass: configService.get<string>('DB_PASSWORD'),
         dbName: configService.get<string>('DB_NAME'),
+        connectionFactory: (connection: Connection) => {
+          connection.plugin(stripObjectPlugin);
+          connection.plugin(leanAndStripQueryPlugin);
+          return connection;
+        },
       }),
       inject: [ConfigService],
     }),
@@ -23,6 +31,7 @@ import { UsersModule } from './users/users.module';
     CompaniesModule,
     PostingsModule,
     ReviewsModule,
+    IamModule,
   ],
   controllers: [],
   providers: [],
