@@ -5,7 +5,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { PostingsModule } from './postings/postings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
-import { IamModule } from './iam/iam.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { IamModule } from './iam/iam.module';
     CompaniesModule,
     PostingsModule,
     ReviewsModule,
-    IamModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

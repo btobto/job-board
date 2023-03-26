@@ -20,7 +20,7 @@ export class UsersService {
   }
 
   findByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel.findOne({ email }).lean().exec();
   }
 
   search(queryDto: UserSearchQueryDto): Promise<User[]> {
