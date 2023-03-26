@@ -5,15 +5,15 @@ import { Location, LocationSchema } from '../../common/schemas';
 export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema({
-  virtuals: {
-    rating: function (): number {
-      return this.ratingsCount === 0 ? 0 : this.ratingsSum / this.ratingsCount;
-    },
-  },
   toObject: {
     transform: (doc, ret, options) => {
+      const rating =
+        ret.ratingsCount === 0
+          ? 0
+          : (ret.ratingsSum / ret.ratingsCount).toFixed(2);
+
       delete ret.ratingsSum;
-      return { ...ret, rating: doc.rating };
+      return { ...ret, rating };
     },
   },
 })

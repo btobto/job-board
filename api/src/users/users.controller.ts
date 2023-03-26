@@ -13,10 +13,14 @@ import {
   Post,
   Query,
   UnauthorizedException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { User } from './schemas';
 import { UsersService } from './users.service';
+import { Public } from 'src/auth/decorators';
+import { DocumentToObjectInterceptor } from 'src/common/interceptors/document-to-object.interceptor';
+import { DisableToObject } from 'src/common/decorators';
 
 @Controller('users')
 export class UsersController {
@@ -44,6 +48,7 @@ export class UsersController {
     return user;
   }
 
+  @Public()
   @Post('search')
   async searchUsers(@Body() queryDto: UserSearchQueryDto): Promise<User[]> {
     console.log(queryDto);
@@ -65,7 +70,7 @@ export class UsersController {
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UserUpdateDto,
-  ) {
+  ): Promise<User> {
     return await this.usersService.update(id, dto);
   }
 

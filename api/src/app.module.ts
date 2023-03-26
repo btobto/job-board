@@ -6,8 +6,9 @@ import { PostingsModule } from './postings/postings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards';
+import { DocumentToObjectInterceptor } from './common/interceptors';
 
 @Module({
   imports: [
@@ -30,9 +31,13 @@ import { JwtAuthGuard } from './auth/guards';
   ],
   controllers: [],
   providers: [
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
     {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      provide: APP_INTERCEPTOR,
+      useClass: DocumentToObjectInterceptor,
     },
   ],
 })

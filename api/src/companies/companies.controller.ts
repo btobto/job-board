@@ -32,7 +32,7 @@ export class CompaniesController {
   }
 
   @Post('search')
-  async search(@Body() queryDto: CompanySearchQueryDto): Promise<any[]> {
+  async search(@Body() queryDto: CompanySearchQueryDto): Promise<Company[]> {
     console.log(queryDto);
     return await this.companiesService.search(queryDto);
   }
@@ -46,7 +46,7 @@ export class CompaniesController {
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: CompanyUpdateDto,
-  ) {
+  ): Promise<Company> {
     return await this.companiesService.update(id, dto);
   }
 

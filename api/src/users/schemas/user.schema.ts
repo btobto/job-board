@@ -1,5 +1,5 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, QueryWithHelpers } from 'mongoose';
 import { Location, LocationSchema } from '../../common/schemas';
 import {
   WorkExperience,

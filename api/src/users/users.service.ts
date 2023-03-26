@@ -47,6 +47,7 @@ export class UsersService {
       .limit(10)
       .select('name skills location')
       .exec();
+    // .then((docs) => docs.map((d) => d.toObject()));
   }
 
   update(id: string, dto: UserUpdateDto): Promise<User> {
