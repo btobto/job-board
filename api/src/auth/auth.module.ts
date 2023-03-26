@@ -1,14 +1,29 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from 'src/users/users.module';
 import { AuthService } from './auth.service';
-import { HashingService } from './hashing/hashing.service';
-import { BcryptService } from './hashing/bcrypt.service';
+import { HashingService, BcryptService } from './hashing';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
-import { LocalStrategy } from './strategies/local.strategy';
+import { LocalStrategy, JwtStrategy } from './strategies';
+import { JwtModule } from '@nestjs/jwt/dist';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, PassportModule],
+  imports: [
+    UsersModule,
+    PassportModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<number>('JWT_ACCESS_TOKEN_TTL'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   providers: [
     {
       provide: HashingService,
@@ -16,6 +31,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     },
     AuthService,
     LocalStrategy,
+    JwtStrategy,
   ],
   controllers: [AuthController],
 })
