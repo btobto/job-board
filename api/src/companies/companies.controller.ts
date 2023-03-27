@@ -7,8 +7,10 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
+import { ResourceOwhershipGuard } from 'src/auth/guards';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { CompaniesService } from './companies.service';
 import {
@@ -34,6 +36,7 @@ export class CompaniesController {
   }
 
   @Patch(':id')
+  @UseGuards(ResourceOwhershipGuard)
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: CompanyUpdateDto,
@@ -41,8 +44,9 @@ export class CompaniesController {
     return await this.companiesService.update(id, dto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ResourceOwhershipGuard)
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
     await this.companiesService.delete(id);
   }

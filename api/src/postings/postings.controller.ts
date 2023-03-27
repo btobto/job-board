@@ -45,6 +45,7 @@ export class PostingsController {
     return await this.postingsService.findById(id);
   }
 
+  // get user from token
   @Post(':companyId')
   async post(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
@@ -53,6 +54,7 @@ export class PostingsController {
     return await this.postingsService.create(companyId, dto);
   }
 
+  // get user from token
   @Patch('application/:postingId')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,
@@ -69,8 +71,8 @@ export class PostingsController {
     return await this.postingsService.update(id, dto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
     await this.postingsService.delete(id);
   }

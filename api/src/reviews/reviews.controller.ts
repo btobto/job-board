@@ -42,9 +42,9 @@ export class ReviewsController {
     return await this.reviewsService.update(dto);
   }
 
+  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':reviewId')
-  async delete(@Param('reviewId', ParseObjectIdPipe) reviewId) {
+  async delete(@Param('id', ParseObjectIdPipe) reviewId) {
     await this.reviewsService.delete(reviewId);
   }
 }

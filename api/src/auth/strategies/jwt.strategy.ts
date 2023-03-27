@@ -21,8 +21,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return this.connection
+    return await this.connection
       .model(payload[USER_TYPE_KEY])
-      .findById(payload['sub']);
+      .findById(payload['sub'])
+      .exec()
+      .then((doc) =>
+        doc.toObject({
+          transform: (doc, ret, opts) => {
+            ret._id = ret._id.toHexString();
+            return ret;
+          },
+        }),
+      );
   }
 }

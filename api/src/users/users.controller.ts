@@ -9,18 +9,20 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { User } from './schemas';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/decorators';
+import { ResourceOwhershipGuard } from 'src/auth/guards';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Public()
   @Post('search')
+  @Public()
   async searchUsers(@Body() queryDto: UserSearchQueryDto): Promise<User[]> {
     console.log(queryDto);
     return await this.usersService.search(queryDto);
@@ -32,6 +34,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(ResourceOwhershipGuard)
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UserUpdateDto,
@@ -39,8 +42,9 @@ export class UsersController {
     return await this.usersService.update(id, dto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ResourceOwhershipGuard)
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
     await this.usersService.delete(id);
   }
