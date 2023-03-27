@@ -53,21 +53,12 @@ export class PostingsController {
     return await this.postingsService.create(companyId, dto);
   }
 
-  @Patch('apply/:postingId')
+  @Patch('application/:postingId')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,
     @Body('userId', ParseObjectIdPipe) userId: string,
   ) {
-    console.log(userId);
-    return await this.postingsService.apply(postingId, userId);
-  }
-
-  @Patch('unapply/:postingId/')
-  async unapply(
-    @Param('postingId', ParseObjectIdPipe) postingId: string,
-    @Body('userId', ParseObjectIdPipe) userId,
-  ) {
-    return await this.postingsService.unapply(postingId, userId);
+    return await this.postingsService.toggleApply(postingId, userId);
   }
 
   @Patch(':id')

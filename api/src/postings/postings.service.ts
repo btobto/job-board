@@ -5,8 +5,9 @@ import {
 } from './dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, Model } from 'mongoose';
+import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
+import { User } from 'src/users/schemas';
 
 @Injectable()
 export class PostingsService {
@@ -51,39 +52,18 @@ export class PostingsService {
     return this.postingModel.create({ ...dto, company: companyId });
   }
 
-  apply(postingId: string, userId: string): Promise<Posting> {
-    // const posting = await this.postingModel.findById(postingId);
+  async toggleApply(postingId: string, userId: string): Promise<Posting> {
+    const posting = await this.postingModel.findById(postingId);
+    const user = userId as unknown as User;
 
-    // let operator = posting.applicants.includes(userId as unknown as User)
-    //   ? '$pull'
-    //   : '$addToSet';
+    const index = posting.applicants.indexOf(user);
+    if (index !== -1) {
+      posting.applicants.splice(index, 1);
+    } else {
+      posting.applicants.push(user);
+    }
 
-    // return posting
-    //   .updateOne(
-    //     { [operator]: { applicants: userId } },
-    //     { returnDocument: 'after' }
-    //   )
-    //   .exec();
-
-    return this.postingModel
-      .findByIdAndUpdate(
-        postingId,
-        { $addToSet: { applicants: userId } },
-        { new: true },
-      )
-      .orFail()
-      .exec();
-  }
-
-  unapply(postingId: string, userId: string): Promise<Posting> {
-    return this.postingModel
-      .findByIdAndUpdate(
-        postingId,
-        { $pull: { applicants: userId } },
-        { new: true },
-      )
-      .orFail()
-      .exec();
+    return posting.save();
   }
 
   findById(id: string): Promise<Posting> {

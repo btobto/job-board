@@ -45,7 +45,7 @@ export class Posting {
   requirements: string[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  applicants: User[] | mongoose.Types.ObjectId[];
+  applicants: User[];
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);
