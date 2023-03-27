@@ -1,20 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
+import { CompanyCreateDto } from 'src/companies/dto';
+import { Company } from 'src/companies/schemas';
 import { UserCreateDto } from 'src/users/dto';
 import { User } from 'src/users/schemas';
-import { UsersService } from 'src/users/users.service';
+import { Role } from './enums';
+import { USER_TYPE_KEY } from './guards';
 import { HashingService } from './hashing';
+
+type UserType = User | Company;
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectConnection() private connection: Connection,
     private hashingService: HashingService,
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
+  async validateUser(email: string, password: string, userType: Role.User) {
+    const user: UserType = await this.connection
+      .model(userType)
+      .findOne({ email })
+      .lean()
+      .exec();
 
     if (
       !user ||
@@ -27,13 +39,27 @@ export class AuthService {
     return result;
   }
 
-  async login(user: User) {
-    const payload = { email: user.email, sub: user._id }; // to hex string?
+  async login(user: UserType, userType: Role) {
+    const payload = {
+      email: user.email,
+      sub: user._id,
+      [USER_TYPE_KEY]: userType,
+    };
+
     return {
       ...user,
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async register(dto: UserCreateDto) {}
+  async register(dto: UserCreateDto | CompanyCreateDto) {
+    const modelName = dto instanceof UserCreateDto ? Role.User : Role.Company;
+
+    const hashedPassword = await this.hashingService.hash(dto.password);
+
+    await this.connection.model(modelName).create({
+      ...dto,
+      hashedPassword,
+    });
+  }
 }

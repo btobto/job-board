@@ -6,6 +6,7 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsOptional,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { LocationDto } from 'src/common/dto';
@@ -21,6 +22,10 @@ export class CompanyDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  @MinLength(10)
+  password: string;
 
   @IsOptional()
   @IsFQDN()

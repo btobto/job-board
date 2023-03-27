@@ -31,7 +31,7 @@ export class ReviewsController {
 
   @Post(':companyId')
   async post(
-    @Param('companyId', ParseObjectIdPipe) companyId,
+    @Param('companyId', ParseObjectIdPipe) companyId: string,
     @Body() dto: ReviewCreateDto,
   ): Promise<Review> {
     return await this.reviewsService.create(companyId, dto);

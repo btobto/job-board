@@ -1,11 +1,8 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { Role } from '../enums';
 
-export class LoginDto {
-  @IsNotEmpty()
-  @IsEmail()
+export interface LoginDto {
   email: string;
-
-  @IsNotEmpty()
-  @MinLength(10)
   password: string;
+  type: Role;
 }

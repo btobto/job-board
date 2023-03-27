@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common/enums';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { CompaniesService } from './companies.service';
 import {
@@ -20,16 +21,6 @@ import { Company } from './schemas';
 @Controller('companies')
 export class CompaniesController {
   constructor(private companiesService: CompaniesService) {}
-
-  @Post('register')
-  async register(@Body() dto: CompanyCreateDto): Promise<Company> {
-    return await this.companiesService.create(dto);
-  }
-
-  @Post('login')
-  async login(@Body('email') email: string): Promise<Company> {
-    return await this.companiesService.findByEmail(email);
-  }
 
   @Post('search')
   async search(@Body() queryDto: CompanySearchQueryDto): Promise<Company[]> {
@@ -50,7 +41,7 @@ export class CompaniesController {
     return await this.companiesService.update(id, dto);
   }
 
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
     await this.companiesService.delete(id);

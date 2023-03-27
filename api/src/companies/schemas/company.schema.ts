@@ -26,6 +26,9 @@ export class Company {
   @Prop({ required: true, lowercase: true, unique: true })
   email: string;
 
+  @Prop({ required: true })
+  hashedPassword: string;
+
   @Prop()
   website: string;
 

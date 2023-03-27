@@ -31,10 +31,10 @@ import { DocumentToObjectInterceptor } from './common/interceptors';
   ],
   controllers: [],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: DocumentToObjectInterceptor,

@@ -4,4 +4,5 @@ import { CompanyDto } from './company.dto';
 export class CompanyCreateDto extends PickType(CompanyDto, [
   'name',
   'email',
+  'password',
 ] as const) {}

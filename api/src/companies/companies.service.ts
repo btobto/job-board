@@ -16,16 +16,12 @@ export class CompaniesService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  create(dto: CompanyCreateDto): Promise<Company> {
-    return this.companyModel.create(dto);
-  }
-
   findById(id: string): Promise<Company> {
     return this.companyModel.findById(id).orFail().exec();
   }
 
   findByEmail(email: string): Promise<Company> {
-    return this.companyModel.findOne({ email }).orFail().exec();
+    return this.companyModel.findOne({ email }).lean().exec();
   }
 
   search(queryDto: CompanySearchQueryDto): Promise<Company[]> {

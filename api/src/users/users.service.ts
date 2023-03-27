@@ -8,13 +8,6 @@ import { User, UserDocument } from './schemas';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(dto: UserCreateDto): Promise<User> {
-    return this.userModel.create({
-      ...dto,
-      hashedPassword: dto.password,
-    });
-  }
-
   findById(id: string): Promise<User> {
     return this.userModel.findById(id).orFail().exec();
   }
@@ -47,7 +40,6 @@ export class UsersService {
       .limit(10)
       .select('name skills location')
       .exec();
-    // .then((docs) => docs.map((d) => d.toObject()));
   }
 
   update(id: string, dto: UserUpdateDto): Promise<User> {

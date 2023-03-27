@@ -9,6 +9,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -45,24 +47,25 @@ export class PostingsController {
 
   @Post(':companyId')
   async post(
-    @Param('companyId', ParseObjectIdPipe) companyId,
+    @Param('companyId', ParseObjectIdPipe) companyId: string,
     @Body() dto: PostingCreateDto,
   ): Promise<Posting> {
     return await this.postingsService.create(companyId, dto);
   }
 
-  @Patch(':postingId/apply/:userId')
+  @Patch('apply/:postingId')
   async apply(
-    @Param('postingId', ParseObjectIdPipe) postingId,
-    @Param('userId', ParseObjectIdPipe) userId,
+    @Param('postingId', ParseObjectIdPipe) postingId: string,
+    @Body('userId', ParseObjectIdPipe) userId: string,
   ) {
+    console.log(userId);
     return await this.postingsService.apply(postingId, userId);
   }
 
-  @Patch(':postingId/unapply/:userId')
+  @Patch('unapply/:postingId/')
   async unapply(
-    @Param('postingId', ParseObjectIdPipe) postingId,
-    @Param('userId', ParseObjectIdPipe) userId,
+    @Param('postingId', ParseObjectIdPipe) postingId: string,
+    @Body('userId', ParseObjectIdPipe) userId,
   ) {
     return await this.postingsService.unapply(postingId, userId);
   }
@@ -72,13 +75,10 @@ export class PostingsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: PostingUpdateDto,
   ): Promise<Posting> {
-    const updatedPosting = await this.postingsService.update(id, dto);
-
-    if (!updatedPosting) throw new BadRequestException("Posting doesn't exist");
-
-    return updatedPosting;
+    return await this.postingsService.update(id, dto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id', ParseObjectIdPipe) id: string) {
     await this.postingsService.delete(id);
