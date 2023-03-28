@@ -15,7 +15,7 @@ import { User } from 'src/users/schemas';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { Role } from './enums';
-import { LocalAuthGuard, USER_TYPE_KEY } from './guards';
+import { LocalAuthGuard } from './guards';
 
 @Public()
 @Controller('auth')
@@ -23,10 +23,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard(Role.User))
+  @UseGuards(LocalAuthGuard)
   @Post('user/login')
   loginUser(@Request() req) {
-    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
+    return this.authService.login(req['user'], Role.User);
   }
 
   @Post('user/register')
@@ -35,10 +35,10 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard(Role.Company))
+  @UseGuards(LocalAuthGuard)
   @Post('company/login')
   loginCompany(@Request() req) {
-    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
+    return this.authService.login(req['user'], Role.Company);
   }
 
   @Post('company/register')

@@ -4,8 +4,8 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Connection } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { USER_TYPE_KEY } from 'src/common/constants';
 import { UsersService } from 'src/users/users.service';
-import { USER_TYPE_KEY } from '../guards';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

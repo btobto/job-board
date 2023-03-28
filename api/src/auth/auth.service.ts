@@ -3,12 +3,12 @@ import { ModuleRef } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { USER_TYPE_KEY } from 'src/common/constants';
 import { CompanyCreateDto } from 'src/companies/dto';
 import { Company } from 'src/companies/schemas';
 import { UserCreateDto } from 'src/users/dto';
 import { User } from 'src/users/schemas';
 import { Role } from './enums';
-import { USER_TYPE_KEY } from './guards';
 import { HashingService } from './hashing';
 
 type UserType = User | Company;

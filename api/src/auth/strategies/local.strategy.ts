@@ -6,9 +6,9 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-local';
+import { USER_TYPE_KEY } from 'src/common/constants';
 import { AuthService } from '../auth.service';
 import { Role } from '../enums';
-import { USER_TYPE_KEY } from '../guards';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
