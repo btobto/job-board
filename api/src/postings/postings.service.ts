@@ -70,7 +70,7 @@ export class PostingsService {
     return this.postingModel
       .findById(id)
       .orFail()
-      .populate('applicants', '_id name email')
+      .populate('applicants', 'name email')
       .exec();
   }
 
@@ -78,15 +78,26 @@ export class PostingsService {
     return this.postingModel.where('company').equals(companyId).exec();
   }
 
-  update(id: string, dto: PostingUpdateDto): Promise<Posting> {
+  update(
+    id: string,
+    companyId: string,
+    dto: PostingUpdateDto,
+  ): Promise<Posting> {
     return this.postingModel
-      .findByIdAndUpdate(id, { ...dto, dateUpdated: Date.now() }, { new: true })
+      .findOneAndUpdate(
+        { _id: id, company: companyId },
+        { ...dto, dateUpdated: Date.now() },
+        { new: true },
+      )
       .orFail()
       .exec();
   }
 
-  delete(id: string) {
-    return this.postingModel.findByIdAndDelete(id).orFail().exec();
+  delete(id: string, companyId: string) {
+    return this.postingModel
+      .findOneAndDelete({ _id: id, company: companyId })
+      .orFail()
+      .exec();
   }
 
   deleteAllCompanyPostings(companyId: string, session: ClientSession = null) {

@@ -16,6 +16,8 @@ import { PaginationOptionsDto, PaginationResultDto } from '../common/dto';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schemas';
+import { ActiveUser } from 'src/auth/decorators';
+import { User } from 'src/users/schemas';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -32,19 +34,27 @@ export class ReviewsController {
   @Post(':companyId')
   async post(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
+    @ActiveUser('_id') userId: string,
     @Body() dto: ReviewCreateDto,
   ): Promise<Review> {
-    return await this.reviewsService.create(companyId, dto);
+    return await this.reviewsService.create(companyId, userId, dto);
   }
 
-  @Patch()
-  async update(@Body() dto: ReviewUpdateDto): Promise<Review> {
-    return await this.reviewsService.update(dto);
+  @Patch(':id')
+  async update(
+    @Param('id', ParseObjectIdPipe) reviewId,
+    @ActiveUser('_id') userId: string,
+    @Body() dto: ReviewUpdateDto,
+  ): Promise<Review> {
+    return await this.reviewsService.update(reviewId, userId, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id', ParseObjectIdPipe) reviewId) {
-    await this.reviewsService.delete(reviewId);
+  async delete(
+    @Param('id', ParseObjectIdPipe) reviewId,
+    @ActiveUser('_id') userId: string,
+  ) {
+    await this.reviewsService.delete(reviewId, userId);
   }
 }

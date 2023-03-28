@@ -18,6 +18,7 @@ import {
 import { ParseObjectIdPipe } from '../common/pipes';
 import { PostingsService } from './postings.service';
 import { Posting } from './schemas';
+import { ActiveUser } from 'src/auth/decorators';
 
 @Controller('postings')
 export class PostingsController {
@@ -45,20 +46,18 @@ export class PostingsController {
     return await this.postingsService.findById(id);
   }
 
-  // get user from token
-  @Post(':companyId')
+  @Post()
   async post(
-    @Param('companyId', ParseObjectIdPipe) companyId: string,
+    @ActiveUser('_id') companyId: string,
     @Body() dto: PostingCreateDto,
   ): Promise<Posting> {
     return await this.postingsService.create(companyId, dto);
   }
 
-  // get user from token
   @Patch('application/:postingId')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,
-    @Body('userId', ParseObjectIdPipe) userId: string,
+    @ActiveUser('_id') userId: string,
   ) {
     return await this.postingsService.toggleApply(postingId, userId);
   }
@@ -66,14 +65,18 @@ export class PostingsController {
   @Patch(':id')
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
+    @ActiveUser('_id') companyId: string,
     @Body() dto: PostingUpdateDto,
   ): Promise<Posting> {
-    return await this.postingsService.update(id, dto);
+    return await this.postingsService.update(id, companyId, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id', ParseObjectIdPipe) id: string) {
-    await this.postingsService.delete(id);
+  async delete(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @ActiveUser('_id') companyId: string,
+  ) {
+    await this.postingsService.delete(id, companyId);
   }
 }

@@ -23,6 +23,7 @@ export class UsersController {
 
   @Post('search')
   @Public()
+  @HttpCode(HttpStatus.OK)
   async searchUsers(@Body() queryDto: UserSearchQueryDto): Promise<User[]> {
     console.log(queryDto);
     return await this.usersService.search(queryDto);

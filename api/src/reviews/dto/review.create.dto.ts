@@ -5,4 +5,5 @@ export class ReviewCreateDto extends OmitType(ReviewDto, [
   'id',
   'companyId',
   'datePosted',
+  'userId',
 ] as const) {}

@@ -13,7 +13,11 @@ export class ReviewsService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  create(companyId: string, dto: ReviewCreateDto): Promise<Review> {
+  create(
+    companyId: string,
+    userId: string,
+    dto: ReviewCreateDto,
+  ): Promise<Review> {
     return transactionHandler(
       this.connection,
       async (session: ClientSession) => {
@@ -22,7 +26,7 @@ export class ReviewsService {
             {
               ...dto,
               company: companyId,
-              user: dto.userId,
+              user: userId,
             },
           ],
           { session },
@@ -59,13 +63,17 @@ export class ReviewsService {
     };
   }
 
-  update(dto: ReviewUpdateDto): Promise<Review> {
+  update(
+    reviewId: string,
+    userId: string,
+    dto: ReviewUpdateDto,
+  ): Promise<Review> {
     return transactionHandler(this.connection, async (session) => {
       const now = new Date();
 
       return this.reviewModel
         .findOneAndUpdate(
-          { company: dto.companyId, user: dto.userId },
+          { _id: reviewId, user: userId },
           { ...dto, dateUpdated: now },
           {
             new: false,
@@ -89,10 +97,10 @@ export class ReviewsService {
     });
   }
 
-  delete(id: string) {
+  delete(reviewId: string, userId: string) {
     return transactionHandler(this.connection, async (session) => {
       return this.reviewModel
-        .findByIdAndDelete(id)
+        .findOneAndDelete({ _id: reviewId, user: userId })
         .orFail()
         .session(session)
         .exec();

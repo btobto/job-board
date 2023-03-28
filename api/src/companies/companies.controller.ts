@@ -25,6 +25,7 @@ export class CompaniesController {
   constructor(private companiesService: CompaniesService) {}
 
   @Post('search')
+  @HttpCode(HttpStatus.OK)
   async search(@Body() queryDto: CompanySearchQueryDto): Promise<Company[]> {
     console.log(queryDto);
     return await this.companiesService.search(queryDto);
