@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
 import { User } from 'src/users/schemas';
+import { posix } from 'path';
 
 @Injectable()
 export class PostingsService {
@@ -66,23 +67,19 @@ export class PostingsService {
     return posting.save();
   }
 
-  findById(id: string, userId: string): Promise<Posting> {
-    return this.postingModel
-      .findById(id)
-      .orFail()
-      .populate({
+  async findById(id: string, userId: string): Promise<Posting> {
+    const posting = await this.postingModel.findById(id).orFail().exec();
+
+    if ((posting.company as mongoose.Types.ObjectId).toHexString() === userId) {
+      await posting.populate({
         path: 'applicants',
         select: 'name email',
-      })
-      .lean({
-        transform: (doc) => {
-          if (doc.company && doc.company != userId) {
-            delete doc.applicants;
-          }
-          return doc;
-        },
-      })
-      .exec();
+      });
+
+      return posting.toObject({ transform: (doc, ret, opts) => ret });
+    }
+
+    return posting.toObject();
   }
 
   findAllCompanyPostings(companyId: string): Promise<Posting[]> {
