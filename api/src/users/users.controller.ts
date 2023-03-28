@@ -22,7 +22,6 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post('search')
-  @Public()
   @HttpCode(HttpStatus.OK)
   async searchUsers(@Body() queryDto: UserSearchQueryDto): Promise<User[]> {
     console.log(queryDto);

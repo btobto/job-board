@@ -42,8 +42,9 @@ export class PostingsController {
   @Get(':id')
   async getPosting(
     @Param('id', ParseObjectIdPipe) id: string,
+    @ActiveUser('_id') userId: string,
   ): Promise<Posting> {
-    return await this.postingsService.findById(id);
+    return await this.postingsService.findById(id, userId);
   }
 
   @Post()

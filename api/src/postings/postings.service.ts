@@ -66,11 +66,22 @@ export class PostingsService {
     return posting.save();
   }
 
-  findById(id: string): Promise<Posting> {
+  findById(id: string, userId: string): Promise<Posting> {
     return this.postingModel
       .findById(id)
       .orFail()
-      .populate('applicants', 'name email')
+      .populate({
+        path: 'applicants',
+        select: 'name email',
+      })
+      .lean({
+        transform: (doc) => {
+          if (doc.company && doc.company != userId) {
+            delete doc.applicants;
+          }
+          return doc;
+        },
+      })
       .exec();
   }
 

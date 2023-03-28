@@ -7,7 +7,14 @@ import { Location, LocationSchema } from '../../common/schemas';
 
 export type PostingDocument = HydratedDocument<Posting>;
 
-@Schema()
+@Schema({
+  toObject: {
+    transform: (doc, ret, opts) => {
+      delete ret.applicants;
+      return ret;
+    },
+  },
+})
 export class Posting {
   _id: mongoose.Types.ObjectId;
 
