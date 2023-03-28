@@ -23,7 +23,7 @@ export const referenceValidator: ValidateOpts<mongoose.Types.ObjectId> = {
     return await validateReference(id, this.db.model(ref));
   },
   message: function (props: ValidatorProps): string {
-    return `Not a valid '${props.path}' reference!`;
+    return `${props.value} is not a valid ID!`;
   },
 };
 

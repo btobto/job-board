@@ -18,16 +18,21 @@ export class MongoExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof mongoose.Error.ValidationError) {
       status = HttpStatus.BAD_REQUEST;
-      message = `Validation error: ${exception.message}`;
+      message = `Validation error. ${exception.message}`;
     } else if (exception instanceof mongoose.Error.DocumentNotFoundError) {
+      const filterMessage = Object.entries(exception.filter)
+        .map(([k, v]) => `'${k}': '${v}'`)
+        .join(', ');
+      const modelName = exception.message.split('"').slice(-2)[0];
+
       status = HttpStatus.BAD_REQUEST;
-      message = `Document doesn't exist: ${exception.message}`;
+      message = `Document doesn't exist. No '${modelName}' document found for: ${filterMessage}`;
     } else if (exception instanceof MongoError) {
       switch (exception.code) {
         case MongoErrorCodes.DUPLICATE_KEY:
           status = HttpStatus.CONFLICT;
           // prettier-ignore
-          message = `Duplicate key error for: ${
+          message = `Duplicate key error. ${
             Object.keys(exception.keyValue).join(', ')
           }`;
       }
