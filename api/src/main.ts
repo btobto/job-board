@@ -19,7 +19,6 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new MongoExceptionFilter());
-  mongoose.set('runValidators', true);
 
   app.enableCors();
   const host = configService.get<string>('HOST') || 'localhost';

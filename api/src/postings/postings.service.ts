@@ -54,7 +54,7 @@ export class PostingsService {
   }
 
   async toggleApply(postingId: string, userId: string): Promise<Posting> {
-    const posting = await this.postingModel.findById(postingId);
+    const posting = await this.postingModel.findById(postingId).orFail().exec();
     const user = userId as unknown as User;
 
     const index = posting.applicants.indexOf(user);

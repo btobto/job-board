@@ -51,7 +51,15 @@ export class Posting {
   @Prop([String])
   requirements: string[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  @Prop({
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        validate: referenceValidator,
+      },
+    ],
+  })
   applicants: User[];
 }
 
