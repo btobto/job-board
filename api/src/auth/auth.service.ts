@@ -52,12 +52,10 @@ export class AuthService {
     };
   }
 
-  async register(dto: UserCreateDto | CompanyCreateDto) {
-    const modelName = dto instanceof UserCreateDto ? Role.User : Role.Company;
-
+  async register(dto: UserCreateDto | CompanyCreateDto, userType: Role) {
     const hashedPassword = await this.hashingService.hash(dto.password);
 
-    await this.connection.model(modelName).create({
+    await this.connection.model(userType).create({
       ...dto,
       hashedPassword,
     });

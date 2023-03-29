@@ -34,8 +34,7 @@ export class PersonComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private personService: PersonService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const id: string = paramMap.get('id')!;
@@ -71,7 +70,9 @@ export class PersonComponent implements OnInit {
       updateDto.location = location;
     }
 
-    this.personService.update(this.person!._id, updateDto).subscribe();
+    this.personService
+      .update(this.person!._id, updateDto)
+      .subscribe((p) => (this.person = p));
   }
 
   removeSkill(i: number) {

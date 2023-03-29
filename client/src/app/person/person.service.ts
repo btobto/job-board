@@ -24,8 +24,7 @@ export class PersonService {
   update(id: string, dto: PersonUpdateDto): Observable<Person> {
     return this.http.patch<Person>(environment.api + '/users/' + id, dto).pipe(
       tap((person) => {
-        console.log(person);
-        this.authService.loggedInUser$.next(person);
+        this.authService.updateUser(person);
       })
     );
   }

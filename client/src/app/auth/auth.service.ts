@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { UserType } from '../common/enums/user-type.enum';
 import { User } from '../common/types';
 import { Company } from './models/company.interface';
 import { CompanyRegisterDto } from './models/company.register.dto';
@@ -27,6 +28,10 @@ export class AuthService {
         this.saveUser(user);
       }
     });
+  }
+
+  getAccessToken() {
+    return localStorage.getItem('token');
   }
 
   loginPerson(email: string, password: string) {
@@ -87,5 +92,12 @@ export class AuthService {
 
   saveUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', user.accessToken);
+  }
+
+  updateUser(newUser: User) {
+    const token = this.getAccessToken()!;
+    newUser.accessToken = token;
+    this.loggedInUser$.next(newUser);
   }
 }

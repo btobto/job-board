@@ -13,6 +13,7 @@ export type CompanyDocument = HydratedDocument<Company>;
           : (ret.ratingsSum / ret.ratingsCount).toFixed(2);
 
       delete ret.ratingsSum;
+      delete ret.hashedPassword;
       return { ...ret, rating };
     },
   },

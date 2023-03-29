@@ -27,7 +27,11 @@ export class CompanyService {
   update(id: string, dto: CompanyUpdateDto): Observable<Company> {
     return this.http
       .patch<Company>(environment.api + '/companies/' + id, dto)
-      .pipe(tap((company) => this.authService.loggedInUser$.next(company)));
+      .pipe(
+        tap((company) => {
+          this.authService.updateUser(company);
+        })
+      );
   }
 
   delete(id: string) {
