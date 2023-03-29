@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { errorLogger } from 'src/app/common/helpers/error.logger';
 import { AuthService } from '../../auth.service';
 import { Company } from '../../models/company.interface';
-import { User } from '../../models/user.interface';
+import { Person } from '../../models/person.interface';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
           error: errorLogger,
         });
       } else {
-        this.authService.loginUser(this.email, this.password).subscribe({
+        this.authService.loginPerson(this.email, this.password).subscribe({
           next: (user) => {
             this.router.navigateByUrl('/home');
           },

@@ -1,5 +1,5 @@
 import { Company } from 'src/app/auth/models/company.interface';
-import { User } from 'src/app/auth/models/user.interface';
+import { Person } from 'src/app/auth/models/person.interface';
 import { Location } from 'src/app/common/models/location.interface';
 
 export interface Posting {
@@ -13,5 +13,5 @@ export interface Posting {
   remote?: boolean;
   salary?: string;
   requirements?: string[];
-  applicants?: User[];
+  applicants?: Person[];
 }

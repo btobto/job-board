@@ -13,7 +13,7 @@ import { CompanyUpdateDto } from './models/company-update.dto';
 export class CompanyService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getCompany(id: string): Observable<Company> {
+  get(id: string): Observable<Company> {
     return this.http.get<Company>(`${environment.api}/companies/${id}`);
   }
 
@@ -27,7 +27,7 @@ export class CompanyService {
   update(id: string, dto: CompanyUpdateDto): Observable<Company> {
     return this.http
       .patch<Company>(environment.api + '/companies/' + id, dto)
-      .pipe(tap((user) => this.authService.loggedInUser$.next(user)));
+      .pipe(tap((company) => this.authService.loggedInUser$.next(company)));
   }
 
   delete(id: string) {

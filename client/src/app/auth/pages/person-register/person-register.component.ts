@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { errorLogger } from 'src/app/common/helpers/error.logger';
 import { AuthService } from '../../auth.service';
 
 @Component({
-  selector: 'app-register-company',
-  templateUrl: './register-company.component.html',
-  styleUrls: ['./register-company.component.scss'],
+  selector: 'app-person-register',
+  templateUrl: './person-register.component.html',
+  styleUrls: ['./person-register.component.scss'],
 })
-export class RegisterCompanyComponent implements OnInit {
+export class PersonRegisterComponent implements OnInit {
   name = '';
   email = '';
   password = '';
@@ -20,7 +19,7 @@ export class RegisterCompanyComponent implements OnInit {
   register() {
     if (this.name && this.email && this.password) {
       this.authService
-        .registerCompany({
+        .registerPerson({
           name: this.name,
           email: this.email,
           password: this.password,
@@ -29,7 +28,6 @@ export class RegisterCompanyComponent implements OnInit {
           next: () => {
             this.router.navigateByUrl('/login');
           },
-          error: errorLogger,
         });
     } else {
       alert('Fields must not be empty.');

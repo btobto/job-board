@@ -3,17 +3,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { User } from '../common/types';
 import { Company } from './models/company.interface';
 import { CompanyRegisterDto } from './models/company.register.dto';
-import { UserBase } from './models/user-base.interface';
-import { User } from './models/user.interface';
-import { UserRegisterDto } from './models/user.register.dto';
+import { Person } from './models/person.interface';
+import { PersonRegisterDto } from './models/person.register.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public loggedInUser$ = new BehaviorSubject<UserBase | null>(null);
+  public loggedInUser$ = new BehaviorSubject<User | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
     const user = localStorage.getItem('user');
@@ -29,18 +29,18 @@ export class AuthService {
     });
   }
 
-  loginUser(email: string, password: string) {
+  loginPerson(email: string, password: string) {
     return this.http
-      .post<User>(`${environment.api}/auth/user/login`, {
+      .post<Person>(`${environment.api}/auth/user/login`, {
         email,
         password,
       })
       .pipe(
-        tap((user) => {
-          this.saveUser(user);
-          this.loggedInUser$.next(user);
+        tap((person) => {
+          this.saveUser(person);
+          this.loggedInUser$.next(person);
 
-          console.log(user);
+          console.log(person);
         })
       );
   }
@@ -61,7 +61,7 @@ export class AuthService {
       );
   }
 
-  registerUser(dto: UserRegisterDto) {
+  registerPerson(dto: PersonRegisterDto) {
     console.log(dto);
     return this.http
       .post<void>(`${environment.api}/auth/user/register`, dto)
@@ -85,7 +85,7 @@ export class AuthService {
     this.router.navigateByUrl('/login');
   }
 
-  saveUser(user: UserBase) {
+  saveUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
   }
 }

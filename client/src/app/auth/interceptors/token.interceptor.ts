@@ -6,12 +6,12 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/common/types';
 import { AuthService } from '../auth.service';
-import { UserBase } from '../models/user-base.interface';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  currentUser: UserBase | null = null;
+  currentUser: User | null = null;
 
   constructor(private authService: AuthService) {
     authService.loggedInUser$.subscribe((user) => {

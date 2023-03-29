@@ -11,9 +11,16 @@ import { SearchComponent } from './common/pages/search/search.component';
 import { TokenInterceptor } from './auth/interceptors/token.interceptor';
 import { ErrorInterceptor } from './auth/interceptors/error.interceptor';
 import { AuthModule } from './auth/auth.module';
+import { UserTypeOfPipe } from './common/pipes/user-type-of.pipe';
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, HomeComponent, SearchComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    HomeComponent,
+    SearchComponent,
+    UserTypeOfPipe,
+  ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, AuthModule],
   providers: [
     {

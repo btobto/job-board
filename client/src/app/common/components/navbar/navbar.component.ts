@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
+import { UserType } from '../../enums/user-type.enum';
+import { User } from '../../types';
 
 @Component({
   selector: 'app-navbar',
@@ -7,7 +10,12 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  user$ = new BehaviorSubject<User | null>(null);
+  UserType = UserType;
+
+  constructor(private authService: AuthService) {
+    this.user$ = this.authService.loggedInUser$;
+  }
 
   ngOnInit(): void {}
 

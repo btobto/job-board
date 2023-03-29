@@ -1,13 +1,20 @@
-<div>
-  <h1>Job Board</h1>
+<ng-container *ngIf="this.user$ | async as user">
   <div>
-    <button routerLink="/home">Home</button>
-    <button routerLink="/search">Search</button>
-    <!-- <button [routerLink]="['/user', user._id]">Profile</button> -->
-    <button (click)="logout()">Log out</button>
+    <h1>Job Board</h1>
+    <div>
+      <button routerLink="/home">Home</button>
+      <button routerLink="/search">Search</button>
+      <ng-container *ngIf="(user | UserTypeOf) === UserType.Person">
+        <button [routerLink]="['/person', user._id]">User profile</button>
+      </ng-container>
+      <ng-container *ngIf="(user | UserTypeOf) === UserType.Company">
+        <button [routerLink]="['/company', user._id]">Company profile</button>
+      </ng-container>
+      <button (click)="logout()">Log out</button>
+    </div>
+    <br />
+    <div>
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <br />
-  <div>
-    <router-outlet></router-outlet>
-  </div>
-</div>
+</ng-container>
