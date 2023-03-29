@@ -3,8 +3,8 @@
     <h1>{{ company.name }} ({{ company.rating }} ⭐)</h1>
   </div>
 
-  <button>Reviews</button>
-  <button>Job postings</button>
+  <button [routerLink]="['/reviews', company._id]">Reviews</button>
+  <button [routerLink]="['/postings', company._id]">Job postings</button>
 
   <div>
     <h2>{{ company.website }}</h2>

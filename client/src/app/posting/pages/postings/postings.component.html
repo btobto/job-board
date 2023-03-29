@@ -1,0 +1,33 @@
+<ng-container *ngIf="this.loggedInUser$ | async as user">
+  <ng-container *ngIf="company">
+    <button [routerLink]="['/company', company._id]">
+      <h1>
+        {{ company.name }}
+      </h1>
+    </button>
+
+    <ng-container *ngFor="let posting of postings">
+      <div>
+        <h2>Position: {{ posting.position }}</h2>
+        <p>Description: {{ posting.description }}</p>
+        <p>Remote: {{ posting.remote ? "Yes" : "No" }}</p>
+        <span>Requirements: </span>
+        <ng-container *ngFor="let req of posting.requirements">
+          <span>{{ req }}, </span>
+        </ng-container>
+
+        <br />
+        <br />
+
+        <ng-container *ngIf="(user | UserTypeOf) === UserType.Company">
+          <button (click)="apply(posting._id)">Apply!</button>
+        </ng-container>
+
+        <!-- unnaply -->
+        <!-- location salary date -->
+        <!-- if logged in company show applicants -->
+        <!-- delete update -->
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>

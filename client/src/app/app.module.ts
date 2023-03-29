@@ -16,15 +16,10 @@ import { PersonModule } from './person/person.module';
 import { CompanyModule } from './company/company.module';
 import { ReviewModule } from './review/review.module';
 import { PostingModule } from './posting/posting.module';
+import { SharedModule } from './common/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent,
-    HomeComponent,
-    SearchComponent,
-    UserTypeOfPipe,
-  ],
+  declarations: [AppComponent, NavbarComponent, HomeComponent, SearchComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -34,6 +29,7 @@ import { PostingModule } from './posting/posting.module';
     CompanyModule,
     ReviewModule,
     PostingModule,
+    SharedModule,
   ],
   providers: [
     {
@@ -48,5 +44,6 @@ import { PostingModule } from './posting/posting.module';
     },
   ],
   bootstrap: [AppComponent],
+  exports: [UserTypeOfPipe],
 })
 export class AppModule {}

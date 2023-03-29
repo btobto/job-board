@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Company } from 'src/app/auth/models/company.interface';
@@ -34,7 +34,8 @@ export class CompanyComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private companyService: CompanyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const id: string = paramMap.get('id')!;

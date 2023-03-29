@@ -11,6 +11,7 @@ import { CompanyComponent } from './company/pages/company/company.component';
 import { PostingComponent } from './posting/pages/posting/posting.component';
 import { ReviewsComponent } from './review/pages/reviews/reviews.component';
 import { PersonComponent } from './person/pages/person/person.component';
+import { PostingsComponent } from './posting/pages/postings/postings.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,7 +27,7 @@ const routes: Routes = [
       { path: 'search', component: SearchComponent },
       { path: 'person/:id', component: PersonComponent },
       { path: 'company/:id', component: CompanyComponent },
-      { path: 'posting/:id', component: PostingComponent },
+      { path: 'postings/:id', component: PostingsComponent },
       { path: 'reviews/:id', component: ReviewsComponent },
     ],
   },
