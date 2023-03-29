@@ -39,6 +39,8 @@ export class AuthService {
         tap((user) => {
           this.saveUser(user);
           this.loggedInUser$.next(user);
+
+          console.log(user);
         })
       );
   }
@@ -53,15 +55,16 @@ export class AuthService {
         tap((company) => {
           this.saveUser(company);
           this.loggedInUser$.next(company);
+
+          console.log(company);
         })
       );
   }
 
   registerUser(dto: UserRegisterDto) {
+    console.log(dto);
     return this.http
-      .post(`${environment.api}/auth/user/register`, {
-        dto,
-      })
+      .post<void>(`${environment.api}/auth/user/register`, dto)
       .pipe(
         tap(() => {
           this.router.navigateByUrl('/login');
@@ -70,19 +73,16 @@ export class AuthService {
   }
 
   registerCompany(dto: CompanyRegisterDto) {
-    return this.http
-      .post(`${environment.api}/auth/company/register`, {
-        dto,
+    return this.http.post(`${environment.api}/auth/company/register`, dto).pipe(
+      tap(() => {
+        this.router.navigateByUrl('/login');
       })
-      .pipe(
-        tap(() => {
-          this.router.navigateByUrl('/login');
-        })
-      );
+    );
   }
 
   logout() {
     localStorage.removeItem('user');
+    this.router.navigateByUrl('/login');
   }
 
   saveUser(user: UserBase) {

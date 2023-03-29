@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { errorLogger } from 'src/app/common/helpers/error.logger';
 import { AuthService } from '../../auth.service';
 import { Company } from '../../models/company.interface';
 import { User } from '../../models/user.interface';
@@ -25,22 +26,18 @@ export class LoginComponent implements OnInit {
           next: (user) => {
             this.router.navigateByUrl('/home');
           },
-          error: (err) => {
-            console.log(err);
-            alert('Error logging in');
-          },
+          error: errorLogger,
         });
       } else {
         this.authService.loginUser(this.email, this.password).subscribe({
           next: (user) => {
             this.router.navigateByUrl('/home');
           },
-          error: (err) => {
-            console.log(err);
-            alert('Error logging in');
-          },
+          error: errorLogger,
         });
       }
+    } else {
+      alert('Fields must not be empty.');
     }
   }
 }

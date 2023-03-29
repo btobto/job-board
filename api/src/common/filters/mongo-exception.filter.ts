@@ -32,7 +32,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
         case MongoErrorCodes.DUPLICATE_KEY:
           status = HttpStatus.CONFLICT;
           // prettier-ignore
-          message = `Duplicate key error. ${
+          message = `Duplicate key error for: ${
             Object.keys(exception.keyValue).join(', ')
           }`;
       }

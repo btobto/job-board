@@ -33,7 +33,7 @@ export class PostingService {
 
   apply(id: string): Observable<Posting> {
     return this.http.patch<Posting>(
-      environment.api + '/postings/application' + id,
+      environment.api + '/postings/' + id + '/application',
       {}
     );
   }

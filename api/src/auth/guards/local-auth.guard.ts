@@ -1,12 +1,18 @@
 import { ExecutionContext, Injectable, mixin } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { USER_TYPE_KEY } from 'src/common/constants';
 import { Role } from '../enums';
 
-@Injectable()
-export class LocalAuthGuard extends AuthGuard('local') {
-  canActivate(context: ExecutionContext) {
-    const req = context.switchToHttp().getRequest();
+export const LocalAuthGuard = (role: Role) => {
+  class LocalAuthGuardMixin extends AuthGuard('local') {
+    canActivate(context: ExecutionContext) {
+      const req = context.switchToHttp().getRequest();
+      req[USER_TYPE_KEY] = role;
 
-    return super.canActivate(context);
+      return super.canActivate(context);
+    }
   }
-}
+
+  const guard = mixin(LocalAuthGuardMixin);
+  return guard;
+};

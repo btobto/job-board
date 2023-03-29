@@ -55,7 +55,7 @@ export class PostingsController {
     return await this.postingsService.create(companyId, dto);
   }
 
-  @Patch('application/:postingId')
+  @Patch(':postingId/application')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,
     @ActiveUser('_id') userId: string,

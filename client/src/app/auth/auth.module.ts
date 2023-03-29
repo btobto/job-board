@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { RegisterUserComponent } from './pages/register-user/register-user.component';
 import { RegisterCompanyComponent } from './pages/register-company/register-company.component';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { FormsModule } from '@angular/forms';
     RegisterUserComponent,
     RegisterCompanyComponent,
   ],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   providers: [AuthService],
 })
 export class AuthModule {}

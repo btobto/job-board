@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { USER_TYPE_KEY } from 'src/common/constants';
 import { DisableToObject } from 'src/common/decorators';
 import { CompanyCreateDto } from 'src/companies/dto';
 import { UserCreateDto } from 'src/users/dto';
@@ -23,10 +24,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard(Role.User))
   @Post('user/login')
   loginUser(@Request() req) {
-    return this.authService.login(req['user'], Role.User);
+    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
   }
 
   @Post('user/register')
@@ -35,10 +36,10 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard(Role.User))
   @Post('company/login')
   loginCompany(@Request() req) {
-    return this.authService.login(req['user'], Role.Company);
+    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
   }
 
   @Post('company/register')
