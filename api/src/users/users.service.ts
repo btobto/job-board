@@ -20,7 +20,7 @@ export class UsersService {
     const query: Record<string, any> = {};
 
     if (queryDto.name) {
-      query['name'] = { $regex: queryDto.name + '.*', $options: 'i' };
+      query['name'] = { $regex: '^' + queryDto.name, $options: 'i' };
     }
     if (queryDto.skills) {
       query['skills'] = { $all: queryDto.skills };

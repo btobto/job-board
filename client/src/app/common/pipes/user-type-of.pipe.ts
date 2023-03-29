@@ -7,12 +7,16 @@ import { User } from '../types';
 })
 export class UserTypeOfPipe implements PipeTransform {
   transform(user: User): UserType | undefined {
-    if ('skills' in user) {
-      return UserType.Person;
-    } else if ('offices' in user) {
-      return UserType.Company;
-    } else {
-      return undefined;
-    }
+    return getTypeof(user);
+  }
+}
+
+export function getTypeof(user: User): UserType | undefined {
+  if ('skills' in user) {
+    return UserType.Person;
+  } else if ('offices' in user) {
+    return UserType.Company;
+  } else {
+    return undefined;
   }
 }

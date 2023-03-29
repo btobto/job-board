@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { UserTypeOfPipe } from './pipes/user-type-of.pipe';
 
 @NgModule({

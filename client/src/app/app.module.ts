@@ -17,6 +17,7 @@ import { CompanyModule } from './company/company.module';
 import { ReviewModule } from './review/review.module';
 import { PostingModule } from './posting/posting.module';
 import { SharedModule } from './common/shared.module';
+import { DecimalPipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent, HomeComponent, SearchComponent],
@@ -30,6 +31,8 @@ import { SharedModule } from './common/shared.module';
     ReviewModule,
     PostingModule,
     SharedModule,
+    FormsModule,
+    DecimalPipe,
   ],
   providers: [
     {
