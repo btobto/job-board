@@ -4,7 +4,7 @@ import { WorkExperience } from 'src/app/common/models/work-experience.interface'
 import { UserBase } from './user-base.interface';
 
 export interface Person extends UserBase {
-  location: Location;
+  location?: Location;
   skills: string[];
   prevExperience: WorkExperience[];
 }

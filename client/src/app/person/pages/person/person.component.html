@@ -1,1 +1,120 @@
-<p>user works!</p>
+<ng-container *ngIf="this.person as person">
+  <div>
+    <h1>{{ person.name }}</h1>
+  </div>
+  <div>
+    <ng-container *ngIf="person.location">
+      <h2>Location</h2>
+      <h3>{{ person.location.country }}, {{ person.location.city }}</h3>
+    </ng-container>
+  </div>
+  <div>
+    <ng-container *ngIf="person.skills.length != 0">
+      <h2>Skills</h2>
+      <ng-container *ngFor="let skill of person.skills">
+        <span>{{ skill }}, </span>
+      </ng-container>
+      <br />
+    </ng-container>
+  </div>
+  <div>
+    <ng-container *ngIf="person.prevExperience.length != 0">
+      <h2>Work experience</h2>
+      <ng-container *ngFor="let exp of person.prevExperience">
+        <p>{{ exp.companyName }}</p>
+        <p>{{ exp.yearFrom }} - {{ exp.yearTo }}</p>
+      </ng-container>
+    </ng-container>
+  </div>
+  <div>
+    <ng-container *ngIf="this.loggedInUser$ | async as loggedInPerson">
+      <ng-container *ngIf="loggedInPerson._id == person._id">
+        <button (click)="showEditForm = !showEditForm">
+          {{ !showEditForm ? "Edit profile" : "Cancel" }}
+        </button>
+        <button (click)="deleteUser()">Delete</button>
+
+        <ng-container *ngIf="showEditForm">
+          <br />
+          <br />
+
+          <label>New name:</label>
+          <input type="text" name="name" [(ngModel)]="name" />
+          <br />
+
+          <label>Country:</label>
+          <input type="text" name="country" [(ngModel)]="country" />
+          <br />
+
+          <label>City:</label>
+          <input type="text" name="city" [(ngModel)]="city" />
+          <br />
+          <br />
+
+          <label>Skills:</label>
+          <div>
+            <ng-container *ngFor="let skill of skills; let i = index">
+              <div>
+                <span>{{ skill }} </span>
+                <button (click)="removeSkill(i)">Delete skill</button>
+              </div>
+            </ng-container>
+          </div>
+          <div>
+            <input type="text" name="skill" [(ngModel)]="newSkill" />
+            <button (click)="addNewSkill()">Add skill</button>
+          </div>
+          <br />
+
+          <label>Work Experience:</label>
+          <div>
+            <ng-container *ngFor="let exp of workExperience; let i = index">
+              <div>
+                <input
+                  type="text"
+                  name="workExp"
+                  [(ngModel)]="exp.companyName"
+                />
+                <br />
+                <input type="text" name="yearFrom" [(ngModel)]="exp.yearFrom" />
+                <span> - </span>
+                <input type="text" name="yearTo" [(ngModel)]="exp.yearTo" />
+                <br />
+                <button (click)="removeExperience(i)">Delete experience</button>
+                <br />
+                <br />
+              </div>
+            </ng-container>
+            <div>
+              <input
+                type="text"
+                name="workExp"
+                [(ngModel)]="newWorkExperience.companyName"
+              />
+              <br />
+              <input
+                type="text"
+                name="yearFrom"
+                [(ngModel)]="newWorkExperience.yearFrom"
+              />
+              <span> - </span>
+              <input
+                type="text"
+                name="yearTo"
+                [(ngModel)]="newWorkExperience.yearTo"
+              />
+              <br />
+              <button (click)="addNewWorkExperience()">
+                Add work experience
+              </button>
+              <br />
+              <br />
+            </div>
+          </div>
+
+          <button (click)="updateUser()">Submit changes</button>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>

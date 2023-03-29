@@ -1,5 +1,5 @@
 export interface WorkExperience {
   companyName: string;
   yearFrom: number;
-  yearTo: number;
+  yearTo?: number;
 }

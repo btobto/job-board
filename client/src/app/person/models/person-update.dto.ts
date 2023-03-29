@@ -4,6 +4,6 @@ import { WorkExperience } from 'src/app/common/models/work-experience.interface'
 export interface PersonUpdateDto {
   name?: string;
   location?: Location;
-  skills?: string;
-  prevExperience?: WorkExperience;
+  skills?: string[];
+  prevExperience?: WorkExperience[];
 }

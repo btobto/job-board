@@ -12,6 +12,10 @@ import { TokenInterceptor } from './auth/interceptors/token.interceptor';
 import { ErrorInterceptor } from './auth/interceptors/error.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { UserTypeOfPipe } from './common/pipes/user-type-of.pipe';
+import { PersonModule } from './person/person.module';
+import { CompanyModule } from './company/company.module';
+import { ReviewModule } from './review/review.module';
+import { PostingModule } from './posting/posting.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,16 @@ import { UserTypeOfPipe } from './common/pipes/user-type-of.pipe';
     SearchComponent,
     UserTypeOfPipe,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, AuthModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    AuthModule,
+    PersonModule,
+    CompanyModule,
+    ReviewModule,
+    PostingModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

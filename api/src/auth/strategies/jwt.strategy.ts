@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       .then((doc) =>
         doc.toObject({
           transform: (doc, ret, opts) => {
-            ret._id = ret._id.toHexString();
+            if (ret._id) ret._id = ret._id.toHexString();
             return ret;
           },
         }),

@@ -22,9 +22,12 @@ export class PersonService {
   }
 
   update(id: string, dto: PersonUpdateDto): Observable<Person> {
-    return this.http
-      .patch<Person>(environment.api + '/users/' + id, dto)
-      .pipe(tap((person) => this.authService.loggedInUser$.next(person)));
+    return this.http.patch<Person>(environment.api + '/users/' + id, dto).pipe(
+      tap((person) => {
+        console.log(person);
+        this.authService.loggedInUser$.next(person);
+      })
+    );
   }
 
   delete(id: string) {
