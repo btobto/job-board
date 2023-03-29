@@ -9,14 +9,21 @@ import { NavbarComponent } from './common/components/navbar/navbar.component';
 import { HomeComponent } from './common/pages/home/home.component';
 import { SearchComponent } from './common/pages/search/search.component';
 import { TokenInterceptor } from './auth/interceptors/token.interceptor';
+import { ErrorInterceptor } from './auth/interceptors/error.interceptor';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent, HomeComponent, SearchComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, AuthModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true,
     },
   ],

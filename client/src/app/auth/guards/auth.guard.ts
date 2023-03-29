@@ -13,12 +13,16 @@ import { AuthService } from '../auth.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {}
+  constructor(private readonly router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return of(false);
+    const user = localStorage.getItem('user');
+
+    if (user == null) {
+      this.router.navigateByUrl('/login');
+      return of(false);
+    }
+
+    return of(true);
   }
 }

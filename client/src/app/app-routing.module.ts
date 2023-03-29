@@ -13,6 +13,9 @@ import { ReviewsComponent } from './review/pages/reviews/reviews.component';
 import { UserComponent } from './user/pages/user/user.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'user/register', component: RegisterUserComponent },
+  { path: 'company/register', component: RegisterCompanyComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '',
@@ -27,10 +30,7 @@ const routes: Routes = [
       { path: 'reviews/:id', component: ReviewsComponent },
     ],
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'user/register', component: RegisterUserComponent },
-  { path: 'company/register', component: RegisterCompanyComponent },
-  { path: '**', redirectTo: '/home' },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
