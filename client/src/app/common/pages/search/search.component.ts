@@ -50,8 +50,10 @@ export class SearchComponent implements OnInit {
   }
 
   addNewSkill() {
-    this.skills.push(this.newSkill);
-    this.newSkill = '';
+    if (this.newSkill) {
+      this.skills.push(this.newSkill);
+      this.newSkill = '';
+    }
   }
 
   searchUsers() {

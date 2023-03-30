@@ -10,6 +10,38 @@
       ratings)
     </h2>
 
+    <ng-container *ngIf="(user | UserTypeOf) === UserType.Person">
+      <ng-container *ngIf="getPersonReview(); let review">
+        <button (click)="showEditForm = !showEditForm">
+          {{ !showEditForm ? "Edit profile" : "Cancel" }}
+        </button>
+        <button (click)="deleteReview()">Delete</button>
+
+        <ng-container *ngIf="showEditForm">
+          <label>Rating:</label>
+          <input type="text" name="rating" [(ngModel)]="rating" />
+          <br />
+
+          <label>Description:</label>
+          <input type="textarea" name="description" [(ngModel)]="description" />
+          <br />
+
+          <button (click)="updateReview()">Update</button>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="!personReview">
+        <label>Rating:</label>
+        <input type="text" name="rating" [(ngModel)]="rating" />
+        <br />
+
+        <label>Description:</label>
+        <input type="textarea" name="description" [(ngModel)]="description" />
+        <br />
+
+        <button (click)="postReview()">Post</button>
+      </ng-container>
+    </ng-container>
+
     <ng-container *ngIf="reviews!.data.length > 0">
       <ng-container *ngFor="let review of reviews!.data">
         <div>

@@ -16,17 +16,36 @@
           <span>{{ req }}, </span>
         </ng-container>
 
-        <br />
-        <br />
-
-        <ng-container *ngIf="(user | UserTypeOf) === UserType.Company">
-          <button (click)="apply(posting._id)">Apply!</button>
+        <ng-container *ngIf="posting.location">
+          <h3>
+            {{ posting.location.country }}, {{ posting.location.city }},
+            {{ posting.location.address }}
+          </h3>
         </ng-container>
 
-        <!-- unnaply -->
-        <!-- location salary date -->
-        <!-- if logged in company show applicants -->
-        <!-- delete update -->
+        <ng-container *ngIf="posting.salary">
+          <h3>Salary {{ posting.salary }}</h3>
+        </ng-container>
+
+        <br />
+        <br />
+
+        <ng-container *ngIf="(user | UserTypeOf) === UserType.Person">
+          <button (click)="apply(posting._id)">Apply!</button>
+        </ng-container>
+        <ng-container *ngIf="(user | UserTypeOf) === UserType.Company">
+          <ng-container *ngIf="user._id === posting.company._id">
+            <ng-container *ngFor="let a of posting.applicants!">
+              <div>
+                <p>{{ a.name }} - {{ a.email }}</p>
+              </div>
+            </ng-container>
+
+            <button (click)="deletePosting(posting._id)">Delete</button>
+          </ng-container>
+        </ng-container>
+
+        <!-- create update -->
       </div>
     </ng-container>
   </ng-container>

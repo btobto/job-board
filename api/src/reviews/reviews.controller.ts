@@ -23,6 +23,17 @@ import { User } from 'src/users/schemas';
 export class ReviewsController {
   constructor(private reviewsService: ReviewsService) {}
 
+  @Get(':companyId/user')
+  async getUserReviewForCompany(
+    @Param('companyId', ParseObjectIdPipe) companyId: string,
+    @ActiveUser('_id') userId: string,
+  ) {
+    return await this.reviewsService.findUserReviewForCompany(
+      companyId,
+      userId,
+    );
+  }
+
   @Get(':companyId')
   async getCompanyReviews(
     @Param('companyId', ParseObjectIdPipe) companyId: string,

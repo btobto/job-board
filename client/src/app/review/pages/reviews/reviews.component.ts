@@ -10,6 +10,8 @@ import { User } from 'src/app/common/types';
 import { CompanyService } from 'src/app/company/company.service';
 import { PersonService } from 'src/app/person/person.service';
 import { PostingService } from 'src/app/posting/posting.service';
+import { ReviewCreateDto } from '../../models/review-create.dto';
+import { ReviewUpdateDto } from '../../models/review-update.dto';
 import { Review } from '../../models/review.interface';
 import { ReviewModule } from '../../review.module';
 import { ReviewService } from '../../review.service';
@@ -24,8 +26,14 @@ export class ReviewsComponent implements OnInit {
   company: Company | null = null;
   loggedInUser$ = new Observable<User | null>();
   UserType = UserType;
+  personReview: Review | null = null;
+
+  showEditForm = false;
 
   pages: number[] = [];
+
+  rating = 5;
+  description = '';
 
   constructor(
     private authService: AuthService,
@@ -50,4 +58,46 @@ export class ReviewsComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  getPersonReview() {
+    this.reviewsService
+      .getUserReviewForCompany(this.company!._id)
+      .subscribe((r) => {
+        this.rating = r.rating;
+        this.description = r.description ?? '';
+        this.personReview = r;
+      });
+
+    return this.personReview;
+  }
+
+  deleteReview() {
+    this.reviewsService.delete(this.personReview!._id).subscribe(() => {
+      this.router.navigate(['/reviews', this.company!._id]);
+    });
+  }
+
+  postReview() {
+    const dto: ReviewCreateDto = {
+      rating: this.rating,
+    };
+
+    if (this.description) dto.description = this.description;
+
+    this.reviewsService.post(this.company!._id, dto).subscribe((r) => {
+      this.router.navigate(['/reviews', this.company!._id]);
+    });
+  }
+
+  updateReview() {
+    const dto: ReviewUpdateDto = {
+      rating: this.rating,
+    };
+
+    if (this.description) dto.description = this.description;
+
+    this.reviewsService.update(this.personReview!._id, dto).subscribe((r) => {
+      this.router.navigate(['/reviews', this.company!._id]);
+    });
+  }
 }

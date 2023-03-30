@@ -29,6 +29,10 @@ export class ReviewService {
     );
   }
 
+  getUserReviewForCompany(companyId: string): Observable<Review> {
+    return this.http.get<Review>(environment.api + '/' + companyId + '/user');
+  }
+
   post(companyId: string, dto: ReviewCreateDto): Observable<Review> {
     return this.http.post<Review>(
       environment.api + '/reviews/' + companyId,

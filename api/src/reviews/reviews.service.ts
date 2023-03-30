@@ -35,6 +35,16 @@ export class ReviewsService {
     ).then((r) => r[0]);
   }
 
+  findUserReviewForCompany(companyId: string, userId: string) {
+    return this.reviewModel
+      .findOne({
+        company: companyId,
+        user: userId,
+      })
+      .lean()
+      .exec();
+  }
+
   findById(id: string): Promise<Review> {
     return this.reviewModel.findById(id).orFail().exec();
   }

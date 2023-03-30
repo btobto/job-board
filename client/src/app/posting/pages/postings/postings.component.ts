@@ -43,5 +43,13 @@ export class PostingsComponent implements OnInit {
     this.postingService.apply(id).subscribe();
   }
 
+  deletePosting(id: string) {
+    this.postingService.delete(id).subscribe();
+  }
+
+  asCompany(company: any): Company {
+    return company as Company;
+  }
+
   ngOnInit(): void {}
 }

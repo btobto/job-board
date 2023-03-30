@@ -4,7 +4,7 @@ import { Location } from 'src/app/common/models/location.interface';
 
 export interface Posting {
   _id: string;
-  company: Company | string;
+  company: Company;
   location?: Location;
   position: string;
   description?: string;

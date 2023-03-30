@@ -5,7 +5,9 @@ import {
   IsDate,
   IsMongoId,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
+  IsPositive,
   ValidateNested,
 } from 'class-validator';
 import { LocationDto } from 'src/common/dto';
@@ -39,6 +41,9 @@ export class PostingDto {
   @IsNotEmpty()
   @IsBoolean()
   remote: boolean;
+
+  @IsOptional()
+  salary: string;
 
   @IsNotEmpty()
   @IsArray()
