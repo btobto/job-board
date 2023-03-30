@@ -11,11 +11,17 @@
     </h2>
 
     <ng-container *ngIf="(user | UserTypeOf) === UserType.Person">
-      <ng-container *ngIf="getPersonReview(); let review">
+      <ng-container *ngIf="review">
+        <p>Your review:</p>
+        <p>Rating: {{ review.rating }}</p>
+        <p>Description: {{ review.description }}</p>
         <button (click)="showEditForm = !showEditForm">
-          {{ !showEditForm ? "Edit profile" : "Cancel" }}
+          {{ !showEditForm ? "Edit review" : "Cancel" }}
         </button>
         <button (click)="deleteReview()">Delete</button>
+
+        <br />
+        <br />
 
         <ng-container *ngIf="showEditForm">
           <label>Rating:</label>

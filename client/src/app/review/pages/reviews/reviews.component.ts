@@ -5,7 +5,10 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Company } from 'src/app/auth/models/company.interface';
 import { UserType } from 'src/app/common/enums/user-type.enum';
 import { PaginationResult } from 'src/app/common/models/pagination-result.interface';
-import { getTypeof } from 'src/app/common/pipes/user-type-of.pipe';
+import {
+  getTypeof,
+  UserTypeOfPipe,
+} from 'src/app/common/pipes/user-type-of.pipe';
 import { User } from 'src/app/common/types';
 import { CompanyService } from 'src/app/company/company.service';
 import { PersonService } from 'src/app/person/person.service';
@@ -35,13 +38,16 @@ export class ReviewsComponent implements OnInit {
   rating = 5;
   description = '';
 
+  review: Review | null = null;
+
   constructor(
     private authService: AuthService,
     private reviewsService: ReviewService,
     private companyService: CompanyService,
     private personService: PersonService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userPipe: UserTypeOfPipe
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const id: string = paramMap.get('id')!;
@@ -49,6 +55,13 @@ export class ReviewsComponent implements OnInit {
       this.reviewsService.getCompanyReviews(id).subscribe((reviews) => {
         this.reviews = reviews;
         this.loggedInUser$ = this.authService.loggedInUser$;
+
+        this.loggedInUser$.subscribe((u) => {
+          if (userPipe.transform(u!) === UserType.Person) {
+            this.getPersonReview();
+          }
+        });
+
         this.pages = Array(reviews.pageCount)
           .fill(0)
           .map((x, i) => i);
@@ -60,20 +73,30 @@ export class ReviewsComponent implements OnInit {
   ngOnInit(): void {}
 
   getPersonReview() {
-    this.reviewsService
-      .getUserReviewForCompany(this.company!._id)
-      .subscribe((r) => {
-        this.rating = r.rating;
-        this.description = r.description ?? '';
-        this.personReview = r;
-      });
+    // console.log('company', this.company!._id);
+    // console.log('user', JSON.parse(localStorage.getItem('user')!)._id);
+
+    this.reviewsService.getUserReviewForCompany(this.company!._id).subscribe({
+      next: (r) => {
+        if (r) {
+          this.rating = r.rating;
+          this.description = r.description ?? '';
+          this.personReview = r;
+        }
+        this.review = r;
+      },
+      error: () => {
+        console.log('nema ga');
+        this.review = null;
+      },
+    });
 
     return this.personReview;
   }
 
   deleteReview() {
     this.reviewsService.delete(this.personReview!._id).subscribe(() => {
-      this.router.navigate(['/reviews', this.company!._id]);
+      location.reload();
     });
   }
 
@@ -85,7 +108,7 @@ export class ReviewsComponent implements OnInit {
     if (this.description) dto.description = this.description;
 
     this.reviewsService.post(this.company!._id, dto).subscribe((r) => {
-      this.router.navigate(['/reviews', this.company!._id]);
+      location.reload();
     });
   }
 
@@ -97,7 +120,7 @@ export class ReviewsComponent implements OnInit {
     if (this.description) dto.description = this.description;
 
     this.reviewsService.update(this.personReview!._id, dto).subscribe((r) => {
-      this.router.navigate(['/reviews', this.company!._id]);
+      location.reload();
     });
   }
 }

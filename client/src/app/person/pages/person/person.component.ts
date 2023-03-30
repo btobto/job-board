@@ -70,6 +70,8 @@ export class PersonComponent implements OnInit {
       updateDto.location = location;
     }
 
+    console.log(updateDto);
+
     this.personService
       .update(this.person!._id, updateDto)
       .subscribe((p) => (this.person = p));
@@ -94,15 +96,20 @@ export class PersonComponent implements OnInit {
     const { companyName, yearFrom, yearTo } = this.newWorkExperience;
 
     if (companyName && yearFrom) {
-      this.workExperience.push(
-        JSON.parse(JSON.stringify(this.newWorkExperience))
-      );
+      const exp: WorkExperience = {
+        companyName,
+        yearFrom,
+      };
+
+      if (yearTo) exp.yearTo = yearTo;
+
+      this.workExperience.push(JSON.parse(JSON.stringify(exp)));
+
+      console.log(this.workExperience);
 
       this.newWorkExperience.companyName = '';
       this.newWorkExperience.yearFrom = new Date().getFullYear();
       this.newWorkExperience.yearTo = undefined;
-
-      console.log(this.workExperience);
     }
   }
 
