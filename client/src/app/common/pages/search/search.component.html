@@ -104,6 +104,10 @@
 
     <!-- posting -->
     <ng-container *ngIf="checked === 'Posting'">
+      <label for="position">Position</label>
+      <input type="text" id="text" name="position" [(ngModel)]="position" />
+      <br />
+
       <label for="country">Country</label>
       <input type="text" id="text" name="country" [(ngModel)]="country" />
       <br />

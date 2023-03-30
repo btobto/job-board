@@ -26,6 +26,7 @@ export class SearchComponent implements OnInit {
   newSkill: string = '';
   rating: number = 0;
   remote: boolean = false;
+  position = '';
 
   people: Person[] = [];
   companies: Company[] = [];
@@ -131,7 +132,11 @@ export class SearchComponent implements OnInit {
       dto.location = location;
     }
 
+    if (this.position) dto.position = this.position;
+
+    console.log(dto);
     this.postingService.search(dto).subscribe((p) => {
+      console.log(p);
       this.postings = [];
       this.postings = p;
     });
