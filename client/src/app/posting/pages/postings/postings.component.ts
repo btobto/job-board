@@ -6,7 +6,9 @@ import { Company } from 'src/app/auth/models/company.interface';
 import { UserType } from 'src/app/common/enums/user-type.enum';
 import { User } from 'src/app/common/types';
 import { CompanyService } from 'src/app/company/company.service';
+import { ReviewCreateDto } from 'src/app/review/models/review-create.dto';
 import { Review } from 'src/app/review/models/review.interface';
+import { PostingCreateDto } from '../../models/posting-create.dto';
 import { Posting } from '../../models/posting.interface';
 import { PostingService } from '../../posting.service';
 
@@ -20,6 +22,15 @@ export class PostingsComponent implements OnInit {
   company: Company | null = null;
   loggedInUser$ = new Observable<User | null>();
   UserType = UserType;
+
+  position: string = '';
+  country = '';
+  city = '';
+  description = '';
+  remote: boolean = false;
+  skills: string[] = [];
+  newSkill = '';
+  salary = '';
 
   constructor(
     private authService: AuthService,
@@ -47,8 +58,62 @@ export class PostingsComponent implements OnInit {
     this.postingService.delete(id).subscribe();
   }
 
-  asCompany(company: any): Company {
-    return company as Company;
+  removeSkill(i: number) {
+    this.skills.slice(i, 1);
+  }
+
+  addNewSkill() {
+    if (this.newSkill) {
+      this.skills.push(this.newSkill.trim());
+      this.newSkill = '';
+    }
+  }
+
+  createPosting() {
+    const dto: PostingCreateDto = {
+      remote: this.remote,
+      requirements: this.skills,
+      position: this.position,
+    };
+
+    dto.location = {};
+
+    if (!this.position) {
+      alert('position required');
+      return;
+    }
+
+    if (!this.country) {
+      alert('country required');
+      return;
+    } else {
+      dto.location.country = this.country;
+    }
+
+    if (!this.city) {
+      alert('city required');
+      return;
+    } else {
+      dto.location.city = this.city;
+    }
+
+    if (!this.salary) {
+      alert('salary required');
+      return;
+    } else {
+      dto.salary = this.salary;
+    }
+
+    if (this.description) dto.description = this.description;
+
+    if (this.skills.length == 0) {
+      alert('requirements must not be empty');
+      return;
+    }
+
+    this.postingService.post(dto).subscribe((p) => {
+      location.reload();
+    });
   }
 
   ngOnInit(): void {}

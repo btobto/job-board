@@ -29,7 +29,6 @@ export class ReviewsComponent implements OnInit {
   company: Company | null = null;
   loggedInUser$ = new Observable<User | null>();
   UserType = UserType;
-  personReview: Review | null = null;
 
   showEditForm = false;
 
@@ -81,7 +80,6 @@ export class ReviewsComponent implements OnInit {
         if (r) {
           this.rating = r.rating;
           this.description = r.description ?? '';
-          this.personReview = r;
         }
         this.review = r;
       },
@@ -91,11 +89,11 @@ export class ReviewsComponent implements OnInit {
       },
     });
 
-    return this.personReview;
+    return this.review;
   }
 
   deleteReview() {
-    this.reviewsService.delete(this.personReview!._id).subscribe(() => {
+    this.reviewsService.delete(this.review!._id).subscribe(() => {
       location.reload();
     });
   }
@@ -119,7 +117,7 @@ export class ReviewsComponent implements OnInit {
 
     if (this.description) dto.description = this.description;
 
-    this.reviewsService.update(this.personReview!._id, dto).subscribe((r) => {
+    this.reviewsService.update(this.review!._id, dto).subscribe((r) => {
       location.reload();
     });
   }

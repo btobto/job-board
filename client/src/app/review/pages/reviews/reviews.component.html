@@ -35,7 +35,7 @@
           <button (click)="updateReview()">Update</button>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="!personReview">
+      <ng-container *ngIf="!review">
         <label>Rating:</label>
         <input type="text" name="rating" [(ngModel)]="rating" />
         <br />

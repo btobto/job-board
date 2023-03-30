@@ -6,9 +6,10 @@ import { AppRoutingModule } from '../app-routing.module';
 import { RouterModule } from '@angular/router';
 import { UserTypeOfPipe } from '../common/pipes/user-type-of.pipe';
 import { SharedModule } from '../common/shared.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [PostingComponent, PostingsComponent],
-  imports: [CommonModule, RouterModule, SharedModule],
+  imports: [CommonModule, RouterModule, SharedModule, FormsModule],
 })
 export class PostingModule {}

@@ -27,9 +27,6 @@
           <h3>Salary {{ posting.salary }}</h3>
         </ng-container>
 
-        <br />
-        <br />
-
         <ng-container *ngIf="(user | UserTypeOf) === UserType.Person">
           <button (click)="apply(posting._id)">Apply!</button>
         </ng-container>
@@ -42,11 +39,65 @@
             </ng-container>
 
             <button (click)="deletePosting(posting._id)">Delete</button>
+            <!-- update -->
           </ng-container>
         </ng-container>
-
-        <!-- create update -->
       </div>
+    </ng-container>
+    <ng-container>
+      <ng-container *ngIf="(user | UserTypeOf) === UserType.Company">
+        <ng-container *ngIf="user._id === company!._id">
+          <h2>New posting</h2>
+
+          <label>Position:</label>
+          <input type="text" name="position" [(ngModel)]="position" />
+          <br />
+
+          <label>Country:</label>
+          <input type="text" name="country" [(ngModel)]="country" />
+          <br />
+
+          <label>City:</label>
+          <input type="text" name="city" [(ngModel)]="city" />
+          <br />
+          <br />
+
+          <label>Salary:</label>
+          <input type="text" name="salary" [(ngModel)]="salary" />
+          <br />
+          <br />
+
+          <label>Description:</label>
+          <input type="textarea" name="description" [(ngModel)]="description" />
+          <br />
+
+          <label for="remote">Remote</label>
+          <input
+            type="checkbox"
+            id="remote"
+            name="remote"
+            [(ngModel)]="remote"
+          />
+
+          <br />
+
+          <label>Requirements:</label>
+          <div>
+            <ng-container *ngFor="let skill of skills; let i = index">
+              <div>
+                <span>{{ skill }} </span>
+                <button (click)="removeSkill(i)">Delete skill</button>
+              </div>
+            </ng-container>
+          </div>
+          <div>
+            <input type="text" name="skill" [(ngModel)]="newSkill" />
+            <button (click)="addNewSkill()">Add skill</button>
+          </div>
+
+          <button (click)="createPosting()">Create</button>
+        </ng-container>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ng-container>
