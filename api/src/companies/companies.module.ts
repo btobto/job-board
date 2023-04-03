@@ -24,8 +24,6 @@ import { Company, CompanySchema } from './schemas';
           schema.post('findOneAndDelete', async function (doc, next) {
             const session = doc.$session();
 
-            // console.log(session);
-
             await postingsService.deleteAllCompanyPostings(doc.id, session);
             await reviewsService.deleteAllCompanyReviews(doc.id, session);
             next();

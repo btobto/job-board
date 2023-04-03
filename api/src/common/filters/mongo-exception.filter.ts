@@ -33,7 +33,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
           status = HttpStatus.CONFLICT;
           // prettier-ignore
           message = `Duplicate key error for: ${
-            Object.keys(exception.keyValue).join(', ')
+            Object.keys(exception.keyValue,).join(', ')
           }`;
       }
     }

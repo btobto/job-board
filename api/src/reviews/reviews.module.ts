@@ -16,10 +16,6 @@ import { updateCompanyRating } from '../common/mongoose-helpers';
           const schema = ReviewSchema;
 
           schema.post('findOneAndUpdate', async function (doc, next) {
-            // console.log(doc);
-            // console.log(this.getOptions());
-            // console.log(this.getUpdate());
-
             const newRating: number = this.getOptions().$locals.newRating;
             const session = this.getOptions().session;
 
@@ -39,8 +35,6 @@ import { updateCompanyRating } from '../common/mongoose-helpers';
           });
 
           schema.post('save', async (doc, next) => {
-            // console.log(doc);
-
             await updateCompanyRating(
               connection,
               doc.company.toString(),
@@ -52,9 +46,6 @@ import { updateCompanyRating } from '../common/mongoose-helpers';
           });
 
           schema.post('findOneAndDelete', async (doc, next) => {
-            // console.log(doc);
-            // console.log(!!doc.$session());
-
             await updateCompanyRating(
               connection,
               doc.company.toString(),
