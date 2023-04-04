@@ -8,42 +8,39 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
 import { User } from 'src/users/schemas';
-import { posix } from 'path';
 
 @Injectable()
 export class PostingsService {
   constructor(
-    @InjectModel(Posting.name)
-    private postingModel: Model<PostingDocument>,
+    @InjectModel(Posting.name) private postingModel: Model<PostingDocument>,
   ) {}
 
   search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
-    const query: Record<string, any> = {};
+    const query = this.postingModel.find();
 
     if (queryDto.location) {
-      query['location.country'] = queryDto.location.country;
+      query.where('location.country').equals(queryDto.location.country);
 
       if (queryDto.location.city) {
-        query['location.city'] = queryDto.location.city;
+        query.where('location.city').equals(queryDto.location.city);
       }
     }
     if (queryDto.position) {
-      query['position'] = { $regex: queryDto.position, $options: 'i' };
+      query.where({ position: { $regex: queryDto.position, $options: 'i' } });
     }
     if (queryDto.datePosted) {
-      query['datePosted'] = { $gte: queryDto.datePosted };
+      query.gte('datePosted', queryDto.datePosted);
     }
-    if (queryDto.remote != null) {
-      query['remote'] = queryDto.remote;
+    if (queryDto.remoteAvailable != null) {
+      query.where('remoteAvailable').equals(queryDto.remoteAvailable);
     }
     if (queryDto.requirements) {
-      query['requirements'] = { $all: queryDto.requirements };
+      query.where({ requirements: { $all: queryDto.requirements } });
     }
 
     console.log(query);
 
-    return this.postingModel
-      .find(query)
+    return query
       .populate('company', 'name website ratingsSum ratingsCount')
       .limit(10)
       .exec();

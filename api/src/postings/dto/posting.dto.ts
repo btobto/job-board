@@ -40,7 +40,7 @@ export class PostingDto {
 
   @IsNotEmpty()
   @IsBoolean()
-  remote: boolean;
+  remoteAvailable: boolean;
 
   @IsOptional()
   salary: string;

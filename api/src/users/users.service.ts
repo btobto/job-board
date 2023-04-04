@@ -1,7 +1,7 @@
 import { UserSearchQueryDto, UserCreateDto, UserUpdateDto } from './dto';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 import { User, UserDocument } from './schemas';
 
 @Injectable()
@@ -17,29 +17,25 @@ export class UsersService {
   }
 
   search(queryDto: UserSearchQueryDto): Promise<User[]> {
-    const query: Record<string, any> = {};
+    let query = this.userModel.find();
 
     if (queryDto.name) {
-      query['name'] = { $regex: '^' + queryDto.name, $options: 'i' };
+      query.where({ name: { $regex: '^' + queryDto.name, $options: 'i' } });
     }
     if (queryDto.skills) {
-      query['skills'] = { $all: queryDto.skills };
+      query.where({ skills: { $all: queryDto.skills } });
     }
     if (queryDto.location) {
-      query['location.country'] = queryDto.location.country;
+      query.where('location.country').equals(queryDto.location.country);
 
       if (queryDto.location.city) {
-        query['location.city'] = queryDto.location.city;
+        query.where('location.city').equals(queryDto.location.city);
       }
     }
 
     console.log(query);
 
-    return this.userModel
-      .find(query)
-      .limit(10)
-      .select('name skills location')
-      .exec();
+    return query.limit(10).select('name skills location').exec();
   }
 
   update(id: string, dto: UserUpdateDto): Promise<User> {

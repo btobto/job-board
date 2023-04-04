@@ -42,8 +42,8 @@ export class Posting {
   @Prop()
   dateUpdated: Date;
 
-  @Prop()
-  remote: boolean;
+  @Prop({ required: true })
+  remoteAvailable: boolean;
 
   @Prop()
   salary: string;
