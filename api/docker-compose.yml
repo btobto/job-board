@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - job-board-data:/mongodb/data
+
+  api:
+    build: .
+    env_file:
+      - ./.env
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+
+volumes:
+  job-board-data:
