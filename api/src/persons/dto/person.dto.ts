@@ -11,7 +11,7 @@ import {
 import { Type } from 'class-transformer';
 import { LocationDto, WorkExperienceDto } from 'src/common/dto';
 
-export class UserDto {
+export class PersonDto {
   @IsNotEmpty()
   @IsMongoId()
   _id: string;

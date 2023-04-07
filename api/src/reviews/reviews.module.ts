@@ -1,7 +1,7 @@
-import mongoose, { Connection, Mongoose } from 'mongoose';
+import mongoose, { Connection, Document, Mongoose } from 'mongoose';
 import { forwardRef, Module } from '@nestjs/common';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
-import { Review, ReviewSchema } from './schemas';
+import { Review, ReviewDocument, ReviewSchema } from './schemas';
 import { ReviewsService } from './reviews.service';
 import { ReviewsController } from './reviews.controller';
 import { Company, CompanySchema } from '../companies/schemas';
@@ -15,26 +15,29 @@ import { updateCompanyRating } from '../common/mongoose-helpers';
         useFactory: (connection: Connection) => {
           const schema = ReviewSchema;
 
-          schema.post('findOneAndUpdate', async function (doc, next) {
-            const newRating: number = this.getOptions().$locals.newRating;
-            const session = this.getOptions().session;
+          schema.post(
+            'findOneAndUpdate',
+            async function (doc: ReviewDocument, next) {
+              const newRating: number = this.getOptions().$locals.newRating;
+              const session = this.getOptions().session;
 
-            if (doc.rating != newRating) {
-              const company = await connection
-                .model<typeof CompanySchema>(Company.name)
-                .findById(doc.company)
-                .session(session)
-                .exec();
+              if (doc.rating != newRating) {
+                const company = await connection
+                  .model<typeof CompanySchema>(Company.name)
+                  .findById(doc.company)
+                  .session(session)
+                  .exec();
 
-              company.ratingsSum += newRating - doc.rating;
+                company.ratingsSum += newRating - doc.rating;
 
-              await company.save({ session });
-            }
+                await company.save({ session });
+              }
 
-            next();
-          });
+              next();
+            },
+          );
 
-          schema.post('save', async (doc, next) => {
+          schema.post('save', async (doc: ReviewDocument, next) => {
             await updateCompanyRating(
               connection,
               doc.company.toString(),
@@ -45,7 +48,7 @@ import { updateCompanyRating } from '../common/mongoose-helpers';
             next();
           });
 
-          schema.post('findOneAndDelete', async (doc, next) => {
+          schema.post('findOneAndDelete', async (doc: ReviewDocument, next) => {
             await updateCompanyRating(
               connection,
               doc.company.toString(),

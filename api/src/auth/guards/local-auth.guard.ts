@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { USER_TYPE_KEY } from 'src/common/constants';
-import { Role } from '../enums';
+import { UserType } from '../../common/enums';
 
-export const LocalAuthGuard = (role: Role): Type<CanActivate> => {
+export const LocalAuthGuard = (role: UserType): Type<CanActivate> => {
   class LocalAuthGuardMixin extends AuthGuard('local') {
     canActivate(context: ExecutionContext) {
       const req = context.switchToHttp().getRequest();

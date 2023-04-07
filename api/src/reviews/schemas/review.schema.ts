@@ -1,8 +1,9 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Company } from '../../companies/schemas';
-import { User } from '../../users/schemas';
+import { Person } from '../../persons/schemas';
 import { referenceValidator } from '../../common/validators';
+import { UserType } from 'src/common/enums';
 
 export type ReviewDocument = HydratedDocument<Review>;
 
@@ -12,7 +13,7 @@ export class Review {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: UserType.Company,
     index: true,
     required: true,
     validate: referenceValidator,
@@ -21,11 +22,11 @@ export class Review {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: UserType.Person,
     required: true,
     validate: referenceValidator,
   })
-  user: User | mongoose.Types.ObjectId;
+  person: Person | mongoose.Types.ObjectId;
 
   @Prop({ min: 1, max: 5, required: true })
   rating: number;
@@ -42,4 +43,4 @@ export class Review {
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
 
-ReviewSchema.index({ company: 1, user: 1 }, { unique: true });
+ReviewSchema.index({ company: 1, person: 1 }, { unique: true });

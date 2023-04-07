@@ -27,7 +27,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
 
       status = HttpStatus.BAD_REQUEST;
       message = `Document doesn't exist. No '${modelName}' document found for: ${filterMessage}`;
-    } else if (exception instanceof MongoError) {
+    } else if (exception instanceof MongoServerError) {
       switch (exception.code) {
         case MongoErrorCodes.DUPLICATE_KEY:
           status = HttpStatus.CONFLICT;

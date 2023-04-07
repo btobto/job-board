@@ -1,8 +1,8 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { Role } from '../enums';
+import { UserType } from '../../common/enums';
 
 export interface LoginDto {
   email: string;
   password: string;
-  type: Role;
+  type: UserType;
 }

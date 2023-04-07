@@ -1,23 +1,25 @@
-import { UserSearchQueryDto, UserCreateDto, UserUpdateDto } from './dto';
+import { PersonSearchQueryDto, PersonCreateDto, PersonUpdateDto } from './dto';
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
-import { User, UserDocument } from './schemas';
+import { Person, PersonDocument } from './schemas';
 
 @Injectable()
-export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+export class PersonsService {
+  constructor(
+    @InjectModel(Person.name) private personModel: Model<PersonDocument>,
+  ) {}
 
-  findById(id: string): Promise<User> {
-    return this.userModel.findById(id).orFail().exec();
+  findById(id: string): Promise<Person> {
+    return this.personModel.findById(id).orFail().exec();
   }
 
-  findByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).lean().exec();
+  findByEmail(email: string): Promise<Person> {
+    return this.personModel.findOne({ email }).lean().exec();
   }
 
-  search(queryDto: UserSearchQueryDto): Promise<User[]> {
-    let query = this.userModel.find();
+  search(queryDto: PersonSearchQueryDto): Promise<Person[]> {
+    let query = this.personModel.find();
 
     if (queryDto.name) {
       query.where({ name: { $regex: '^' + queryDto.name, $options: 'i' } });
@@ -38,8 +40,8 @@ export class UsersService {
     return query.limit(10).select('name skills location').exec();
   }
 
-  update(id: string, dto: UserUpdateDto): Promise<User> {
-    return this.userModel
+  update(id: string, dto: PersonUpdateDto): Promise<Person> {
+    return this.personModel
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
@@ -48,6 +50,6 @@ export class UsersService {
   }
 
   delete(id: string) {
-    return this.userModel.findByIdAndDelete(id).orFail().exec();
+    return this.personModel.findByIdAndDelete(id).orFail().exec();
   }
 }

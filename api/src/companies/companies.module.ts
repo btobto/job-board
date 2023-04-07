@@ -7,7 +7,7 @@ import { ReviewsModule } from '../reviews/reviews.module';
 import { ReviewsService } from '../reviews/reviews.service';
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
-import { Company, CompanySchema } from './schemas';
+import { Company, CompanyDocument, CompanySchema } from './schemas';
 
 @Module({
   imports: [
@@ -21,13 +21,17 @@ import { Company, CompanySchema } from './schemas';
         ) => {
           const schema = CompanySchema;
 
-          schema.post('findOneAndDelete', async function (doc, next) {
-            const session = doc.$session();
+          schema.post(
+            'findOneAndDelete',
+            async function (doc: CompanyDocument, next) {
+              const session = doc.$session();
 
-            await postingsService.deleteAllCompanyPostings(doc.id, session);
-            await reviewsService.deleteAllCompanyReviews(doc.id, session);
-            next();
-          });
+              await postingsService.deleteAllCompanyPostings(doc.id, session);
+              await reviewsService.deleteAllCompanyReviews(doc.id, session);
+
+              next();
+            },
+          );
 
           return schema;
         },

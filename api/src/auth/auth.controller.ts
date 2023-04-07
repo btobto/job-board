@@ -7,15 +7,12 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { USER_TYPE_KEY } from 'src/common/constants';
-import { DisableToObject } from 'src/common/decorators';
 import { CompanyCreateDto } from 'src/companies/dto';
-import { UserCreateDto } from 'src/users/dto';
-import { User } from 'src/users/schemas';
+import { PersonCreateDto } from 'src/persons/dto';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
-import { Role } from './enums';
+import { UserType } from '../common/enums';
 import { LocalAuthGuard } from './guards';
 
 @Public()
@@ -24,19 +21,19 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard(Role.User))
-  @Post('user/login')
-  loginUser(@Request() req) {
+  @UseGuards(LocalAuthGuard(UserType.Person))
+  @Post('person/login')
+  loginPerson(@Request() req) {
     return this.authService.login(req['user'], req[USER_TYPE_KEY]);
   }
 
-  @Post('user/register')
-  register(@Body() dto: UserCreateDto) {
-    return this.authService.register(dto, Role.User);
+  @Post('person/register')
+  registerPerson(@Body() dto: PersonCreateDto) {
+    return this.authService.register(dto, UserType.Person);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard(Role.Company))
+  @UseGuards(LocalAuthGuard(UserType.Company))
   @Post('company/login')
   loginCompany(@Request() req) {
     return this.authService.login(req['user'], req[USER_TYPE_KEY]);
@@ -44,6 +41,6 @@ export class AuthController {
 
   @Post('company/register')
   companyRegister(@Body() dto: CompanyCreateDto) {
-    return this.authService.register(dto, Role.Company);
+    return this.authService.register(dto, UserType.Company);
   }
 }

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from 'src/users/users.module';
+import { PersonsModule } from 'src/persons/persons.module';
 import { AuthService } from './auth.service';
 import { HashingService, BcryptService } from './hashing';
 import { PassportModule } from '@nestjs/passport';
@@ -8,22 +8,17 @@ import { LocalStrategy, JwtStrategy } from './strategies';
 import { JwtModule } from '@nestjs/jwt/dist';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CompaniesModule } from 'src/companies/companies.module';
+import { JwtConfigService } from 'src/config';
 
 @Module({
   imports: [
-    UsersModule,
+    PersonsModule,
     CompaniesModule,
     PassportModule,
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_ACCESS_TOKEN_TTL'),
-        },
-      }),
-      inject: [ConfigService],
+      useClass: JwtConfigService,
     }),
   ],
   providers: [

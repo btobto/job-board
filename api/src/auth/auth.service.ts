@@ -6,12 +6,11 @@ import { Connection } from 'mongoose';
 import { USER_TYPE_KEY } from 'src/common/constants';
 import { CompanyCreateDto } from 'src/companies/dto';
 import { Company } from 'src/companies/schemas';
-import { UserCreateDto } from 'src/users/dto';
-import { User } from 'src/users/schemas';
-import { Role } from './enums';
+import { PersonCreateDto } from 'src/persons/dto';
+import { Person } from 'src/persons/schemas';
+import { UserType } from '../common/enums';
 import { HashingService } from './hashing';
-
-type UserType = User | Company;
+import { User } from 'src/common/types';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +20,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string, userType: Role.User) {
-    const user: UserType = await this.connection
+  async validateUser(email: string, password: string, userType: UserType) {
+    const user: User = await this.connection
       .model(userType)
       .findOne({ email })
       .lean()
@@ -39,7 +38,7 @@ export class AuthService {
     return result;
   }
 
-  async login(user: UserType, userType: Role) {
+  async login(user: User, userType: UserType) {
     const payload = {
       email: user.email,
       sub: user._id,
@@ -52,7 +51,7 @@ export class AuthService {
     };
   }
 
-  async register(dto: UserCreateDto | CompanyCreateDto, userType: Role) {
+  async register(dto: PersonCreateDto | CompanyCreateDto, userType: UserType) {
     const hashedPassword = await this.hashingService.hash(dto.password);
 
     await this.connection.model(userType).create({

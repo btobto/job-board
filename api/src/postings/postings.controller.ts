@@ -19,6 +19,7 @@ import { ParseObjectIdPipe } from '../common/pipes';
 import { PostingsService } from './postings.service';
 import { Posting } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
+import { Person } from 'src/persons/schemas';
 
 @Controller('postings')
 export class PostingsController {
@@ -28,7 +29,7 @@ export class PostingsController {
   async searchPostings(
     @Body() queryDto: PostingSearchQueryDto,
   ): Promise<Posting[]> {
-    console.log(queryDto);
+    // console.log(queryDto);
     return await this.postingsService.search(queryDto);
   }
 
@@ -49,8 +50,8 @@ export class PostingsController {
 
   @Post()
   async post(
-    @ActiveUser('_id') companyId: string,
     @Body() dto: PostingCreateDto,
+    @ActiveUser('_id') companyId: string,
   ): Promise<Posting> {
     return await this.postingsService.create(companyId, dto);
   }
@@ -58,16 +59,16 @@ export class PostingsController {
   @Patch(':postingId/application')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,
-    @ActiveUser('_id') userId: string,
+    @ActiveUser('_id') personId: string,
   ) {
-    return await this.postingsService.toggleApply(postingId, userId);
+    return await this.postingsService.toggleApply(postingId, personId);
   }
 
   @Patch(':id')
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
-    @ActiveUser('_id') companyId: string,
     @Body() dto: PostingUpdateDto,
+    @ActiveUser('_id') companyId: string,
   ): Promise<Posting> {
     return await this.postingsService.update(id, companyId, dto);
   }

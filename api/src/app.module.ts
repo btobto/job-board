@@ -4,24 +4,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CompaniesModule } from './companies/companies.module';
 import { PostingsModule } from './postings/postings.module';
 import { ReviewsModule } from './reviews/reviews.module';
-import { UsersModule } from './users/users.module';
+import { PersonsModule } from './persons/persons.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards';
 import { DocumentToObjectInterceptor } from './common/interceptors';
+import { MongooseConfigService } from './config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-        dbName: configService.get<string>('DB_NAME'),
-      }),
-      inject: [ConfigService],
+      useClass: MongooseConfigService,
     }),
-    UsersModule,
+    PersonsModule,
     CompaniesModule,
     PostingsModule,
     ReviewsModule,

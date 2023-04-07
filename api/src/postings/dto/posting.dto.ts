@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { LocationDto } from 'src/common/dto';
 import { CompanyDto } from 'src/companies/dto';
-import { UserDto } from 'src/users/dto/user.dto';
+import { PersonDto } from 'src/persons/dto/person.dto';
 
 export class PostingDto {
   @IsMongoId()
@@ -51,7 +51,7 @@ export class PostingDto {
 
   @IsOptional()
   @IsArray()
-  @Type(() => UserDto)
+  @Type(() => PersonDto)
   @ValidateNested()
-  applicants: UserDto[];
+  applicants: PersonDto[];
 }

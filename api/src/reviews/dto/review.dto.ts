@@ -19,7 +19,7 @@ export class ReviewDto {
 
   @IsNotEmpty()
   @IsMongoId()
-  userId: string;
+  personId: string;
 
   @IsNotEmpty()
   @IsInt()

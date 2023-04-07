@@ -1,4 +1,4 @@
-export interface PaginationResultDto<T> {
+export interface PaginationResult<T> {
   data: T[];
   page: number;
   take: number;

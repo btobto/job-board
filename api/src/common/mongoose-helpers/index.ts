@@ -1,2 +1,2 @@
 export * from './transaction.handler';
-export * from './update-rating.middleware';
+export * from './update-rating';

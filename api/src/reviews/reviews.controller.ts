@@ -12,25 +12,25 @@ import {
   Query,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
-import { PaginationOptionsDto, PaginationResultDto } from '../common/dto';
+import { PaginationOptionsDto, PaginationResult } from '../common/dto';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { ReviewsService } from './reviews.service';
 import { Review } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
-import { User } from 'src/users/schemas';
+import { Person } from 'src/persons/schemas';
 
 @Controller('reviews')
 export class ReviewsController {
   constructor(private reviewsService: ReviewsService) {}
 
-  @Get(':companyId/user')
-  async getUserReviewForCompany(
+  @Get(':companyId/person')
+  async getPersonReviewForCompany(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
-    @ActiveUser('_id') userId: string,
+    @ActiveUser('_id') personId: string,
   ) {
-    return await this.reviewsService.findUserReviewForCompany(
+    return await this.reviewsService.findPersonReviewForCompany(
       companyId,
-      userId,
+      personId,
     );
   }
 
@@ -38,34 +38,34 @@ export class ReviewsController {
   async getCompanyReviews(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
     @Query() searchQuery: PaginationOptionsDto,
-  ): Promise<PaginationResultDto<Review[]>> {
+  ): Promise<PaginationResult<Review[]>> {
     return await this.reviewsService.findCompanyReviews(companyId, searchQuery);
   }
 
   @Post(':companyId')
   async post(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
-    @ActiveUser('_id') userId: string,
+    @ActiveUser('_id') personId: string,
     @Body() dto: ReviewCreateDto,
   ): Promise<Review> {
-    return await this.reviewsService.create(companyId, userId, dto);
+    return await this.reviewsService.create(companyId, personId, dto);
   }
 
   @Patch(':id')
   async update(
     @Param('id', ParseObjectIdPipe) reviewId,
-    @ActiveUser('_id') userId: string,
+    @ActiveUser('_id') personId: string,
     @Body() dto: ReviewUpdateDto,
   ): Promise<Review> {
-    return await this.reviewsService.update(reviewId, userId, dto);
+    return await this.reviewsService.update(reviewId, personId, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
     @Param('id', ParseObjectIdPipe) reviewId,
-    @ActiveUser('_id') userId: string,
+    @ActiveUser('_id') personId: string,
   ) {
-    await this.reviewsService.delete(reviewId, userId);
+    await this.reviewsService.delete(reviewId, personId);
   }
 }

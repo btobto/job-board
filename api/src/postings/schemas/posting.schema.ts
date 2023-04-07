@@ -1,9 +1,10 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Company } from '../../companies/schemas';
-import { User } from '../../users/schemas';
+import { Person } from '../../persons/schemas';
 import { referenceValidator } from '../../common/validators';
 import { Location, LocationSchema } from '../../common/schemas';
+import { UserType } from 'src/common/enums';
 
 export type PostingDocument = HydratedDocument<Posting>;
 
@@ -20,7 +21,7 @@ export class Posting {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: UserType.Company,
     index: true,
     required: true,
     validate: referenceValidator,
@@ -55,12 +56,12 @@ export class Posting {
     type: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: UserType.Person,
         validate: referenceValidator,
       },
     ],
   })
-  applicants: User[];
+  applicants: Person[];
 }
 
 export const PostingSchema = SchemaFactory.createForClass(Posting);

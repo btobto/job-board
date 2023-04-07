@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
-import { User } from 'src/users/schemas';
+import { Person } from 'src/persons/schemas';
 
 @Injectable()
 export class PostingsService {
@@ -50,15 +50,15 @@ export class PostingsService {
     return this.postingModel.create({ ...dto, company: companyId });
   }
 
-  async toggleApply(postingId: string, userId: string): Promise<Posting> {
+  async toggleApply(postingId: string, personId: string): Promise<Posting> {
     const posting = await this.postingModel.findById(postingId).orFail().exec();
-    const user = userId as unknown as User;
+    const person = personId as unknown as Person;
 
-    const index = posting.applicants.indexOf(user);
+    const index = posting.applicants.indexOf(person);
     if (index !== -1) {
       posting.applicants.splice(index, 1);
     } else {
-      posting.applicants.push(user);
+      posting.applicants.push(person);
     }
 
     return posting.save();

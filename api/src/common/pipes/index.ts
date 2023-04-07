@@ -1,1 +1,1 @@
-export * from './parse-objectId.pipe';
+export * from './parse-object-id.pipe';

@@ -6,9 +6,10 @@ import {
   WorkExperienceSchema,
 } from '../../common/schemas/work-experience.schema';
 
-export type UserDocument = HydratedDocument<User>;
+export type PersonDocument = HydratedDocument<Person>;
 
 @Schema({
+  collection: 'persons',
   toObject: {
     transform: (doc, ret, options) => {
       delete ret.hashedPassword;
@@ -16,7 +17,7 @@ export type UserDocument = HydratedDocument<User>;
     },
   },
 })
-export class User {
+export class Person {
   _id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
@@ -38,4 +39,4 @@ export class User {
   prevExperience: WorkExperience[];
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const PersonSchema = SchemaFactory.createForClass(Person);

@@ -3,7 +3,7 @@ import { ReviewDto } from './review.dto';
 
 export class ReviewUpdateDto extends OmitType(ReviewDto, [
   'id',
-  'userId',
+  'personId',
   'companyId',
   'datePosted',
 ] as const) {}

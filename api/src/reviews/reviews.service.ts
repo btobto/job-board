@@ -2,7 +2,7 @@ import { ReviewCreateDto, ReviewUpdateDto } from './dto';
 import { Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Connection, Model } from 'mongoose';
-import { PaginationOptionsDto, PaginationResultDto } from '../common/dto';
+import { PaginationOptionsDto, PaginationResult } from '../common/dto';
 import { transactionHandler } from '../common/mongoose-helpers';
 import { Review, ReviewDocument } from './schemas';
 
@@ -15,7 +15,7 @@ export class ReviewsService {
 
   create(
     companyId: string,
-    userId: string,
+    personId: string,
     dto: ReviewCreateDto,
   ): Promise<Review> {
     return transactionHandler(
@@ -26,7 +26,7 @@ export class ReviewsService {
             {
               ...dto,
               company: companyId,
-              user: userId,
+              person: personId,
             },
           ],
           { session },
@@ -35,11 +35,11 @@ export class ReviewsService {
     ).then((r) => r[0]);
   }
 
-  findUserReviewForCompany(companyId: string, userId: string) {
+  findPersonReviewForCompany(companyId: string, personId: string) {
     return this.reviewModel
       .findOne({
         company: companyId,
-        user: userId,
+        person: personId,
       })
       .lean()
       .exec();
@@ -52,7 +52,7 @@ export class ReviewsService {
   async findCompanyReviews(
     companyId: string,
     { page, take, skip }: PaginationOptionsDto,
-  ): Promise<PaginationResultDto<Review[]>> {
+  ): Promise<PaginationResult<Review[]>> {
     const query = this.reviewModel.where('company').equals(companyId);
 
     const total = await query.clone().countDocuments().exec();
@@ -75,7 +75,7 @@ export class ReviewsService {
 
   update(
     reviewId: string,
-    userId: string,
+    personId: string,
     dto: ReviewUpdateDto,
   ): Promise<Review> {
     return transactionHandler(this.connection, async (session) => {
@@ -83,7 +83,7 @@ export class ReviewsService {
 
       return this.reviewModel
         .findOneAndUpdate(
-          { _id: reviewId, user: userId },
+          { _id: reviewId, person: personId },
           { ...dto, dateUpdated: now },
           {
             new: false,
@@ -107,10 +107,10 @@ export class ReviewsService {
     });
   }
 
-  delete(reviewId: string, userId: string) {
+  delete(reviewId: string, personId: string) {
     return transactionHandler(this.connection, async (session) => {
       return this.reviewModel
-        .findOneAndDelete({ _id: reviewId, user: userId })
+        .findOneAndDelete({ _id: reviewId, person: personId })
         .orFail()
         .session(session)
         .exec();

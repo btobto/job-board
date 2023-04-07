@@ -8,9 +8,9 @@ export const referenceValidator: ValidateOpts<mongoose.Types.ObjectId> = {
   ): Promise<boolean> {
     const ref = this.schema.path(props.path).options.ref;
 
-    console.log(this.schema.path(props.path));
-    console.log(props);
-    console.log(ref);
+    // console.log(this.schema.path(props.path));
+    // console.log(props);
+    // console.log(ref);
 
     if (!ref) {
       throw new Error(
