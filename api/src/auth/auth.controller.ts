@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   @Post('company/register')
-  companyRegister(@Body() dto: CompanyCreateDto) {
+  registerCompany(@Body() dto: CompanyCreateDto) {
     return this.authService.register(dto, UserType.Company);
   }
 }
