@@ -14,7 +14,7 @@ import { LocationDto, WorkExperienceDto } from 'src/common/dto';
 export class PersonDto {
   @IsNotEmpty()
   @IsMongoId()
-  _id: string;
+  id: string;
 
   @IsNotEmpty()
   name: string;

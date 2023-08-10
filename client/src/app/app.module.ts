@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
-import { RegisterUserComponent } from './pages/register-user/register-user.component';
+import { RegisterPersonComponent } from './pages/register-person/register-person.component';
 import { RegisterCompanyComponent } from './pages/register-company/register-company.component';
 import { HomeComponent } from './pages/home/home.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
@@ -16,16 +16,20 @@ import { RatingModule } from 'primeng/rating';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
+import { MainCardComponent } from './components/main-card/main-card.component';
+import { MessagesModule } from 'primeng/messages';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterUserComponent,
+    RegisterPersonComponent,
     RegisterCompanyComponent,
     HomeComponent,
     PageNotFoundComponent,
     NavbarComponent,
+    MainCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +40,8 @@ import { ButtonModule } from 'primeng/button';
     BrowserAnimationsModule,
     CheckboxModule,
     ButtonModule,
+    MessagesModule,
+    StoreModule.forRoot({}, {}),
   ],
   providers: [],
   bootstrap: [AppComponent],

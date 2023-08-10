@@ -3,13 +3,20 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  email = '';
+  password = '';
+  company = false;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  login() {
+    if (this.company) {
+    } else {
+    }
   }
-
 }
