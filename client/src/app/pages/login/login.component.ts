@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { MessageService } from 'primeng/api';
+import { filter } from 'rxjs';
+import { HttpErrorBody, UserLogin } from 'src/app/models';
+import { AppState } from 'src/app/state/app.state';
+import { authActions, fromAuth } from 'src/app/state/auth';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +14,21 @@ import { Component, OnInit } from '@angular/core';
 export class LoginComponent implements OnInit {
   email = '';
   password = '';
-  company = false;
+  isCompany = false;
 
-  constructor() {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {}
 
   login() {
-    if (this.company) {
-    } else {
-    }
+    this.store.dispatch(
+      authActions.login({
+        payload: {
+          email: this.email,
+          password: this.password,
+          isCompany: this.isCompany,
+        },
+      })
+    );
   }
 }

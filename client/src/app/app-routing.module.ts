@@ -6,11 +6,13 @@ import { RegisterCompanyComponent } from './pages/register-company/register-comp
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: NavbarComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },

@@ -2,3 +2,8 @@ export * from './company.model';
 export * from './location.model';
 export * from './person.model';
 export * from './work-experience.model';
+export * from './company-register.model';
+export * from './person-register.model';
+export * from './user.model';
+export * from './user-login.model';
+export * from './http-error-body.model';
