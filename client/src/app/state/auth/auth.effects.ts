@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from 'src/app/services/auth.service';
 import { authActions } from '.';
-import { catchError, delay, exhaustMap, map, of, tap } from 'rxjs';
-import { User, UserLogin } from 'src/app/models';
+import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { User } from 'src/app/models';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -18,11 +18,27 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(authActions.login),
       //   delay(2000),
-      exhaustMap(({ payload }) =>
-        this.authService.login(payload).pipe(
+      exhaustMap(({ payload, isCompany }) =>
+        this.authService.login(payload, isCompany).pipe(
           map((user: User) => authActions.loginSuccess({ user })),
           catchError((error) => of(authActions.loginFailure({ error })))
         )
+      )
+    )
+  );
+
+  autoLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.autoLogin),
+      map(() => this.authService.getUserFromLocalStorage()),
+      exhaustMap((user) =>
+        user
+          ? of(authActions.loginSuccess({ user })).pipe(
+              tap(({ user }) => {
+                console.log('Auto login: ', user);
+              })
+            )
+          : of(authActions.loginFailure({ error: null }))
       )
     )
   );
@@ -31,26 +47,24 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(authActions.loginSuccess, authActions.registerSuccess),
-        tap(() => this.router.navigate(['/home']))
+        tap(({ user }) => {
+          this.authService.saveUserToLocalStorage(user);
+          this.router.navigate(['/home']);
+
+          console.log('Login success: ', user);
+        })
       ),
     { dispatch: false }
   );
 
-  // dialog
-  //   logoutInit$ = createEffect(() =>
-  // 		this.actions$.pipe(
-  // 			ofType(authActions.logoutInit),
-  // 			exhaustMap(() => {
-
-  // 			})
-  // 		)
-  //   )
-
-  logoutConfirmed$ = createEffect(
+  logout$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(authActions.logoutConfirmed),
-        tap(() => this.router.navigate(['/login']))
+        ofType(authActions.logout),
+        tap(() => {
+          this.authService.removeUserFromLocalStorage();
+          this.router.navigate(['/login']);
+        })
       ),
     { dispatch: false }
   );

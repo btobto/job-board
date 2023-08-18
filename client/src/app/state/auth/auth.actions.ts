@@ -8,7 +8,7 @@ import {
 
 export const login = createAction(
   '[Login page] Login',
-  props<{ payload: UserLogin }>()
+  props<{ payload: UserLogin; isCompany: boolean }>()
 );
 
 export const loginSuccess = createAction(
@@ -41,8 +41,6 @@ export const registerFailure = createAction(
   props<{ error: any }>()
 );
 
-export const logoutInit = createAction('[Auth] Logout');
+export const autoLogin = createAction('[Auth] Auto login');
 
-export const logoutConfirmed = createAction('[Auth] Logout confirmed');
-
-export const logoutCancelled = createAction('[Auth] Logout cancelled');
+export const logout = createAction('[Auth] Logout');

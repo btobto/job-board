@@ -18,6 +18,7 @@ export const authReducer = createReducer(
   initialState,
   on(
     authActions.login,
+    authActions.autoLogin,
     authActions.registerPerson,
     authActions.registerCompany,
     (state) => ({
@@ -43,5 +44,5 @@ export const authReducer = createReducer(
       error,
     })
   ),
-  on(authActions.logoutConfirmed, (state) => initialState)
+  on(authActions.logout, (state) => initialState)
 );

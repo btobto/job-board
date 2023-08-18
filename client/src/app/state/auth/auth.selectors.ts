@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { AuthState } from './auth.reducer';
 import { HttpErrorBody, User } from 'src/app/models';
 
 export const selectAuth = (state: AppState) => state.auth;

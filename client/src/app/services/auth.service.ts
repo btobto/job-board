@@ -4,26 +4,21 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, delay, tap } from 'rxjs';
 
+const USER_KEY = 'user';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  login(payload: UserLogin): Observable<User> {
-    const type = payload.isCompany ? 'company' : 'person';
+  login(payload: UserLogin, isCompany: boolean): Observable<User> {
+    const type = isCompany ? 'company' : 'person';
 
-    return this.http
-      .post<User>(`${environment.apiUrl}/auth/${type}/login`, {
-        email: payload.email,
-        password: payload.password,
-      })
-      .pipe(
-        tap((user: User) => {
-          // this.saveUser(user);
-          console.log('login success', user);
-        })
-      );
+    return this.http.post<User>(`${environment.apiUrl}/auth/${type}/login`, {
+      email: payload.email,
+      password: payload.password,
+    });
   }
 
   logout() {}
@@ -32,9 +27,24 @@ export class AuthService {
 
   registerCompany(payload: CompanyRegister) {}
 
-  saveUser(user: User) {
-    localStorage.setItem('user', JSON.stringify(user));
+  saveUserToLocalStorage(user: User) {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  autoLogin() {}
+  removeUserFromLocalStorage() {
+    localStorage.removeItem(USER_KEY);
+  }
+
+  getUserFromLocalStorage(): User | null {
+    const user = localStorage.getItem(USER_KEY);
+    return user ? JSON.parse(user) : null;
+  }
+
+  autoLogin() {
+    const user = localStorage.getItem(USER_KEY);
+
+    if (!user) return;
+
+    const userJson: User = JSON.parse(user);
+  }
 }
