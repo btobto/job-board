@@ -30,9 +30,9 @@ export const authReducer = createReducer(
     authActions.loginSuccess,
     authActions.registerSuccess,
     (state, { user }) => ({
-      ...state,
-      loading: false,
       user,
+      loading: false,
+      error: null,
     })
   ),
   on(

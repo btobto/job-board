@@ -17,7 +17,7 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.login),
-      //   delay(2000),
+      // delay(2000),
       exhaustMap(({ payload, isCompany }) =>
         this.authService.login(payload, isCompany).pipe(
           map((user: User) => authActions.loginSuccess({ user })),
@@ -33,11 +33,7 @@ export class AuthEffects {
       map(() => this.authService.getUserFromLocalStorage()),
       exhaustMap((user) =>
         user
-          ? of(authActions.loginSuccess({ user })).pipe(
-              tap(({ user }) => {
-                console.log('Auto login: ', user);
-              })
-            )
+          ? of(authActions.loginSuccess({ user }))
           : of(authActions.loginFailure({ error: null }))
       )
     )
