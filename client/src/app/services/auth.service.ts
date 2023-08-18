@@ -21,8 +21,6 @@ export class AuthService {
     });
   }
 
-  logout() {}
-
   registerPerson(payload: PersonRegister) {}
 
   registerCompany(payload: CompanyRegister) {}
@@ -38,13 +36,5 @@ export class AuthService {
   getUserFromLocalStorage(): User | null {
     const user = localStorage.getItem(USER_KEY);
     return user ? JSON.parse(user) : null;
-  }
-
-  autoLogin() {
-    const user = localStorage.getItem(USER_KEY);
-
-    if (!user) return;
-
-    const userJson: User = JSON.parse(user);
   }
 }

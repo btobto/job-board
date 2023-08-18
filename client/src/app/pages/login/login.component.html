@@ -10,77 +10,76 @@
     >
   </div>
 
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
-    <!-- {{ loginForm.value | json }} -->
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- {{ loginForm.value | json }}
+    {{ loginForm.valid }} -->
 
-    <div class="field p-fluid mb-3">
-      <label for="email" class="block text-900 font-medium mb-2">Email</label>
-      <input
-        pInputText
-        id="email"
-        type="email"
-        name="email"
-        placeholder="Email address"
-        class="w-full"
-        required
-        [(ngModel)]="email"
-        aria-describedby="email-help"
-        #emailInput="ngModel"
-        email="true"
-      />
-      <div
-        *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
-      >
-        <!-- {{ emailInput.errors | json }} -->
+    <ng-container formGroupName="payload">
+      <div class="field p-fluid mb-3">
+        <label for="email" class="block text-900 font-medium mb-2">Email</label>
+        <input
+          pInputText
+          formControlName="email"
+          id="email"
+          type="email"
+          name="email"
+          placeholder="Email address"
+          class="w-full"
+          aria-describedby="email-help"
+        />
+        <div *ngIf="email.invalid && (email.dirty || email.touched)">
+          <!-- {{ email.errors | json }} -->
 
-        <div *ngIf="emailInput.errors?.['required']">
-          <small id="email-help" class="p-error">Email is required.</small>
-        </div>
-        <div *ngIf="emailInput.errors?.['email']">
-          <small id="email-help" class="p-error">Invalid email.</small>
+          <div *ngIf="email.errors?.['required']">
+            <small id="email-help" class="p-error">Email is required.</small>
+          </div>
+          <div *ngIf="email.errors?.['email']">
+            <small id="email-help" class="p-error">Invalid email.</small>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="field p-fluid mb-3">
-      <label for="password" class="block text-900 font-medium mb-2"
-        >Password</label
-      >
-      <input
-        pInputText
-        id="password"
-        type="password"
-        name="password"
-        placeholder="Password"
-        class="w-full"
-        minlength="10"
-        maxlength="25"
-        required
-        [(ngModel)]="password"
-        aria-describedby="pw-help"
-        #pwInput="ngModel"
-      />
-      <div *ngIf="pwInput.invalid && (pwInput.dirty || pwInput.touched)">
-        <!-- {{ pwInput.errors | json }} -->
+      <div class="field p-fluid mb-3">
+        <label for="password" class="block text-900 font-medium mb-2"
+          >Password</label
+        >
+        <input
+          pInputText
+          formControlName="password"
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          class="w-full"
+          aria-describedby="pw-help"
+        />
+        <div *ngIf="password.invalid && (password.dirty || password.touched)">
+          <!-- {{ password.errors | json }} -->
 
-        <div *ngIf="pwInput.errors?.['required']">
-          <small id="pw-help" class="p-error">Password is required.</small>
-        </div>
-        <div *ngIf="pwInput.errors?.['minlength']">
-          <small id="pw-help" class="p-error"
-            >Password must be at least 10 characters long.</small
-          >
+          <div *ngIf="password.errors?.['required']">
+            <small id="pw-help" class="p-error">Password is required.</small>
+          </div>
+          <div *ngIf="password.errors?.['minlength']">
+            <small id="pw-help" class="p-error"
+              >Password must be at least 10 characters long.</small
+            >
+          </div>
+          <div *ngIf="password.errors?.['maxlength']">
+            <small id="pw-help" class="p-error"
+              >Password length must not exceed 25 characters.</small
+            >
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
 
     <div class="flex align-items-center mb-5">
       <p-checkbox
+        formControlName="isCompany"
         id="company"
         [binary]="true"
         styleClass="mr-2"
-        [(ngModel)]="isCompany"
-        name="company"
+        name="isCompany"
       ></p-checkbox>
       <label for="company" class="text-900">Company login?</label>
     </div>
@@ -91,7 +90,7 @@
       label="Login"
       icon="pi pi-user"
       class="w-full"
-      [disabled]="!loginForm.form.valid"
+      [disabled]="!loginForm.valid"
     ></button>
   </form>
 </app-main-card>
