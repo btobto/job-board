@@ -6,7 +6,7 @@
 //   description?: string;
 // }
 
-import { OmitStrict } from '../types';
+import { OmitStrict } from '../shared/types';
 import { Company } from './company.model';
 
 export type CompanyRegister = OmitStrict<

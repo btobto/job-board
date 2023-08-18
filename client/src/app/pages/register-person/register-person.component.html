@@ -1,1 +1,161 @@
-<app-main-card> Register works </app-main-card>
+<app-main-card>
+  <div class="text-center mb-2">
+    <span class="text-600 font-medium line-height-3"
+      >Already have an account?</span
+    >
+    <a
+      class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
+      routerLink="/login"
+      >Login here!</a
+    >
+  </div>
+  <div class="text-center mb-5">
+    <span class="text-600 font-medium line-height-3"
+      >Are you a company representative?</span
+    >
+    <a
+      class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
+      routerLink="/register/company"
+      >Register here!</a
+    >
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    {{ registerForm.value | json }}
+    {{ registerForm.valid }}
+
+    <div class="field p-fluid mb-3">
+      <label for="email" class="block text-900 font-medium mb-2">Email</label>
+      <input
+        pInputText
+        formControlName="email"
+        id="email"
+        type="email"
+        name="email"
+        placeholder="Email address"
+        class="w-full"
+        aria-describedby="email-help"
+      />
+      <div *ngIf="email.invalid && (email.dirty || email.touched)">
+        <!-- {{ email.errors | json }} -->
+
+        <div *ngIf="email.errors?.['required']">
+          <small id="email-help" class="p-error">Email is required.</small>
+        </div>
+        <div *ngIf="email.errors?.['email']">
+          <small id="email-help" class="p-error">Invalid email.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="field p-fluid mb-3">
+      <label for="name" class="block text-900 font-medium mb-2">Name</label>
+      <input
+        pInputText
+        formControlName="name"
+        id="name"
+        type="name"
+        name="name"
+        placeholder="Name"
+        class="w-full"
+        aria-describedby="name-help"
+      />
+      <div *ngIf="name.invalid && (name.dirty || name.touched)">
+        <!-- {{ name.errors | json }} -->
+
+        <div *ngIf="name.errors?.['required']">
+          <small id="name-help" class="p-error">Name is required.</small>
+        </div>
+        <div *ngIf="name.errors?.['minlength']">
+          <small id="pw-help" class="p-error"
+            >Name must be at least 10 characters long.</small
+          >
+        </div>
+        <div *ngIf="name.errors?.['maxlength']">
+          <small id="pw-help" class="p-error"
+            >Name length must not exceed 25 characters.</small
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="field p-fluid mb-3">
+      <label for="password" class="block text-900 font-medium mb-2"
+        >Password</label
+      >
+      <input
+        pInputText
+        formControlName="password"
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Password"
+        class="w-full"
+        aria-describedby="pw-help"
+      />
+      <div *ngIf="password.invalid && (password.dirty || password.touched)">
+        <!-- {{ password.errors | json }} -->
+
+        <div *ngIf="password.errors?.['required']">
+          <small id="pw-help" class="p-error">Password is required.</small>
+        </div>
+        <div *ngIf="password.errors?.['minlength']">
+          <small id="pw-help" class="p-error"
+            >Password must be at least 10 characters long.</small
+          >
+        </div>
+        <div *ngIf="password.errors?.['maxlength']">
+          <small id="pw-help" class="p-error"
+            >Password length must not exceed 25 characters.</small
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="field p-fluid mb-5">
+      <span class="block text-900 font-medium mb-2">Location</span>
+      <div
+        class="card flex flex-column md:flex-row gap-3"
+        formGroupName="location"
+      >
+        <div class="w-full">
+          <label for="country" class="block text-900 font-normal mb-2 text-sm"
+            >Country</label
+          >
+          <p-dropdown
+            [options]="countries"
+            formControlName="country"
+            id="country"
+            type="text"
+            name="country"
+            placeholder="Country"
+          >
+          </p-dropdown>
+        </div>
+        <div class="w-full">
+          <label for="city" class="block text-900 font-normal mb-2 text-sm"
+            >City</label
+          >
+          <input
+            pInputText
+            formControlName="city"
+            id="city"
+            type="text"
+            name="city"
+            placeholder="City"
+            class="w-full"
+          />
+        </div>
+      </div>
+    </div>
+
+    <button
+      pButton
+      type="submit"
+      label="Register"
+      icon="pi pi-user"
+      class="w-full"
+      [disabled]="!registerForm.valid"
+    ></button>
+  </form>
+</app-main-card>
