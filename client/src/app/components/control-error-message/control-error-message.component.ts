@@ -11,12 +11,12 @@ export class ControlErrorMessageComponent {
   @Input() controlName!: string;
   @Input() control!: AbstractControl;
 
-  get errorMessage(): string | null {
-    let key = Object.getOwnPropertyNames(this.control.errors)[0];
-    return this.getErrorMessage(key, this.control.errors![key]);
+  get errorMessage(): string {
+    const key = Object.getOwnPropertyNames(this.control.errors)[0];
+    return this.constructErrorMessage(key, this.control.errors![key]);
   }
 
-  getErrorMessage(key: string, errors?: { [key: string]: any }) {
+  constructErrorMessage(key: string, errors?: { [key: string]: any }) {
     switch (key) {
       case 'required':
         return `${this.controlName} must not be empty.`;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { PersonRegister } from 'src/app/models';
 import { countryList } from 'src/app/shared/constants';
 import { locationValidator } from 'src/app/shared/validators';
 import { AppState } from 'src/app/state/app.state';
@@ -13,15 +14,9 @@ import { authActions } from 'src/app/state/auth';
 })
 export class RegisterPersonComponent implements OnInit {
   registerForm = this.fb.group({
-    name: [
-      '',
-      [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
-    ],
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
     email: ['', [Validators.required, Validators.email]],
-    password: [
-      '',
-      [Validators.required, Validators.minLength(10), Validators.maxLength(25)],
-    ],
+    password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(25)]],
     location: this.fb.group(
       {
         country: [''],
@@ -31,26 +26,17 @@ export class RegisterPersonComponent implements OnInit {
     ),
   });
 
-  countries: string[] = [];
+  countries: string[] = countryList;
 
-  constructor(
-    private store: Store<AppState>,
-    private fb: NonNullableFormBuilder
-  ) {}
+  constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
 
-  ngOnInit(): void {
-    this.countries = countryList;
-  }
+  ngOnInit(): void {}
 
   onSubmit() {
-    const value = this.registerForm.value as Required<
-      typeof this.registerForm.value
-    >;
-
     const formValue = this.registerForm.getRawValue();
-    console.log(formValue);
-
-    // this.store.dispatch(authActions.registerPerson({ payload: value }))
+    this.sanitizeLocationData(formValue);
+    // console.log(formValue);
+    this.store.dispatch(authActions.registerPerson({ payload: formValue }));
   }
 
   get name() {
@@ -65,11 +51,15 @@ export class RegisterPersonComponent implements OnInit {
     return this.registerForm.get('password')!;
   }
 
-  get country() {
-    return this.registerForm.get('location.country')!;
+  get location() {
+    return this.registerForm.get('location')!;
   }
 
-  get city() {
-    return this.registerForm.get('location.city')!;
+  sanitizeLocationData(formValue: PersonRegister) {
+    if (!formValue.location!.country.trim()) {
+      delete formValue.location;
+    } else if (!formValue.location!.city?.trim()) {
+      delete formValue.location!.city;
+    }
   }
 }

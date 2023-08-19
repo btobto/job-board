@@ -13,22 +13,12 @@ export class LoginComponent implements OnInit {
   loginForm = this.fb.group({
     payload: this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(25),
-        ],
-      ],
+      password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(25)]],
     }),
     isCompany: [false, Validators.required],
   });
 
-  constructor(
-    private store: Store<AppState>,
-    private fb: NonNullableFormBuilder
-  ) {}
+  constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
 
   ngOnInit(): void {}
 

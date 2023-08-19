@@ -8,11 +8,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private actions$: Actions, private authService: AuthService, private router: Router) {}
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -32,9 +28,7 @@ export class AuthEffects {
       ofType(authActions.autoLogin),
       map(() => this.authService.getUserFromLocalStorage()),
       exhaustMap((user) =>
-        user
-          ? of(authActions.loginSuccess({ user }))
-          : of(authActions.loginFailure({ error: null }))
+        user ? of(authActions.loginSuccess({ user })) : of(authActions.loginFailure({ error: null }))
       )
     )
   );

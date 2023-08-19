@@ -5,7 +5,7 @@ export interface Person {
   _id: string;
   name: string;
   email: string;
-  location: Location;
+  location?: Location;
   skills: string[];
-  prevExperience: WorkExperience;
+  prevExperience?: WorkExperience;
 }
