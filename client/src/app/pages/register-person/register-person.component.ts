@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { countryList } from 'src/app/shared/constants';
 import { locationValidator } from 'src/app/shared/validators';
 import { AppState } from 'src/app/state/app.state';
+import { authActions } from 'src/app/state/auth';
 
 @Component({
   selector: 'app-register-person',
@@ -45,8 +46,11 @@ export class RegisterPersonComponent implements OnInit {
     const value = this.registerForm.value as Required<
       typeof this.registerForm.value
     >;
+
     const formValue = this.registerForm.getRawValue();
     console.log(formValue);
+
+    // this.store.dispatch(authActions.registerPerson({ payload: value }))
   }
 
   get name() {
@@ -59,5 +63,13 @@ export class RegisterPersonComponent implements OnInit {
 
   get password() {
     return this.registerForm.get('password')!;
+  }
+
+  get country() {
+    return this.registerForm.get('location.country')!;
+  }
+
+  get city() {
+    return this.registerForm.get('location.city')!;
   }
 }

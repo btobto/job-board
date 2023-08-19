@@ -6,16 +6,14 @@ import {
 } from '@angular/forms';
 import { Location } from 'src/app/models';
 
-export const locationValidator: ValidatorFn = (
-  group: AbstractControl<Location>
-): ValidationErrors | null => {
-  const country = group.get('country');
-  const city = group.get('city');
-  const address = group.get('address');
+export const LOCATION_VALIDATOR_KEY = 'emptyLocationFields';
 
-  const valid = [country, city, address]
+export const locationValidator: ValidatorFn = (
+  group: AbstractControl
+): ValidationErrors | null => {
+  const valid = Object.values((group as FormGroup).controls)
     .map((c) => !!c)
     .every((v, i, a) => !i || v <= a[i - 1]);
 
-  return valid ? null : { emptyFields: true };
+  return valid ? null : { [LOCATION_VALIDATOR_KEY]: true };
 };

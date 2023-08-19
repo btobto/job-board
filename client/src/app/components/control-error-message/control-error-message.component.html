@@ -1,0 +1,5 @@
+<div
+  *ngIf="control.invalid && (control.dirty || control.touched) && errorMessage"
+>
+  <small class="p-error">{{ errorMessage }}</small>
+</div>

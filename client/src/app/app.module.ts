@@ -31,6 +31,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { ControlErrorMessageComponent } from './components/control-error-message/control-error-message.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { DropdownModule } from 'primeng/dropdown';
     PageNotFoundComponent,
     NavbarComponent,
     MainCardComponent,
+    ControlErrorMessageComponent,
   ],
   imports: [
     BrowserModule,

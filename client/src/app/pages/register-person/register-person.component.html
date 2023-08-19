@@ -21,32 +21,8 @@
   </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    {{ registerForm.value | json }}
-    {{ registerForm.valid }}
-
-    <div class="field p-fluid mb-3">
-      <label for="email" class="block text-900 font-medium mb-2">Email</label>
-      <input
-        pInputText
-        formControlName="email"
-        id="email"
-        type="email"
-        name="email"
-        placeholder="Email address"
-        class="w-full"
-        aria-describedby="email-help"
-      />
-      <div *ngIf="email.invalid && (email.dirty || email.touched)">
-        <!-- {{ email.errors | json }} -->
-
-        <div *ngIf="email.errors?.['required']">
-          <small id="email-help" class="p-error">Email is required.</small>
-        </div>
-        <div *ngIf="email.errors?.['email']">
-          <small id="email-help" class="p-error">Invalid email.</small>
-        </div>
-      </div>
-    </div>
+    <!-- {{ registerForm.value | json }}
+    {{ registerForm.valid }} -->
 
     <div class="field p-fluid mb-3">
       <label for="name" class="block text-900 font-medium mb-2">Name</label>
@@ -58,25 +34,30 @@
         name="name"
         placeholder="Name"
         class="w-full"
-        aria-describedby="name-help"
       />
-      <div *ngIf="name.invalid && (name.dirty || name.touched)">
-        <!-- {{ name.errors | json }} -->
+      <!-- {{ name.errors | json }} -->
+      <app-control-error-message
+        controlName="Name"
+        [control]="name"
+      ></app-control-error-message>
+    </div>
 
-        <div *ngIf="name.errors?.['required']">
-          <small id="name-help" class="p-error">Name is required.</small>
-        </div>
-        <div *ngIf="name.errors?.['minlength']">
-          <small id="pw-help" class="p-error"
-            >Name must be at least 10 characters long.</small
-          >
-        </div>
-        <div *ngIf="name.errors?.['maxlength']">
-          <small id="pw-help" class="p-error"
-            >Name length must not exceed 25 characters.</small
-          >
-        </div>
-      </div>
+    <div class="field p-fluid mb-3">
+      <label for="email" class="block text-900 font-medium mb-2">Email</label>
+      <input
+        pInputText
+        formControlName="email"
+        id="email"
+        type="email"
+        name="email"
+        placeholder="Email address"
+        class="w-full"
+      />
+      <!-- {{ email.errors | json }} -->
+      <app-control-error-message
+        controlName="Email"
+        [control]="email"
+      ></app-control-error-message>
     </div>
 
     <div class="field p-fluid mb-3">
@@ -91,25 +72,12 @@
         name="password"
         placeholder="Password"
         class="w-full"
-        aria-describedby="pw-help"
       />
-      <div *ngIf="password.invalid && (password.dirty || password.touched)">
-        <!-- {{ password.errors | json }} -->
-
-        <div *ngIf="password.errors?.['required']">
-          <small id="pw-help" class="p-error">Password is required.</small>
-        </div>
-        <div *ngIf="password.errors?.['minlength']">
-          <small id="pw-help" class="p-error"
-            >Password must be at least 10 characters long.</small
-          >
-        </div>
-        <div *ngIf="password.errors?.['maxlength']">
-          <small id="pw-help" class="p-error"
-            >Password length must not exceed 25 characters.</small
-          >
-        </div>
-      </div>
+      <!-- {{ password.errors | json }} -->
+      <app-control-error-message
+        controlName="Password"
+        [control]="password"
+      ></app-control-error-message>
     </div>
 
     <div class="field p-fluid mb-5">
