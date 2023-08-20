@@ -1,4 +1,4 @@
-import { Catch } from '@nestjs/common';
+import { Catch, HttpException } from '@nestjs/common';
 import { ArgumentsHost, ExceptionFilter } from '@nestjs/common/interfaces';
 import mongoose, { MongooseError } from 'mongoose';
 import { MongoError, MongoServerError } from 'mongodb';
@@ -40,9 +40,15 @@ export class MongoExceptionFilter implements ExceptionFilter {
 
     console.error(exception);
 
+    const errorName = HttpStatus[status]
+      .toLowerCase()
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
     response.status(status).json({
       statusCode: status,
-      error: HttpStatus[status],
+      error: errorName,
       message,
     });
   }

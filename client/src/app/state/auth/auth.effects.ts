@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from 'src/app/services/auth.service';
 import { authActions } from '.';
 import { catchError, exhaustMap, map, of, tap } from 'rxjs';
-import { User } from 'src/app/models';
+import { Company, Person, User } from 'src/app/models';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -23,14 +23,36 @@ export class AuthEffects {
     )
   );
 
+  register$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.registerPerson, authActions.registerCompany),
+      exhaustMap(({ payload }) =>
+        this.authService.register(payload).pipe(
+          map((user: User) => authActions.registerSuccess({ user })),
+          catchError((error) => of(authActions.registerFailure({ error })))
+        )
+      )
+    )
+  );
+
   autoLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.autoLogin),
       map(() => this.authService.getUserFromLocalStorage()),
-      exhaustMap((user) =>
-        user ? of(authActions.loginSuccess({ user })) : of(authActions.loginFailure({ error: null }))
-      )
+      map((user) => (user ? authActions.loginSuccess({ user }) : authActions.loginFailure({ error: null })))
     )
+  );
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.logout),
+        tap(() => {
+          this.authService.removeUserFromLocalStorage();
+          this.router.navigate(['/login']);
+        })
+      ),
+    { dispatch: false }
   );
 
   authSuccess$ = createEffect(
@@ -41,19 +63,7 @@ export class AuthEffects {
           this.authService.saveUserToLocalStorage(user);
           this.router.navigate(['/home']);
 
-          console.log('Login success: ', user);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  logout$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(authActions.logout),
-        tap(() => {
-          this.authService.removeUserFromLocalStorage();
-          this.router.navigate(['/login']);
+          console.log('Auth success: ', user);
         })
       ),
     { dispatch: false }

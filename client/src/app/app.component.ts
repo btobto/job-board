@@ -16,20 +16,22 @@ export class AppComponent implements OnInit {
 
   error$ = this.store.select(fromAuth.selectError);
 
-  constructor(
-    private store: Store<AppState>,
-    private messageService: MessageService
-  ) {}
+  constructor(private store: Store<AppState>, private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.error$.pipe(filter((e) => !!e)).subscribe((error: HttpErrorBody) =>
-      this.messageService.add({
-        key: 'globalToast',
-        severity: 'error',
-        summary: 'Error: ' + error.error,
-        detail: error.message,
-      })
-    );
+    this.error$
+      .pipe(
+        filter((e) => !!e),
+        tap((e) => console.log(e))
+      )
+      .subscribe((error: HttpErrorBody) =>
+        this.messageService.add({
+          key: 'globalToast',
+          severity: 'error',
+          summary: 'Error: ' + error.error,
+          detail: error.message,
+        })
+      );
 
     this.store.dispatch(authActions.autoLogin());
   }

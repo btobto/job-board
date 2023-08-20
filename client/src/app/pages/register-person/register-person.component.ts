@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { PersonRegister } from 'src/app/models';
-import { countryList } from 'src/app/shared/constants';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, countryList } from 'src/app/shared/constants';
 import { locationValidator } from 'src/app/shared/validators';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
@@ -16,7 +16,10 @@ export class RegisterPersonComponent implements OnInit {
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(25)]],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH), Validators.maxLength(PASSWORD_MAX_LENGTH)],
+    ],
     location: this.fb.group(
       {
         country: [''],

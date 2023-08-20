@@ -5,7 +5,7 @@ export class Location {
   @Prop({ required: true })
   country: string;
 
-  @Prop({ required: true })
+  @Prop()
   city: string;
 
   @Prop()

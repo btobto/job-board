@@ -27,14 +27,13 @@ export class CompanyDto {
   @MinLength(10)
   password: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsFQDN()
   website: string;
 
   @IsOptional()
   description: string;
 
-  @IsOptional()
   @IsArray()
   @Type(() => LocationDto)
   @ValidateNested()

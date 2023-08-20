@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from 'src/app/shared/constants';
 import { AppState } from 'src/app/state/app.state';
 import { authActions, fromAuth } from 'src/app/state/auth';
 
@@ -13,7 +14,10 @@ export class LoginComponent implements OnInit {
   loginForm = this.fb.group({
     payload: this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(25)]],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH), Validators.maxLength(PASSWORD_MAX_LENGTH)],
+      ],
     }),
     isCompany: [false, Validators.required],
   });

@@ -38,7 +38,7 @@ export class AuthService {
     return result;
   }
 
-  async login(user: User, userType: UserType) {
+  login(user: Omit<User, 'hashedPassword'>, userType: UserType) {
     const payload = {
       email: user.email,
       sub: user._id,
@@ -54,9 +54,14 @@ export class AuthService {
   async register(dto: PersonCreateDto | CompanyCreateDto, userType: UserType) {
     const hashedPassword = await this.hashingService.hash(dto.password);
 
-    await this.connection.model(userType).create({
-      ...dto,
-      hashedPassword,
-    });
+    const user: Omit<User, 'hashedPassword'> = await this.connection
+      .model(userType)
+      .create({
+        ...dto,
+        hashedPassword,
+      })
+      .then((doc) => doc.toObject());
+
+    return this.login(user, userType);
   }
 }
