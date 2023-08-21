@@ -21,15 +21,13 @@ export class ControlErrorMessageComponent {
       case 'required':
         return `${this.controlName} must not be empty.`;
       case 'minlength':
-        return `${this.controlName} must be at least ${
-          errors!['requiredLength']
-        } characters long.`;
+        return `${this.controlName} must be at least ${errors!['requiredLength']} characters long.`;
       case 'maxlength':
-        return `${this.controlName} length must not exceed ${
-          errors!['requiredLength']
-        } characters.`;
+        return `${this.controlName} length must not exceed ${errors!['requiredLength']} characters.`;
       case 'email':
         return 'Not a valid email address.';
+      case 'pattern':
+        return `${this.controlName} is not valid.`;
       case LOCATION_VALIDATOR_KEY:
         return 'Previous location fields must not be empty.';
       default:

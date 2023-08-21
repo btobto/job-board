@@ -37,7 +37,7 @@ export class Company {
   description: string;
 
   @Prop({ type: [LocationSchema], _id: false })
-  offices: Location[];
+  locations: Location[];
 
   @Prop({ default: 0 })
   ratingsSum: number;

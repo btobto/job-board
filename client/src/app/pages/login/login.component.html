@@ -51,6 +51,12 @@
       <label for="company" class="text-900">Company login?</label>
     </div>
 
-    <button pButton type="submit" label="Login" icon="pi pi-user" class="w-full" [disabled]="!loginForm.valid"></button>
+    <p-button
+      type="submit"
+      label="Login"
+      icon="pi pi-user"
+      styleClass="w-full"
+      [disabled]="!loginForm.valid"
+    ></p-button>
   </form>
 </app-main-card>

@@ -6,6 +6,6 @@ export interface Company {
   email: string;
   website: string;
   description?: string;
-  offices: Location[];
+  locations: Location[];
   rating: number;
 }

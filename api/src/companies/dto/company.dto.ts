@@ -37,7 +37,7 @@ export class CompanyDto {
   @IsArray()
   @Type(() => LocationDto)
   @ValidateNested()
-  offices: LocationDto[];
+  locations: LocationDto[];
 
   @IsNotEmpty()
   ratingsSum: number;

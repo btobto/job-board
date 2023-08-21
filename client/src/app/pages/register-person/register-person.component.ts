@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { PersonRegister } from 'src/app/models';
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, countryList } from 'src/app/shared/constants';
+import {
+  NAME_MAX_LENGTH,
+  NAME_MIN_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  COUNTRY_LIST,
+} from 'src/app/shared/constants';
 import { locationValidator } from 'src/app/shared/validators';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
@@ -13,8 +19,12 @@ import { authActions } from 'src/app/state/auth';
   styleUrls: ['./register-person.component.scss'],
 })
 export class RegisterPersonComponent implements OnInit {
+  constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
+  ngOnInit(): void {}
+
+  countries: string[] = COUNTRY_LIST;
   registerForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+    name: ['', [Validators.required, Validators.minLength(NAME_MIN_LENGTH), Validators.maxLength(NAME_MAX_LENGTH)]],
     email: ['', [Validators.required, Validators.email]],
     password: [
       '',
@@ -29,16 +39,10 @@ export class RegisterPersonComponent implements OnInit {
     ),
   });
 
-  countries: string[] = countryList;
-
-  constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
-
-  ngOnInit(): void {}
-
   onSubmit() {
     const formValue = this.registerForm.getRawValue();
     this.sanitizeLocationData(formValue);
-    // console.log(formValue);
+    console.log(formValue);
     this.store.dispatch(authActions.registerPerson({ payload: formValue }));
   }
 
