@@ -9,9 +9,9 @@
   </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    {{ registerForm.value | json }}
+    <!-- {{ registerForm.value | json }}
     <br />
-    {{ registerForm.valid }}
+    {{ registerForm.valid }} -->
 
     <div class="field p-fluid mb-3">
       <label for="name" class="block text-900 font-medium mb-2">Company name</label>
@@ -121,7 +121,12 @@
       ></p-button>
     </div>
 
-    <p-button type="submit" label="Register" icon="pi pi-user" styleClass="w-full"></p-button>
-    <!-- [disabled]="!registerForm.valid" -->
+    <p-button
+      type="submit"
+      label="Register"
+      icon="pi pi-user"
+      styleClass="w-full"
+      [disabled]="!registerForm.valid"
+    ></p-button>
   </form>
 </app-main-card>

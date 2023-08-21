@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
 
@@ -10,18 +10,40 @@ import { authActions } from 'src/app/state/auth';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(
-    private store: Store<AppState>,
-    private confirmationService: ConfirmationService
-  ) {}
+  constructor(private store: Store<AppState>, private confirmationService: ConfirmationService) {}
 
-  ngOnInit(): void {}
+  items: MenuItem[] = [];
+
+  ngOnInit(): void {
+    this.items = [
+      {
+        label: 'Search',
+        icon: PrimeIcons.SEARCH,
+        routerLink: ['/search'],
+      },
+      {
+        label: 'Account',
+        icon: PrimeIcons.USER,
+        items: [
+          {
+            label: 'Settings',
+            icon: PrimeIcons.COG,
+          },
+          {
+            label: 'Logout',
+            icon: PrimeIcons.SIGN_OUT,
+            command: () => this.logout(),
+          },
+        ],
+      },
+    ];
+  }
 
   logout() {
     this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Are you sure you want to log out?',
-      icon: 'pi pi-exclamation-triangle',
+      icon: PrimeIcons.EXCLAMATION_TRIANGLE,
       key: 'logoutDialog',
       accept: () => {
         this.store.dispatch(authActions.logout());

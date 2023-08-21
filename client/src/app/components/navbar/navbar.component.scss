@@ -1,0 +1,17 @@
+:host ::ng-deep  {
+	.p-menubar {
+		border-radius: 0;
+		border: 0;
+		border-bottom: 1px solid #dee2e6; 
+	}
+
+	p-menubarsub {
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	a.p-menubar-button{
+		order: 3;
+	}
+}	

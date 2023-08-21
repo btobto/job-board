@@ -32,7 +32,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ControlErrorMessageComponent } from './components/control-error-message/control-error-message.component';
-import { COUNTRY_LIST } from './shared/constants';
+import { MenubarModule } from 'primeng/menubar';
 
 @NgModule({
   declarations: [
@@ -68,6 +68,7 @@ import { COUNTRY_LIST } from './shared/constants';
     ConfirmDialogModule,
     ReactiveFormsModule,
     DropdownModule,
+    MenubarModule,
   ],
   providers: [MessageService, ConfirmationService],
   bootstrap: [AppComponent],
