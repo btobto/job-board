@@ -6,7 +6,10 @@ import { RegisterCompanyComponent } from './pages/register-company/register-comp
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { AuthGuard } from './guard/auth.guard';
+import { AuthGuard, LoggedInAuthGuard } from './guards';
+import { SearchComponent } from './pages/search/search.component';
+import { PersonComponent } from './pages/person/person.component';
+import { CompanyComponent } from './pages/company/company.component';
 
 const routes: Routes = [
   {
@@ -15,13 +18,23 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent },
+      { path: 'search', component: SearchComponent },
+      { path: 'person/:id', component: PersonComponent },
+      { path: 'company/:id', component: CompanyComponent },
+      { path: '404', component: PageNotFoundComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ],
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'register/user', component: RegisterPersonComponent },
-  { path: 'register/company', component: RegisterCompanyComponent },
-  { path: '**', component: PageNotFoundComponent },
+  {
+    path: 'auth',
+    canActivateChild: [LoggedInAuthGuard],
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register-user', component: RegisterPersonComponent },
+      { path: 'register-company', component: RegisterCompanyComponent },
+    ],
+  },
+  { path: '**', redirectTo: '/404' },
 ];
 
 @NgModule({

@@ -1,11 +1,13 @@
 <app-main-card>
   <div class="text-center mb-2">
     <span class="text-600 font-medium line-height-3">Already have an account?</span>
-    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" routerLink="/login">Login here!</a>
+    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" routerLink="/auth/login">Login here!</a>
   </div>
   <div class="text-center mb-5">
     <span class="text-600 font-medium line-height-3">Are you an individual without an account?</span>
-    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" routerLink="/register/user">Register here!</a>
+    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" routerLink="/auth/register-user"
+      >Register here!</a
+    >
   </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">

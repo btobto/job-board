@@ -3,13 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from 'src/app/services/auth.service';
 import { authActions } from '.';
 import { catchError, exhaustMap, map, of, tap } from 'rxjs';
-import { Company, Person, User } from 'src/app/models';
-import { Router } from '@angular/router';
+import { Company, HttpErrorBody, Person, User } from 'src/app/models';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService, private router: Router) {}
-
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.login),
@@ -39,7 +38,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(authActions.autoLogin),
       map(() => this.authService.getUserFromLocalStorage()),
-      map((user) => (user ? authActions.loginSuccess({ user }) : authActions.loginFailure({ error: null })))
+      map((user) => (user ? authActions.autoLoginSuccess({ user }) : authActions.autoLoginFaliure()))
     )
   );
 
@@ -49,7 +48,7 @@ export class AuthEffects {
         ofType(authActions.logout),
         tap(() => {
           this.authService.removeUserFromLocalStorage();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/auth/login']);
         })
       ),
     { dispatch: false }
@@ -61,11 +60,28 @@ export class AuthEffects {
         ofType(authActions.loginSuccess, authActions.registerSuccess),
         tap(({ user }) => {
           this.authService.saveUserToLocalStorage(user);
-          this.router.navigate(['/home']);
-
+          this.router.navigate(['/']);
           console.log('Auth success: ', user);
         })
       ),
     { dispatch: false }
   );
+
+  authFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.loginFailure, authActions.registerFailure),
+        map(({ error }) => error.error),
+        tap((error: HttpErrorBody) => this.notificationService.showError(error.error, error.message))
+      ),
+    { dispatch: false }
+  );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 }

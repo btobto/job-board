@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
+import { Observable, Subscription } from 'rxjs';
+import { User } from 'src/app/models';
+import { getUserType } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
-import { authActions } from 'src/app/state/auth';
+import { authActions, fromAuth } from 'src/app/state/auth';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
-  constructor(private store: Store<AppState>, private confirmationService: ConfirmationService) {}
-
+export class NavbarComponent implements OnInit, OnDestroy {
+  userSub!: Subscription;
+  user!: User;
   items: MenuItem[] = [];
 
+  constructor(private store: Store<AppState>, private confirmationService: ConfirmationService) {}
+
   ngOnInit(): void {
+    this.userSub = this.store.select(fromAuth.selectUser).subscribe((user) => (this.user = user!));
+
     this.items = [
       {
         label: 'Search',
@@ -26,8 +33,9 @@ export class NavbarComponent implements OnInit {
         icon: PrimeIcons.USER,
         items: [
           {
-            label: 'Settings',
-            icon: PrimeIcons.COG,
+            label: 'View profile',
+            icon: PrimeIcons.USER_EDIT,
+            routerLink: [`/${getUserType(this.user)}`, this.user._id],
           },
           {
             label: 'Logout',
@@ -37,6 +45,10 @@ export class NavbarComponent implements OnInit {
         ],
       },
     ];
+  }
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
   }
 
   logout() {

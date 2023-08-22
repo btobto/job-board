@@ -33,6 +33,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ControlErrorMessageComponent } from './components/control-error-message/control-error-message.component';
 import { MenubarModule } from 'primeng/menubar';
+import { SearchComponent } from './pages/search/search.component';
+import { PersonComponent } from './pages/person/person.component';
+import { CompanyComponent } from './pages/company/company.component';
+import { personReducer } from './state/person/person.reducer';
+import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +50,9 @@ import { MenubarModule } from 'primeng/menubar';
     NavbarComponent,
     MainCardComponent,
     ControlErrorMessageComponent,
+    SearchComponent,
+    PersonComponent,
+    CompanyComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +64,7 @@ import { MenubarModule } from 'primeng/menubar';
     CheckboxModule,
     ButtonModule,
     MessagesModule,
-    StoreModule.forRoot<AppState>({ auth: authReducer }),
+    StoreModule.forRoot<AppState>({ auth: authReducer, person: personReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
@@ -70,7 +78,7 @@ import { MenubarModule } from 'primeng/menubar';
     DropdownModule,
     MenubarModule,
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
