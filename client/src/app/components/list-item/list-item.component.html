@@ -1,0 +1,9 @@
+<li class="list-item" *ngIf="customContent || (!customContent && value)">
+  <div class="list-item-label">{{ label }}</div>
+  <ng-container *ngIf="!customContent">
+    <div class="list-item-value">{{ value }}</div>
+  </ng-container>
+  <ng-container *ngIf="customContent">
+    <ng-content></ng-content>
+  </ng-container>
+</li>

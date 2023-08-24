@@ -5,8 +5,7 @@ import {
   WorkExperience,
   WorkExperienceSchema,
 } from '../../common/schemas/work-experience.schema';
-import { EducationSchema } from 'src/common/schemas/educaton.schema';
-import { Education } from 'src/common/dto/education.dto';
+import { EducationSchema, Education } from 'src/common/schemas/educaton.schema';
 
 export type PersonDocument = HydratedDocument<Person>;
 

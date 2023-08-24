@@ -1,10 +1,30 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";
+@import "primeflex/primeflex.scss";
 
 body {
 	font-family: var(--font-family);
 	background-color: var(--surface-ground);
 	margin: 0;
+}
+
+.list {
+	@include styleclass('list-none p-0 my-2');
+}
+
+.list-item {
+	@include styleclass('flex align-items-center py-3 pr-2 border-top-1 surface-border flex-wrap')
+}
+
+.list-item-label {
+	@include styleclass('text-500 w-6 md:w-2 font-medium');
+}
+
+.list-item-value {
+	@include styleclass('text-900 w-full md:w-8 flex-grow-1');
+}
+
+.chips-wrapper {
+	@include styleclass('text-900 w-full flex flex-grow-1 flex-wrap gap-2');
 }

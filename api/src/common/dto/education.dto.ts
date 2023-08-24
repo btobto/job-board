@@ -8,7 +8,7 @@ import {
   isPositive,
 } from 'class-validator';
 
-export class Education {
+export class EducationDto {
   @IsNotEmpty()
   school: string;
 

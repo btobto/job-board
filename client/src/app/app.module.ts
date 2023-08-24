@@ -41,6 +41,7 @@ import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
 import { PersonEffects } from './state/person/person.effects';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChipModule } from 'primeng/chip';
+import { ListItemComponent } from './components/list-item/list-item.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ChipModule } from 'primeng/chip';
     SearchComponent,
     PersonComponent,
     CompanyComponent,
+    ListItemComponent,
   ],
   imports: [
     BrowserModule,

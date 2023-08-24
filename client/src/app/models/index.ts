@@ -7,3 +7,5 @@ export * from './person-register.model';
 export * from './user.model';
 export * from './user-login.model';
 export * from './http-error-body.model';
+export * from './education.model';
+export * from './list-item.model';

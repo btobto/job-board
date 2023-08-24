@@ -9,7 +9,7 @@ export interface Person {
   about?: string;
   location?: Location;
   skills: string[];
-  prevExperience?: WorkExperience[];
+  prevExperience: WorkExperience[];
   education: Education[];
   imagePath?: string;
   accessToken: string;

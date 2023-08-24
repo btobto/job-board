@@ -9,8 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { LocationDto, WorkExperienceDto } from 'src/common/dto';
-import { Education } from 'src/common/dto/education.dto';
+import { LocationDto, WorkExperienceDto, EducationDto } from 'src/common/dto';
 
 export class PersonDto {
   @IsNotEmpty()
@@ -49,7 +48,7 @@ export class PersonDto {
 
   @IsOptional()
   @IsArray()
-  @Type(() => Education)
+  @Type(() => EducationDto)
   @ValidateNested()
-  education: Education[];
+  education: EducationDto[];
 }
