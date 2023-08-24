@@ -6,6 +6,15 @@ export class WorkExperience {
   companyName: string;
 
   @Prop({ required: true })
+  position: string;
+
+  @Prop()
+  description: string;
+
+  @Prop([String])
+  skills: string[];
+
+  @Prop({ required: true })
   yearFrom: number;
 
   @Prop()

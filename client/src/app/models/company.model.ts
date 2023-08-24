@@ -5,7 +5,9 @@ export interface Company {
   name: string;
   email: string;
   website: string;
-  description?: string;
+  about?: string;
   locations: Location[];
   rating: number;
+  imagePath?: string;
+  accessToken: string;
 }

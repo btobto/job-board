@@ -9,13 +9,17 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { Person } from './schemas';
 import { PersonsService } from './persons.service';
 import { Public } from 'src/auth/decorators';
 import { ResourceOwhershipGuard } from 'src/auth/guards';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('persons')
 export class PersonsController {
@@ -35,11 +39,13 @@ export class PersonsController {
 
   @Patch(':id')
   @UseGuards(ResourceOwhershipGuard)
+  @UseInterceptors(FileInterceptor('image'))
   async update(
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: PersonUpdateDto,
+    @UploadedFile() image: Express.Multer.File,
   ): Promise<Person> {
-    return await this.personsService.update(id, dto);
+    return await this.personsService.update(id, dto, image);
   }
 
   @Delete(':id')

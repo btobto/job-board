@@ -3,7 +3,7 @@ import { CompanyDto } from './company.dto';
 
 export class CompanyCreateDto extends OmitType(CompanyDto, [
   'id',
-  'description',
+  'about',
   'ratingsCount',
   'ratingsSum',
 ] as const) {}

@@ -10,6 +10,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards';
 import { DocumentToObjectInterceptor } from './common/interceptors';
 import { MongooseConfigService } from './config';
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterConfigService } from './config/multer-config.service';
 
 @Module({
   imports: [
@@ -17,6 +19,9 @@ import { MongooseConfigService } from './config';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useClass: MongooseConfigService,
+    }),
+    MulterModule.registerAsync({
+      useClass: MulterConfigService,
     }),
     PersonsModule,
     CompaniesModule,
@@ -26,10 +31,10 @@ import { MongooseConfigService } from './config';
   ],
   controllers: [],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: DocumentToObjectInterceptor,

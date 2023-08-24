@@ -2,7 +2,7 @@
 	.p-menubar {
 		border-radius: 0;
 		border: 0;
-		border-bottom: 1px solid #dee2e6; 
+		// border-bottom: 1px solid #dee2e6; 
 	}
 
 	p-menubarsub {
@@ -14,4 +14,15 @@
 	a.p-menubar-button{
 		order: 3;
 	}
+
+	.btn-logo {
+		padding: '0.4rem';
+		white-space: nowrap;
+	}
+
+	.btn-navbar {
+		outline: none;
+   		box-shadow: none;
+	}
 }	
+

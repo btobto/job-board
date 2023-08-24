@@ -40,11 +40,19 @@ export class PersonsService {
     return query.limit(10).select('name skills location').exec();
   }
 
-  update(id: string, dto: PersonUpdateDto): Promise<Person> {
+  update(
+    id: string,
+    dto: PersonUpdateDto,
+    img?: Express.Multer.File,
+  ): Promise<Person> {
     return this.personModel
-      .findByIdAndUpdate(id, dto, {
-        new: true,
-      })
+      .findByIdAndUpdate(
+        id,
+        img ? { ...dto, imagePath: '/' + img.filename } : { ...dto },
+        {
+          new: true,
+        },
+      )
       .orFail()
       .exec();
   }

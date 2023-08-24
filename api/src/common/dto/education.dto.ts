@@ -1,26 +1,24 @@
 import {
-  ArrayUnique,
-  IsArray,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsPositive,
+  isNotEmpty,
+  isPositive,
 } from 'class-validator';
 
-export class WorkExperienceDto {
+export class Education {
   @IsNotEmpty()
-  companyName: string;
-
-  @IsNotEmpty()
-  position: string;
+  school: string;
 
   @IsOptional()
-  description: string;
+  degree: string;
 
   @IsOptional()
-  @IsArray()
-  @ArrayUnique()
-  skills: string[];
+  @IsNumber()
+  @IsPositive()
+  grade: number;
 
   @IsNotEmpty()
   @IsInt()

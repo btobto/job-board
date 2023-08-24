@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { personActions } from '.';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { PersonService } from 'src/app/services/person.service';
 import { HttpErrorBody, Person } from 'src/app/models';
 import { NotificationService } from 'src/app/services/notification.service';

@@ -32,7 +32,7 @@ export class CompanyDto {
   website: string;
 
   @IsOptional()
-  description: string;
+  about: string;
 
   @IsArray()
   @Type(() => LocationDto)

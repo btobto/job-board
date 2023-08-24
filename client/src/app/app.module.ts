@@ -2,7 +2,7 @@ import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -38,6 +38,9 @@ import { PersonComponent } from './pages/person/person.component';
 import { CompanyComponent } from './pages/company/company.component';
 import { personReducer } from './state/person/person.reducer';
 import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
+import { PersonEffects } from './state/person/person.effects';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ChipModule } from 'primeng/chip';
 
 @NgModule({
   declarations: [
@@ -69,7 +72,7 @@ import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, PersonEffects]),
     HttpClientModule,
     ToastModule,
     ProgressSpinnerModule,
@@ -77,8 +80,14 @@ import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
     ReactiveFormsModule,
     DropdownModule,
     MenubarModule,
+    ChipModule,
   ],
-  providers: [MessageService, ConfirmationService, { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' }],
+  providers: [
+    MessageService,
+    ConfirmationService,
+    { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -81,7 +81,6 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
 }

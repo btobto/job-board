@@ -1,3 +1,4 @@
+import { Education } from './education.model';
 import { Location } from './location.model';
 import { WorkExperience } from './work-experience.model';
 
@@ -5,7 +6,11 @@ export interface Person {
   _id: string;
   name: string;
   email: string;
+  about?: string;
   location?: Location;
   skills: string[];
-  prevExperience?: WorkExperience;
+  prevExperience?: WorkExperience[];
+  education: Education[];
+  imagePath?: string;
+  accessToken: string;
 }

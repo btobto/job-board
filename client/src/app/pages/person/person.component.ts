@@ -14,14 +14,16 @@ import { fromPerson, personActions } from 'src/app/state/person';
   styleUrls: ['./person.component.scss'],
 })
 export class PersonComponent implements OnInit {
-  loggedInUser: Observable<User> = this.store.select(fromAuth.selectUser).pipe(filter(isNotNull)); // as User ?
-  selectedPerson: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
+  loggedInUser$: Observable<User> = this.store.select(fromAuth.selectUser).pipe(filter(isNotNull)); // as User ?
+  selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
-    this.route.params.subscribe((params) => {
-      this.store.dispatch(personActions.loadPerson({ personId: params['id'] }));
-    });
+    this.store.dispatch(personActions.loadPerson({ personId: this.route.snapshot.params['id'] }));
   }
 
   ngOnInit(): void {}
+
+  getPersonPosition(person: Person): string {
+    return 'CEO of Testosterone';
+  }
 }

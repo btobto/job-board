@@ -34,7 +34,7 @@ export class Company {
   website: string;
 
   @Prop()
-  description: string;
+  about: string;
 
   @Prop({ type: [LocationSchema], _id: false })
   locations: Location[];
@@ -44,6 +44,9 @@ export class Company {
 
   @Prop({ default: 0 })
   ratingsCount: number;
+
+  @Prop()
+  imagePath: string;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);

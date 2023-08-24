@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LocationDto, WorkExperienceDto } from 'src/common/dto';
+import { Education } from 'src/common/dto/education.dto';
 
 export class PersonDto {
   @IsNotEmpty()
@@ -28,6 +29,9 @@ export class PersonDto {
   password: string;
 
   @IsOptional()
+  about: string;
+
+  @IsOptional()
   @ValidateNested()
   @Type(() => LocationDto)
   location: LocationDto;
@@ -42,4 +46,10 @@ export class PersonDto {
   @Type(() => WorkExperienceDto)
   @ValidateNested()
   prevExperience: WorkExperienceDto[];
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => Education)
+  @ValidateNested()
+  education: Education[];
 }

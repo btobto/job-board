@@ -5,6 +5,8 @@ import {
   WorkExperience,
   WorkExperienceSchema,
 } from '../../common/schemas/work-experience.schema';
+import { EducationSchema } from 'src/common/schemas/educaton.schema';
+import { Education } from 'src/common/dto/education.dto';
 
 export type PersonDocument = HydratedDocument<Person>;
 
@@ -29,6 +31,9 @@ export class Person {
   @Prop({ required: true })
   hashedPassword: string;
 
+  @Prop()
+  about: string;
+
   @Prop({ type: LocationSchema, _id: false })
   location: Location;
 
@@ -37,6 +42,12 @@ export class Person {
 
   @Prop({ type: [WorkExperienceSchema], _id: false })
   prevExperience: WorkExperience[];
+
+  @Prop({ type: [EducationSchema], _id: false })
+  education: Education[];
+
+  @Prop()
+  imagePath: string;
 }
 
 export const PersonSchema = SchemaFactory.createForClass(Person);

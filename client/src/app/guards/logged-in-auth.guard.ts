@@ -15,11 +15,11 @@ import { fromAuth } from '../state/auth';
 @Injectable({
   providedIn: 'root',
 })
-export class LoggedInAuthGuard implements CanActivateChild {
+export class LoggedInAuthGuard implements CanActivate {
   constructor(private store: Store<AppState>, private router: Router) {}
 
-  canActivateChild(
-    childRoute: ActivatedRouteSnapshot,
+  canActivate(
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     return this.store.select(fromAuth.selectIsLoggedIn).pipe(
