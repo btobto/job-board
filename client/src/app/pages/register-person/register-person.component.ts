@@ -30,13 +30,7 @@ export class RegisterPersonComponent implements OnInit {
       '',
       [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH), Validators.maxLength(PASSWORD_MAX_LENGTH)],
     ],
-    location: this.fb.group(
-      {
-        country: [''],
-        city: [''],
-      },
-      { validators: locationValidator }
-    ),
+    location: [],
   });
 
   onSubmit() {
@@ -63,10 +57,8 @@ export class RegisterPersonComponent implements OnInit {
   }
 
   sanitizeLocationData(formValue: PersonRegister) {
-    if (!formValue.location!.country.trim()) {
+    if (!formValue.location || !formValue.location.country) {
       delete formValue.location;
-    } else if (!formValue.location!.city?.trim()) {
-      delete formValue.location!.city;
     }
   }
 }

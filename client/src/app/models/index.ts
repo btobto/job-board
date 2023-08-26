@@ -9,3 +9,4 @@ export * from './user-login.model';
 export * from './http-error-body.model';
 export * from './education.model';
 export * from './list-item.model';
+export * from './file-select-event.model';

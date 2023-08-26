@@ -1,0 +1,42 @@
+<!-- {{ locationGroup.value | json }}
+<br /> -->
+<div class="card flex flex-column md:flex-row gap-3" [formGroup]="locationGroup">
+  <div class="w-full">
+    <label for="country" class="block text-900 font-normal mb-2 text-sm">Country</label>
+    <p-dropdown
+      [options]="countries"
+      formControlName="country"
+      id="country"
+      type="text"
+      placeholder="Country"
+      [showClear]="true"
+      [autoDisplayFirst]="false"
+      (blur)="onTouched()"
+    >
+    </p-dropdown>
+  </div>
+  <div class="w-full">
+    <label for="city" class="block text-900 font-normal mb-2 text-sm">City</label>
+    <input
+      pInputText
+      formControlName="city"
+      id="city"
+      type="text"
+      placeholder="City"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+  </div>
+  <div class="w-full" *ngIf="hasAddress">
+    <label for="address" class="block text-900 font-normal mb-2 text-sm">Address</label>
+    <input
+      pInputText
+      formControlName="address"
+      id="address"
+      type="text"
+      placeholder="Address"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+  </div>
+</div>

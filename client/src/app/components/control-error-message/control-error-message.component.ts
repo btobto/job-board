@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { LOCATION_VALIDATOR_KEY } from 'src/app/shared/validators';
+import { LOCATION_VALIDATOR_KEY, YEAR_SPAN_VALIDATOR_KEY } from 'src/app/shared/validators';
 
 @Component({
   selector: 'app-control-error-message',
@@ -30,6 +30,8 @@ export class ControlErrorMessageComponent {
         return `${this.controlName} is not valid.`;
       case LOCATION_VALIDATOR_KEY:
         return 'Previous location fields must not be empty.';
+      case YEAR_SPAN_VALIDATOR_KEY:
+        return 'Year from cannot be greater than year to.';
       default:
         return 'Invalid input.';
     }

@@ -4,6 +4,9 @@ export const PASSWORD_MAX_LENGTH = 128;
 export const NAME_MIN_LENGTH = 2;
 export const NAME_MAX_LENGTH = 30;
 
+export const MIN_YEAR = 1970;
+export const MAX_YEAR = new Date().getFullYear();
+
 export const URL_REGEX = /^((https?|http?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/;
 
 export const COUNTRY_LIST = [

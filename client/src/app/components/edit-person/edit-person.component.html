@@ -1,0 +1,48 @@
+<div class="w-30rem">
+  <div class="flex flex-column align-items-center gap-3">
+    <div class="circle-crop"><img [src]="imageSource" class="circle-crop" /></div>
+    <div>
+      <p-fileUpload
+        #fileUpload
+        mode="basic"
+        chooseLabel="Upload picture"
+        chooseIcon="pi pi-upload"
+        accept=".jpg,.jpeg,.png"
+        [maxFileSize]="10000000"
+        (onSelect)="onImageSelected($event)"
+      ></p-fileUpload>
+    </div>
+  </div>
+
+  <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
+    <!-- {{ editForm.value | json }} -->
+
+    <div class="field p-fluid mb-3">
+      <label for="name" class="block text-900 font-medium mb-2">Name</label>
+      <input pInputText formControlName="name" id="name" type="text" name="name" placeholder="Name" class="w-full" />
+      <!-- {{ name.errors | json }} -->
+      <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
+    </div>
+
+    <div class="field p-fluid mb-3">
+      <label for="about" class="block text-900 font-medium mb-2">About</label>
+      <textarea
+        pInputTextarea
+        formControlName="about"
+        id="about"
+        name="about"
+        placeholder="About"
+        [autoResize]="true"
+        class="w-full"
+      ></textarea>
+      <!-- {{ name.errors | json }} -->
+      <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
+    </div>
+
+    <div class="field p-fluid mb-5">
+      <span class="block text-900 font-medium mb-2">Location</span>
+      <app-location-form-group formControlName="location" [hasAddress]="false"></app-location-form-group>
+      <app-control-error-message [control]="location"></app-control-error-message>
+    </div>
+  </form>
+</div>

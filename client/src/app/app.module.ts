@@ -42,6 +42,12 @@ import { PersonEffects } from './state/person/person.effects';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChipModule } from 'primeng/chip';
 import { ListItemComponent } from './components/list-item/list-item.component';
+import { EditPersonComponent } from './components/edit-person/edit-person.component';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ChipsModule } from 'primeng/chips';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { LocationFormGroupComponent } from './components/location-form-group/location-form-group.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +64,8 @@ import { ListItemComponent } from './components/list-item/list-item.component';
     PersonComponent,
     CompanyComponent,
     ListItemComponent,
+    EditPersonComponent,
+    LocationFormGroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,10 +91,15 @@ import { ListItemComponent } from './components/list-item/list-item.component';
     DropdownModule,
     MenubarModule,
     ChipModule,
+    DynamicDialogModule,
+    FileUploadModule,
+    ChipsModule,
+    InputTextareaModule,
   ],
   providers: [
     MessageService,
     ConfirmationService,
+    DialogService,
     { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],

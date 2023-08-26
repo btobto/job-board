@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Observable, combineLatest, filter, map } from 'rxjs';
+import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
 import { Education, Person, User, WorkExperience, ListItem } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums/user-type.enum';
 import { getUserType, isNotNull } from 'src/app/shared/helpers';
@@ -14,18 +16,37 @@ import { fromPerson, personActions } from 'src/app/state/person';
   templateUrl: './person.component.html',
   styleUrls: ['./person.component.scss'],
 })
-export class PersonComponent implements OnInit {
+export class PersonComponent implements OnInit, OnDestroy {
   loggedInUser$: Observable<User> = this.store.select(fromAuth.selectUser).pipe(filter(isNotNull));
   selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
-
   users$ = combineLatest([this.selectedPerson$, this.loggedInUser$]).pipe(
     map(([person, loggedInUser]) => ({ person, loggedInUser }))
   );
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
+  dialogRef: DynamicDialogRef | undefined;
+
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
 
   ngOnInit(): void {
-    this.store.dispatch(personActions.loadPerson({ personId: this.route.snapshot.params['id'] }));
+    this.route.params.subscribe((params) => {
+      this.store.dispatch(personActions.loadPerson({ personId: params['id'] }));
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.dialogRef) this.dialogRef.destroy();
+  }
+
+  openEditPersonDialog(person: Person) {
+    this.dialogRef = this.dialogService.open(EditPersonComponent, {
+      header: 'Edit profile',
+      dismissableMask: true,
+      data: { person },
+    });
+
+    // this.dialogRef.onClose.subscribe((person: Person) => {
+    //   console.log('From dialog: ', person);
+    // });
   }
 
   getPersonPosition(person: Person): string {
@@ -42,11 +63,32 @@ export class PersonComponent implements OnInit {
       }
     }
 
-    return positions ? positions.join(' / ') : 'Job Board user';
+    return positions.length ? positions.join(' / ') : 'Job Board user';
   }
 
   formatPeriod(yearFrom: number, yearTo?: number): string {
     return `${yearFrom} - ${yearTo ?? 'Present'}`;
+  }
+
+  isPersonLoggedInUser(person: Person, loggedInUser: User): boolean {
+    return getUserType(loggedInUser) === UserType.Person && person._id === loggedInUser._id;
+  }
+
+  getNoAttributeMessage(person: Person, loggedInUser: User, attribute: string) {
+    const [user, pronoun] = this.isPersonLoggedInUser(person, loggedInUser)
+      ? ['You have', 'your']
+      : ['User has', 'their'];
+    return `${user} not provided any information about ${pronoun} ${attribute}.`;
+  }
+
+  getPersonLocation(person: Person): string {
+    const personLocation = person.location;
+
+    let result = '';
+    if (personLocation) {
+      result = personLocation.city ? `${personLocation.city}, ${personLocation.country}` : personLocation.country;
+    }
+    return result;
   }
 
   getJobListDetails(job: WorkExperience): ListItem[] {
@@ -63,26 +105,5 @@ export class PersonComponent implements OnInit {
       { label: 'Grade', value: education.grade },
       { label: 'Academic period', value: this.formatPeriod(education.yearFrom, education.yearTo) },
     ];
-  }
-
-  personIsLoggedInUser(person: Person, loggedInUser: User): boolean {
-    return getUserType(loggedInUser) === UserType.Person && person._id === loggedInUser._id;
-  }
-
-  getNoAttributeMessage(person: Person, loggedInUser: User, attribute: string) {
-    const [user, pronoun] = this.personIsLoggedInUser(person, loggedInUser)
-      ? ['You have', 'your']
-      : ['User has', 'their'];
-    return `${user} provided any information about ${pronoun} ${attribute}.`;
-  }
-
-  getPersonLocation(person: Person): string {
-    const personLocation = person.location;
-
-    let result = '';
-    if (personLocation) {
-      result = personLocation.city ? `${personLocation.city}, ${personLocation.country}` : personLocation.country;
-    }
-    return result;
   }
 }

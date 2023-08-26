@@ -2,14 +2,21 @@
   <div class="flex justify-content-center m-4">
     <div class="surface-card p-4 shadow-2 border-round w-screen xl:w-8">
       <div class="flex gap-4 mb-4">
-        <div>
+        <div class="flex flex-column align-items-center gap-3">
           <ng-container *ngIf="users.person.imagePath">aa</ng-container>
           <ng-container *ngIf="!users.person.imagePath">
             <img src="./assets/images/user-default-icon.png" style="width: 150px; height: 150px" />
           </ng-container>
+          <p-button
+            *ngIf="isPersonLoggedInUser(users.person, users.loggedInUser)"
+            label="Edit profile"
+            icon="pi pi-user-edit"
+            styleClass="p-button-sm"
+            (click)="openEditPersonDialog(users.person)"
+          ></p-button>
         </div>
         <div>
-          <div class="text-4xl font-medium text-900">{{ users.person.name }}</div>
+          <div class="text-4xl font-medium text-900 mb-2">{{ users.person.name }}</div>
           <div class="text-lg font-medium text-600 mb-2">{{ getPersonPosition(users.person) }}</div>
           <div *ngIf="getPersonLocation(users.person) as location" class="text-lg font-medium text-600 mb-2">
             {{ location }}
@@ -20,12 +27,12 @@
 
       <div class="mb-4">
         <div class="text-2xl font-medium text-900 mb-2">Skills</div>
-        <ng-container *ngIf="users.person.skills">
-          <div class="text-900 w-full flex flex-grow-1 flex-wrap gap-2">
+        <ng-container *ngIf="users.person.skills.length">
+          <div class="chips-wrapper">
             <p-chip *ngFor="let skill of users.person.skills" [label]="skill"></p-chip>
           </div>
         </ng-container>
-        <ng-container *ngIf="!users.person.skills">
+        <ng-container *ngIf="!users.person.skills.length">
           <div class="text-lg font-medium text-600">
             {{ getNoAttributeMessage(users.person, users.loggedInUser, "skills") }}
           </div>
@@ -34,7 +41,7 @@
 
       <div class="mb-4">
         <div class="text-2xl font-medium text-900 mb-3">Experience</div>
-        <ng-container *ngIf="users.person.prevExperience">
+        <ng-container *ngIf="users.person.prevExperience.length">
           <div *ngFor="let job of users.person.prevExperience" class="surface-section mb-3">
             <div class="font-medium text-lg text-800 mb-3">{{ job.companyName }}</div>
             <ul class="list">
@@ -51,7 +58,7 @@
             </ul>
           </div>
         </ng-container>
-        <ng-container *ngIf="!users.person.prevExperience">
+        <ng-container *ngIf="!users.person.prevExperience.length">
           <div class="text-lg font-medium text-600">
             {{ getNoAttributeMessage(users.person, users.loggedInUser, "working experiences") }}
           </div>
@@ -60,7 +67,7 @@
 
       <div *ngIf="users.person.education">
         <div class="text-2xl font-medium text-900 mb-3">Education</div>
-        <ng-container *ngIf="users.person.education">
+        <ng-container *ngIf="users.person.education.length">
           <div *ngFor="let education of users.person.education" class="surface-section mb-3">
             <div class="font-medium text-lg text-800 mb-3">{{ education.school }}</div>
             <ul class="list">
@@ -72,7 +79,7 @@
             </ul>
           </div>
         </ng-container>
-        <ng-container *ngIf="!users.person.education">
+        <ng-container *ngIf="!users.person.education.length">
           <div class="text-lg font-medium text-600">
             {{ getNoAttributeMessage(users.person, users.loggedInUser, "education") }}
           </div>
