@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { PersonRegister } from 'src/app/models';
-import {
-  NAME_MAX_LENGTH,
-  NAME_MIN_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  COUNTRY_LIST,
-} from 'src/app/shared/constants';
-import { locationValidator } from 'src/app/shared/validators';
+import { Location, PersonRegister } from 'src/app/models';
+import { NAME_MAX_LENGTH, NAME_MIN_LENGTH, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from 'src/app/shared/constants';
+import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
 
@@ -22,7 +16,6 @@ export class RegisterPersonComponent implements OnInit {
   constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
   ngOnInit(): void {}
 
-  countries: string[] = COUNTRY_LIST;
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(NAME_MIN_LENGTH), Validators.maxLength(NAME_MAX_LENGTH)]],
     email: ['', [Validators.required, Validators.email]],
@@ -30,12 +23,11 @@ export class RegisterPersonComponent implements OnInit {
       '',
       [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH), Validators.maxLength(PASSWORD_MAX_LENGTH)],
     ],
-    location: [],
+    location: this.fb.control<Location>({ value: { country: '' }, disabled: false }),
   });
 
   onSubmit() {
-    const formValue = this.registerForm.getRawValue();
-    this.sanitizeLocationData(formValue);
+    const formValue = removeEmptyValuesFromObject(this.registerForm.getRawValue());
     console.log(formValue);
     this.store.dispatch(authActions.registerPerson({ payload: formValue }));
   }
@@ -54,11 +46,5 @@ export class RegisterPersonComponent implements OnInit {
 
   get location() {
     return this.registerForm.get('location')!;
-  }
-
-  sanitizeLocationData(formValue: PersonRegister) {
-    if (!formValue.location || !formValue.location.country) {
-      delete formValue.location;
-    }
   }
 }

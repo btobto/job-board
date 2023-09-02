@@ -1,0 +1,94 @@
+<!-- {{ educationGroup.value | json }}
+<br /> -->
+<div class="card" [formGroup]="educationGroup">
+  <div class="w-full mb-2">
+    <label for="school-{{ index }}" class="block text-900 font-normal mb-2 text-sm">School name</label>
+    <input
+      pInputText
+      formControlName="school"
+      id="school-{{ index }}"
+      type="text"
+      placeholder="School name"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+    <app-control-error-message controlName="School name" [control]="school"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-2">
+    <label for="degree-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Degree</label>
+    <input
+      pInputText
+      formControlName="degree"
+      id="degree-{{ index }}"
+      type="text"
+      placeholder="Degree"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+    <app-control-error-message controlName="Degree" [control]="degree"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-2">
+    <label for="grade-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Grade</label>
+    <p-inputNumber
+      inputId="grade-{{ index }}"
+      [useGrouping]="false"
+      [min]="minGrade"
+      [max]="maxGrade"
+      placeholder="Grade"
+      formControlName="grade"
+      [minFractionDigits]="2"
+      [maxFractionDigits]="2"
+      (blur)="onTouched()"
+    ></p-inputNumber>
+  </div>
+
+  <div class="mb-2">
+    <div class="flex flex-column md:flex-row gap-3">
+      <div class="w-full">
+        <label for="e-yearFrom-{{ index }}" class="block text-900 font-normal mb-2 text-sm">From</label>
+        <p-inputNumber
+          inputId="e-yearFrom-{{ index }}"
+          mode="decimal"
+          [useGrouping]="false"
+          [min]="minYear"
+          [max]="maxYear"
+          placeholder="Year from"
+          formControlName="yearFrom"
+          (blur)="onTouched()"
+        ></p-inputNumber>
+      </div>
+      <div class="w-full">
+        <label for="e-yearTo-{{ index }}" class="block text-900 font-normal mb-2 text-sm">To</label>
+        <p-inputNumber
+          inputId="e-yearTo-{{ index }}"
+          mode="decimal"
+          [useGrouping]="false"
+          [min]="minYear"
+          [max]="maxYear"
+          [placeholder]="isCurrentlyStudyingCheckbox.checked() ? 'Present' : 'Year to'"
+          formControlName="yearTo"
+          (blur)="onTouched()"
+        ></p-inputNumber>
+      </div>
+    </div>
+    <app-control-error-message controlName="Year from field" [control]="yearFrom"></app-control-error-message>
+    <app-control-error-message controlName="Year to field" [control]="yearTo"></app-control-error-message>
+    <app-control-error-message controlName="Group" [control]="educationGroup"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-4">
+    <p-checkbox
+      inputId="isCurrentlyStudying-{{ index }}"
+      styleClass="mr-2"
+      [binary]="true"
+      [(ngModel)]="isCurrentlyStudying"
+      [ngModelOptions]="{ standalone: true }"
+      (click)="toggleYearTo()"
+      #isCurrentlyStudyingCheckbox
+      (blur)="onTouched()"
+    ></p-checkbox>
+    <label for="isCurrentJob-{{ index }}">I am currently studying here</label>
+  </div>
+</div>

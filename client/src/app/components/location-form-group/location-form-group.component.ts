@@ -32,6 +32,7 @@ import { locationValidator } from 'src/app/shared/validators';
 })
 export class LocationFormGroupComponent implements ControlValueAccessor, Validator, OnDestroy {
   countries: string[] = COUNTRY_LIST;
+  @Input() index = 0;
   @Input() hasAddress: boolean = true;
 
   onTouched = () => {};
@@ -54,28 +55,28 @@ export class LocationFormGroupComponent implements ControlValueAccessor, Validat
 
   writeValue(location: Location): void {
     if (location) {
-      const country = location.country ?? '';
-      const city = location.city ?? '';
-      const address = location.address ?? '';
-      this.locationGroup.setValue({ country, city, address });
+      this.locationGroup.setValue({
+        country: location.country,
+        city: location.city ?? '',
+        address: location.address ?? '',
+      });
     }
   }
 
   registerOnChange(onChange: (value: Partial<Location>) => void): void {
-    this.onChangeSub = this.locationGroup.valueChanges.subscribe((value) => {
-      onChange(Object.fromEntries(Object.entries(value).filter(([_, v]) => !!v)));
-    });
+    this.onChangeSub = this.locationGroup.valueChanges.subscribe(onChange);
   }
 
   registerOnTouched(onTouched: any): void {
     this.onTouched = onTouched;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    isDisabled ? this.locationGroup.disable() : this.locationGroup.enable();
+  setDisabledState(disable: boolean): void {
+    disable ? this.locationGroup.disable() : this.locationGroup.enable();
   }
 
   validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    // console.log(this.locationGroup.errors);
     return this.locationGroup.errors;
   }
 }

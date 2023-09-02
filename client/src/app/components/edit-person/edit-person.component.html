@@ -1,48 +1,127 @@
-<div class="w-30rem">
-  <div class="flex flex-column align-items-center gap-3">
-    <div class="circle-crop"><img [src]="imageSource" class="circle-crop" /></div>
-    <div>
-      <p-fileUpload
-        #fileUpload
-        mode="basic"
-        chooseLabel="Upload picture"
-        chooseIcon="pi pi-upload"
-        accept=".jpg,.jpeg,.png"
-        [maxFileSize]="10000000"
-        (onSelect)="onImageSelected($event)"
-      ></p-fileUpload>
-    </div>
-  </div>
-
+<div>
   <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
-    <!-- {{ editForm.value | json }} -->
+    <div class="relative">
+      <!-- {{ editForm.value | json }} -->
+      <div class="flex flex-column align-items-center gap-3">
+        <div class="circle-crop"><img [src]="imageSource" class="circle-crop" /></div>
+        <div>
+          <p-fileUpload
+            #fileUpload
+            mode="basic"
+            chooseLabel="Upload picture"
+            chooseIcon="pi pi-upload"
+            accept=".jpg,.jpeg,.png"
+            [maxFileSize]="10000000"
+            (onSelect)="onImageSelected($event)"
+          ></p-fileUpload>
+        </div>
+      </div>
 
-    <div class="field p-fluid mb-3">
-      <label for="name" class="block text-900 font-medium mb-2">Name</label>
-      <input pInputText formControlName="name" id="name" type="text" name="name" placeholder="Name" class="w-full" />
-      <!-- {{ name.errors | json }} -->
-      <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
+      <div class="field p-fluid mb-3">
+        <label for="name" class="block text-900 font-medium mb-2 text-lg">Name</label>
+        <input pInputText formControlName="name" id="name" type="text" name="name" placeholder="Name" class="w-full" />
+        <!-- {{ name.errors | json }} -->
+        <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="about" class="block text-900 font-medium mb-2 text-lg">About</label>
+        <textarea
+          pInputTextarea
+          formControlName="about"
+          id="about"
+          name="about"
+          placeholder="About"
+          [autoResize]="true"
+          class="w-full"
+        ></textarea>
+        <!-- {{ name.errors | json }} -->
+        <app-control-error-message controlName="About" [control]="about"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <span class="block text-900 font-medium mb-2 text-lg">Location</span>
+        <app-location-form-group formControlName="location" [hasAddress]="false"></app-location-form-group>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="skills" class="block text-900 font-medium mb-2 text-lg">Skills</label>
+        <p-chips inputId="skills" formControlName="skills"></p-chips>
+      </div>
+
+      <div class="field p-fluid mb-3" formArrayName="prevExperience">
+        <span class="block text-900 font-medium mb-2 text-lg">Previous working experience</span>
+        <div class="field p-fluid" *ngFor="let job of prevExperience.controls; let i = index">
+          <p-fieldset
+            [legend]="!!job?.value.companyName ? job.value.companyName : 'New work experience'"
+            [toggleable]="true"
+          >
+            <app-work-experience-form-group [formControlName]="i" [index]="i"></app-work-experience-form-group>
+            <div class="flex justify-content-end">
+              <p-button
+                label="Delete work experience"
+                styleClass="p-button-danger w-auto"
+                icon="pi pi-trash"
+                (click)="deleteWorkExperience(i)"
+              ></p-button>
+            </div>
+          </p-fieldset>
+        </div>
+        <div *ngIf="!prevExperience.controls.length" class="mb-2">
+          <div>No work experience added.</div>
+        </div>
+        <div class="flex justify-content-center">
+          <p-button
+            label="Add working experience"
+            (click)="addWorkExperience()"
+            icon="pi pi-plus"
+            styleClass="p-button-secondary w-auto mb-3 font-normal"
+            [disabled]="prevExperience.invalid"
+          ></p-button>
+        </div>
+      </div>
+
+      <div class="field p-fluid mb-3" formArrayName="education">
+        <span class="block text-900 font-medium mb-2 text-lg">Education</span>
+        <div class="field p-fluid" *ngFor="let e of education.controls; let i = index">
+          <p-fieldset [legend]="!!e?.value.school ? e.value.school : 'Education'" [toggleable]="true">
+            <app-education-form-group [formControlName]="i" [index]="i"></app-education-form-group>
+            <div class="flex justify-content-end">
+              <p-button
+                label="Delete education"
+                styleClass="p-button-danger w-auto"
+                icon="pi pi-trash"
+                (click)="deleteEducation(i)"
+              ></p-button>
+            </div>
+          </p-fieldset>
+        </div>
+        <div *ngIf="!education.controls.length" class="mb-2">
+          <div>No education added.</div>
+        </div>
+        <div class="flex justify-content-center">
+          <p-button
+            label="Add education"
+            (click)="addEducation()"
+            icon="pi pi-plus"
+            styleClass="p-button-secondary w-full mb-3 font-normal"
+            [disabled]="education.invalid"
+          ></p-button>
+        </div>
+      </div>
     </div>
 
-    <div class="field p-fluid mb-3">
-      <label for="about" class="block text-900 font-medium mb-2">About</label>
-      <textarea
-        pInputTextarea
-        formControlName="about"
-        id="about"
-        name="about"
-        placeholder="About"
-        [autoResize]="true"
-        class="w-full"
-      ></textarea>
-      <!-- {{ name.errors | json }} -->
-      <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
-    </div>
-
-    <div class="field p-fluid mb-5">
-      <span class="block text-900 font-medium mb-2">Location</span>
-      <app-location-form-group formControlName="location" [hasAddress]="false"></app-location-form-group>
-      <app-control-error-message [control]="location"></app-control-error-message>
+    <div class="surface-card flex gap-3 w-full fixed left-0 bottom-0 p-4">
+      <div class="flex-1">
+        <p-button type="submit" label="Save changes" styleClass="w-full" [disabled]="editForm.invalid"></p-button>
+      </div>
+      <div class="flex-1">
+        <p-button
+          label="Cancel"
+          styleClass="p-button-outlined p-button-secondary w-full"
+          (onClick)="cancel()"
+        ></p-button>
+      </div>
     </div>
   </form>
 </div>

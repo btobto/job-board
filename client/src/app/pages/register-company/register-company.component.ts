@@ -2,16 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription, filter, tap } from 'rxjs';
-import { Company, Location } from 'src/app/models';
+import { Company, CompanyRegister, Location } from 'src/app/models';
 import {
-  COUNTRY_LIST,
   NAME_MAX_LENGTH,
   NAME_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   URL_REGEX,
 } from 'src/app/shared/constants';
-import { locationValidator } from 'src/app/shared/validators';
+import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
 
@@ -23,7 +22,6 @@ import { authActions } from 'src/app/state/auth';
 export class RegisterCompanyComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
 
-  countries = COUNTRY_LIST;
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(NAME_MIN_LENGTH), Validators.maxLength(NAME_MAX_LENGTH)]],
     email: ['', [Validators.required, Validators.email]],
@@ -54,8 +52,7 @@ export class RegisterCompanyComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formValue = this.registerForm.getRawValue();
-    this.sanitizeLocationData(formValue);
+    const formValue = removeEmptyValuesFromObject(this.registerForm.getRawValue());
     console.log(formValue);
     this.store.dispatch(authActions.registerCompany({ payload: formValue }));
   }
@@ -65,14 +62,7 @@ export class RegisterCompanyComponent implements OnInit, OnDestroy {
   }
 
   createLocationGroup() {
-    return this.fb.group(
-      {
-        country: [''],
-        city: [''],
-        address: [''],
-      },
-      { validators: locationValidator }
-    );
+    return this.fb.control<Location>({ country: '', city: '', address: '' });
   }
 
   get canAddAnotherLocation(): boolean {
@@ -82,20 +72,6 @@ export class RegisterCompanyComponent implements OnInit, OnDestroy {
 
   isFormGroupEmpty(obj: Record<string, any>): boolean {
     return !Object.values(obj).some((v) => !!v);
-  }
-
-  sanitizeLocationData(formValue: Pick<Company, 'locations'> & Partial<Company>) {
-    formValue.locations = formValue.locations
-      .filter((loc) => !!loc.country.trim())
-      .map((loc) => {
-        if (!loc.city) {
-          delete loc.city;
-          delete loc.address;
-        } else if (!loc.address) {
-          delete loc.address;
-        }
-        return loc;
-      });
   }
 
   get name() {

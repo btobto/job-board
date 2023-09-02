@@ -1,0 +1,99 @@
+<!-- {{ jobGroup.value | json }}
+<br /> -->
+<div class="card" [formGroup]="jobGroup">
+  <div class="w-full mb-2">
+    <label for="companyName-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Company name</label>
+    <input
+      pInputText
+      formControlName="companyName"
+      id="companyName-{{ index }}"
+      type="text"
+      placeholder="Company name"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+    <app-control-error-message controlName="Company name" [control]="companyName"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-2">
+    <label for="position-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Position</label>
+    <input
+      pInputText
+      formControlName="position"
+      id="position-{{ index }}"
+      type="text"
+      placeholder="Position"
+      class="w-full"
+      (blur)="onTouched()"
+    />
+    <app-control-error-message controlName="Position" [control]="position"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-2">
+    <label for="description-{{ index }}" class="block text-900 font-normal mb-2 text-sm">description-/label>
+    <textarea
+      pInputTextarea
+      formControlName="description"
+      id="description-{{ index }}"
+      name="description"
+      placeholder="Job description"
+      [autoResize]="true"
+      class="w-full"
+    ></textarea>
+    <!-- {{ name.errors | json }} -->
+    <app-control-error-message controlName="About" [control]="description"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-2">
+    <label for="skills-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Skills</label>
+    <p-chips inputId="skills-{{ index }}" formControlName="skills" placeholder="Skills" (blur)="onTouched()"></p-chips>
+  </div>
+
+  <div class="mb-2">
+    <div class="flex flex-column md:flex-row gap-3">
+      <div class="w-full">
+        <label for="yearFrom-{{ index }}" class="block text-900 font-normal mb-2 text-sm">From</label>
+        <p-inputNumber
+          inputId="yearFrom-{{ index }}"
+          mode="decimal"
+          [useGrouping]="false"
+          [min]="minYear"
+          [max]="maxYear"
+          placeholder="Year from"
+          formControlName="yearFrom"
+          (blur)="onTouched()"
+        ></p-inputNumber>
+      </div>
+      <div class="w-full">
+        <label for="yearTo-{{ index }}" class="block text-900 font-normal mb-2 text-sm">To</label>
+        <p-inputNumber
+          inputId="yearTo-{{ index }}"
+          mode="decimal"
+          [useGrouping]="false"
+          [min]="minYear"
+          [max]="maxYear"
+          [placeholder]="isCurrentJobCheckbox.checked() ? 'Present' : 'Year to'"
+          formControlName="yearTo"
+          (blur)="onTouched()"
+        ></p-inputNumber>
+      </div>
+    </div>
+    <app-control-error-message controlName="Year from field" [control]="yearFrom"></app-control-error-message>
+    <app-control-error-message controlName="Year to field" [control]="yearTo"></app-control-error-message>
+    <app-control-error-message controlName="Group" [control]="jobGroup"></app-control-error-message>
+  </div>
+
+  <div class="w-full mb-4">
+    <p-checkbox
+      inputId="isCurrentJob-{{ index }}"
+      styleClass="mr-2"
+      [binary]="true"
+      [(ngModel)]="isCurrentJob"
+      [ngModelOptions]="{ standalone: true }"
+      (click)="toggleYearTo()"
+      #isCurrentJobCheckbox
+      (blur)="onTouched()"
+    ></p-checkbox>
+    <label for="isCurrentJob-{{ index }}">I am currently working here</label>
+  </div>
+</div>

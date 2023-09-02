@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
-import { Education, Person, User, WorkExperience, ListItem } from 'src/app/models';
+import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums/user-type.enum';
 import { getUserType, isNotNull } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
@@ -17,15 +17,14 @@ import { fromPerson, personActions } from 'src/app/state/person';
   styleUrls: ['./person.component.scss'],
 })
 export class PersonComponent implements OnInit, OnDestroy {
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
+
   loggedInUser$: Observable<User> = this.store.select(fromAuth.selectUser).pipe(filter(isNotNull));
   selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
   users$ = combineLatest([this.selectedPerson$, this.loggedInUser$]).pipe(
     map(([person, loggedInUser]) => ({ person, loggedInUser }))
   );
-
-  dialogRef: DynamicDialogRef | undefined;
-
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
+  dialogRef?: DynamicDialogRef;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -42,11 +41,20 @@ export class PersonComponent implements OnInit, OnDestroy {
       header: 'Edit profile',
       dismissableMask: true,
       data: { person },
+      styleClass: 'sm:w-full xl:w-5',
+      contentStyle: {
+        'padding-bottom': '70px',
+      },
     });
 
-    // this.dialogRef.onClose.subscribe((person: Person) => {
-    //   console.log('From dialog: ', person);
-    // });
+    this.dialogRef.onClose.subscribe((updatedPerson?: UpdatePersonDto) => {
+      console.log('From dialog: ', updatedPerson);
+      if (updatedPerson) this.updatePerson(person._id, updatedPerson);
+    });
+  }
+
+  updatePerson(id: string, dto: UpdatePersonDto) {
+    this.store;
   }
 
   getPersonPosition(person: Person): string {

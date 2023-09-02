@@ -6,6 +6,8 @@ import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 import { Company, HttpErrorBody, Person, User } from 'src/app/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
+import { PersonService } from 'src/app/services/person.service';
+import { CompanyService } from 'src/app/services/company.service';
 
 @Injectable()
 export class AuthEffects {
@@ -80,6 +82,8 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
+    private personService: PersonService,
+    private companyService: CompanyService,
     private notificationService: NotificationService,
     private router: Router
   ) {}

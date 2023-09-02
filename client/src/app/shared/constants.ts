@@ -7,7 +7,12 @@ export const NAME_MAX_LENGTH = 30;
 export const MIN_YEAR = 1970;
 export const MAX_YEAR = new Date().getFullYear();
 
+export const MIN_GRADE = 0;
+export const MAX_GRADE = 10;
+
 export const URL_REGEX = /^((https?|http?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/;
+
+export const EMPTY_ERROR_KEY = 'emptyError';
 
 export const COUNTRY_LIST = [
   'Afghanistan',

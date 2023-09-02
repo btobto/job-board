@@ -1,32 +1,39 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUpload } from 'primeng/fileupload';
-import { Education, FileSelectEvent, Person, WorkExperience } from 'src/app/models';
+import { Subscription, combineLatest } from 'rxjs';
+import { Education, FileSelectEvent, Person, UpdatePersonDto, WorkExperience } from 'src/app/models';
 import { MAX_YEAR, MIN_YEAR, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from 'src/app/shared/constants';
+import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { locationValidator, yearSpanValidator } from 'src/app/shared/validators';
+import { AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-edit-person',
   templateUrl: './edit-person.component.html',
   styleUrls: ['./edit-person.component.scss'],
 })
-export class EditPersonComponent implements OnInit {
+export class EditPersonComponent {
   @ViewChild('fileUpload') fileUpload!: FileUpload;
   selectedFile: File | null = null;
-  imageSource: string | null = null;
+  imageSource: string;
   person!: Person;
   editForm!: FormGroup;
 
-  constructor(
-    public dialogRef: DynamicDialogRef,
-    private dialogConfig: DynamicDialogConfig,
-    private fb: NonNullableFormBuilder
-  ) {}
+  addWorkExperienceEnabled = true;
+  submitFormEnabled = true;
 
-  ngOnInit(): void {
+  buttonsEnabledSub!: Subscription;
+
+  constructor(
+    private dialogRef: DynamicDialogRef,
+    private dialogConfig: DynamicDialogConfig,
+    private fb: NonNullableFormBuilder,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     this.person = this.dialogConfig.data.person;
-    console.log(this.person);
     this.imageSource = this.person.imagePath ?? './assets/images/user-default-icon.png';
 
     this.editForm = this.fb.group({
@@ -35,42 +42,11 @@ export class EditPersonComponent implements OnInit {
         [Validators.required, Validators.minLength(NAME_MIN_LENGTH), Validators.maxLength(NAME_MAX_LENGTH)],
       ],
       about: [this.person.about, [Validators.maxLength(500)]],
-      // location: this.fb.group(
-      //   {
-      //     country: [this.person.location?.country],
-      //     city: [this.person.location?.city],
-      //   },
-      //   { validators: locationValidator }
-      // ),
       location: [this.person.location],
       skills: this.fb.control<string[]>(this.person.skills),
-      prevExperience: this.fb.array([
-        this.person.prevExperience.map(
-          (job) => this.createWorkExperienceGroup(job)
-          // this.fb.group({
-          //   companyName: [job.companyName, [Validators.required]],
-          //   position: [job.position, [Validators.required]],
-          //   skills: this.fb.control(job.skills),
-          //   yearFrom: [job.yearFrom, [Validators.required, Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-          //   yearTo: [job.yearTo, [Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-          // })
-        ),
-      ]),
-      education: this.fb.array([
-        this.person.education.map(
-          (education) => this.createEducationGroup(education)
-          // this.fb.group({
-          //   school: [education.school, [Validators.required]],
-          //   degree: [education.degree],
-          //   grade: [education.grade],
-          //   yearFrom: [education.yearFrom, [Validators.required, Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-          //   yearTo: [education.yearTo, [Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-          // })
-        ),
-      ]),
+      prevExperience: this.fb.array(this.person.prevExperience),
+      education: this.fb.array(this.person.education),
     });
-
-    console.log(this.editForm.getRawValue());
   }
 
   onImageSelected(event: FileSelectEvent) {
@@ -88,46 +64,51 @@ export class EditPersonComponent implements OnInit {
   }
 
   saveChanges() {
-    const formValue = this.editForm.getRawValue();
+    const formValue = removeEmptyValuesFromObject(this.editForm.getRawValue());
     console.log(formValue);
+    this.dialogRef.close({ person: formValue, image: this.selectedFile } as UpdatePersonDto);
+  }
 
-    const value = this.editForm.value;
-    console.log(value);
+  cancel() {
+    this.dialogRef.close();
   }
 
   addWorkExperience() {
     this.prevExperience.push(this.createWorkExperienceGroup());
+    this.changeDetectorRef.detectChanges();
+  }
+
+  deleteWorkExperience(index: number) {
+    this.prevExperience.removeAt(index);
   }
 
   addEducation() {
-    this.education.push(this.createEducationGroup);
+    this.education.push(this.createEducationGroup());
   }
 
-  createWorkExperienceGroup(job: WorkExperience | null = null) {
-    return this.fb.group(
-      {
-        companyName: [job?.companyName, Validators.required],
-        position: [job?.position, Validators.required],
-        description: [job?.description],
-        skills: this.fb.control<string[]>(job?.skills || []),
-        yearFrom: [job?.yearFrom, [Validators.required, Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-        yearTo: [job?.yearTo, [Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-      },
-      { validators: yearSpanValidator }
-    );
+  deleteEducation(index: number) {
+    this.education.removeAt(index);
   }
 
-  createEducationGroup(education: Education | null = null) {
-    return this.fb.group(
-      {
-        school: [education?.school, [Validators.required]],
-        degree: [education?.degree],
-        grade: [education?.grade],
-        yearFrom: [education?.yearFrom, [Validators.required, Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-        yearTo: [education?.yearTo, [Validators.min(MIN_YEAR), Validators.max(MAX_YEAR)]],
-      },
-      { validators: yearSpanValidator }
-    );
+  createWorkExperienceGroup(job?: WorkExperience) {
+    return this.fb.control<WorkExperience>({
+      companyName: job?.companyName ?? '',
+      position: job?.position ?? '',
+      description: job?.description ?? '',
+      skills: job?.skills || [],
+      yearFrom: job?.yearFrom ?? MAX_YEAR,
+      yearTo: job?.yearTo ?? MAX_YEAR,
+    });
+  }
+
+  createEducationGroup(education?: Education) {
+    return this.fb.control<Education>({
+      school: education?.school ?? '',
+      degree: education?.degree ?? '',
+      grade: education?.grade ?? 0,
+      yearFrom: education?.yearFrom ?? MAX_YEAR,
+      yearTo: education?.yearTo ?? MAX_YEAR,
+    });
   }
 
   get name() {

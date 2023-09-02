@@ -2,11 +2,11 @@
 <br /> -->
 <div class="card flex flex-column md:flex-row gap-3" [formGroup]="locationGroup">
   <div class="w-full">
-    <label for="country" class="block text-900 font-normal mb-2 text-sm">Country</label>
+    <label for="country-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Country</label>
     <p-dropdown
       [options]="countries"
       formControlName="country"
-      id="country"
+      inputId="country-{{ index }}"
       type="text"
       placeholder="Country"
       [showClear]="true"
@@ -16,11 +16,11 @@
     </p-dropdown>
   </div>
   <div class="w-full">
-    <label for="city" class="block text-900 font-normal mb-2 text-sm">City</label>
+    <label for="city-{{ index }}" class="block text-900 font-normal mb-2 text-sm">City</label>
     <input
       pInputText
       formControlName="city"
-      id="city"
+      id="city-{{ index }}"
       type="text"
       placeholder="City"
       class="w-full"
@@ -28,11 +28,11 @@
     />
   </div>
   <div class="w-full" *ngIf="hasAddress">
-    <label for="address" class="block text-900 font-normal mb-2 text-sm">Address</label>
+    <label for="address-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Address</label>
     <input
       pInputText
       formControlName="address"
-      id="address"
+      id="address-{{ index }}"
       type="text"
       placeholder="Address"
       class="w-full"
@@ -40,3 +40,4 @@
     />
   </div>
 </div>
+<app-control-error-message [control]="locationGroup"></app-control-error-message>

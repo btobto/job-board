@@ -70,49 +70,7 @@
     <div formArrayName="locations">
       <span class="block text-900 font-medium mb-2">Locations</span>
       <div class="field p-fluid" *ngFor="let location of locations.controls; let i = index">
-        <div class="card flex flex-column md:flex-row gap-3" [formGroupName]="i">
-          <div class="w-full">
-            <label for="country-{{ i }}" class="block text-900 font-normal mb-2 text-sm">Country</label>
-            <p-dropdown
-              [options]="countries"
-              formControlName="country"
-              id="country-{{ i }}"
-              type="text"
-              name="country"
-              placeholder="Country"
-              [showClear]="true"
-              [autoDisplayFirst]="false"
-            >
-            </p-dropdown>
-          </div>
-          <div class="w-full">
-            <label for="city-{{ i }}" class="block text-900 font-normal mb-2 text-sm">City</label>
-            <input
-              pInputText
-              formControlName="city"
-              id="city-{{ i }}"
-              type="text"
-              name="city"
-              placeholder="City"
-              class="w-full"
-            />
-          </div>
-          <div class="w-full">
-            <label for="address-{{ i }}" class="block text-900 font-normal mb-2 text-sm">Address</label>
-            <input
-              pInputText
-              formControlName="address"
-              id="address-{{ i }}"
-              type="text"
-              name="address"
-              placeholder="Address"
-              class="w-full"
-            />
-          </div>
-        </div>
-        <div>
-          <app-control-error-message [control]="location"></app-control-error-message>
-        </div>
+        <app-location-form-group [formControlName]="i"></app-location-form-group>
       </div>
       <p-button
         (click)="addLocation()"

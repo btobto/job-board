@@ -48,6 +48,11 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ChipsModule } from 'primeng/chips';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { LocationFormGroupComponent } from './components/location-form-group/location-form-group.component';
+import { WorkExperienceFormGroupComponent } from './components/work-experience-form-group/work-experience-form-group.component';
+import { EducationFormGroupComponent } from './components/education-form-group/education-form-group.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FieldsetModule } from 'primeng/fieldset';
+import { UnauthorizedErrorInterceptor } from './interceptors/unauthorized-error.interceptor';
 
 @NgModule({
   declarations: [
@@ -66,6 +71,8 @@ import { LocationFormGroupComponent } from './components/location-form-group/loc
     ListItemComponent,
     EditPersonComponent,
     LocationFormGroupComponent,
+    WorkExperienceFormGroupComponent,
+    EducationFormGroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,6 +102,8 @@ import { LocationFormGroupComponent } from './components/location-form-group/loc
     FileUploadModule,
     ChipsModule,
     InputTextareaModule,
+    InputNumberModule,
+    FieldsetModule,
   ],
   providers: [
     MessageService,
@@ -102,6 +111,7 @@ import { LocationFormGroupComponent } from './components/location-form-group/loc
     DialogService,
     { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
