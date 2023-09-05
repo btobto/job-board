@@ -5,25 +5,24 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { fromAuth } from '../state/auth';
 import { User } from '../models';
+import { fromUser } from '../state/user';
+import { LocalStorageJwtService } from '../services/local-storage-jwt.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private store: Store<AppState>) {}
+  constructor(private localStorageJwtService: LocalStorageJwtService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return this.store.select(fromAuth.selectUser).pipe(
-      take(1),
-      map((user) => {
-        if (user && user.accessToken) {
-          request = request.clone({
-            setHeaders: {
-              Authorization: `Bearer ${user.accessToken}`,
-            },
-          });
-        }
-        return request;
-      }),
-      switchMap(next.handle)
-    );
+    const token = this.localStorageJwtService.getToken();
+
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+
+    return next.handle(request);
   }
 }

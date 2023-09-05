@@ -30,7 +30,7 @@
   </div>
 
   <div class="w-full mb-2">
-    <label for="description-{{ index }}" class="block text-900 font-normal mb-2 text-sm">description-/label>
+    <label for="description-{{ index }}" class="block text-900 font-normal mb-2 text-sm">Description</label>
     <textarea
       pInputTextarea
       formControlName="description"
@@ -41,7 +41,7 @@
       class="w-full"
     ></textarea>
     <!-- {{ name.errors | json }} -->
-    <app-control-error-message controlName="About" [control]="description"></app-control-error-message>
+    <app-control-error-message controlName="Description" [control]="description"></app-control-error-message>
   </div>
 
   <div class="w-full mb-2">

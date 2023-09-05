@@ -66,7 +66,7 @@ export class EditPersonComponent {
   saveChanges() {
     const formValue = removeEmptyValuesFromObject(this.editForm.getRawValue());
     console.log(formValue);
-    this.dialogRef.close({ person: formValue, image: this.selectedFile } as UpdatePersonDto);
+    this.dialogRef.close({ ...formValue, image: this.selectedFile });
   }
 
   cancel() {

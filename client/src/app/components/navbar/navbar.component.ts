@@ -6,6 +6,7 @@ import { User } from 'src/app/models';
 import { getUserType } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { authActions, fromAuth } from 'src/app/state/auth';
+import { fromUser } from 'src/app/state/user';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +21,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private confirmationService: ConfirmationService) {}
 
   ngOnInit(): void {
-    this.userSub = this.store.select(fromAuth.selectUser).subscribe((user) => (this.user = user!));
+    this.userSub = this.store.select(fromUser.selectUser).subscribe((user) => (this.user = user!));
 
     this.items = [
       {

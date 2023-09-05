@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from 'src/app/services/auth.service';
 import { authActions } from '.';
-import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, filter, map, of, switchMap, tap } from 'rxjs';
 import { Company, HttpErrorBody, Person, User } from 'src/app/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PersonService } from 'src/app/services/person.service';
 import { CompanyService } from 'src/app/services/company.service';
+import { LocalStorageJwtService } from 'src/app/services/local-storage-jwt.service';
+import { isNotNull } from 'src/app/shared/helpers';
+import { UserType } from 'src/app/shared/enums/user-type.enum';
 
 @Injectable()
 export class AuthEffects {
@@ -39,8 +42,13 @@ export class AuthEffects {
   autoLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.autoLogin),
-      map(() => this.authService.getUserFromLocalStorage()),
-      map((user) => (user ? authActions.autoLoginSuccess({ user }) : authActions.autoLoginFaliure()))
+      map(() => this.localStorageJwtService.getToken()),
+      switchMap((token) =>
+        this.authService.getUser().pipe(
+          map((user) => authActions.autoLoginSuccess({ user: { ...user, accessToken: token! } })),
+          catchError(() => of(authActions.autoLoginFaliure()))
+        )
+      )
     )
   );
 
@@ -49,7 +57,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(authActions.logout),
         tap(() => {
-          this.authService.removeUserFromLocalStorage();
+          this.localStorageJwtService.removeToken();
           this.router.navigate(['/auth/login']);
         })
       ),
@@ -61,7 +69,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(authActions.loginSuccess, authActions.registerSuccess),
         tap(({ user }) => {
-          this.authService.saveUserToLocalStorage(user);
+          this.localStorageJwtService.setToken(user.accessToken);
           this.router.navigate(['/']);
           console.log('Auth success: ', user);
         })
@@ -82,8 +90,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private personService: PersonService,
-    private companyService: CompanyService,
+    private localStorageJwtService: LocalStorageJwtService,
     private notificationService: NotificationService,
     private router: Router
   ) {}

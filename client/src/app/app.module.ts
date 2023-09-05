@@ -53,6 +53,8 @@ import { EducationFormGroupComponent } from './components/education-form-group/e
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FieldsetModule } from 'primeng/fieldset';
 import { UnauthorizedErrorInterceptor } from './interceptors/unauthorized-error.interceptor';
+import { userReducer } from './state/user/user.reducer';
+import { UserEffects } from './state/user/user.effects';
 
 @NgModule({
   declarations: [
@@ -84,12 +86,12 @@ import { UnauthorizedErrorInterceptor } from './interceptors/unauthorized-error.
     CheckboxModule,
     ButtonModule,
     MessagesModule,
-    StoreModule.forRoot<AppState>({ auth: authReducer, person: personReducer }),
+    StoreModule.forRoot<AppState>({ auth: authReducer, user: userReducer, person: personReducer }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([AuthEffects, PersonEffects]),
+    EffectsModule.forRoot([AuthEffects, UserEffects, PersonEffects]),
     HttpClientModule,
     ToastModule,
     ProgressSpinnerModule,

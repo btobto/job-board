@@ -10,6 +10,7 @@ import { getUserType, isNotNull } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { fromAuth } from 'src/app/state/auth';
 import { fromPerson, personActions } from 'src/app/state/person';
+import { fromUser, userActions } from 'src/app/state/user';
 
 @Component({
   selector: 'app-person',
@@ -19,7 +20,7 @@ import { fromPerson, personActions } from 'src/app/state/person';
 export class PersonComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
 
-  loggedInUser$: Observable<User> = this.store.select(fromAuth.selectUser).pipe(filter(isNotNull));
+  loggedInUser$: Observable<User> = this.store.select(fromUser.selectUser).pipe(filter(isNotNull));
   selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
   users$ = combineLatest([this.selectedPerson$, this.loggedInUser$]).pipe(
     map(([person, loggedInUser]) => ({ person, loggedInUser }))
@@ -49,12 +50,10 @@ export class PersonComponent implements OnInit, OnDestroy {
 
     this.dialogRef.onClose.subscribe((updatedPerson?: UpdatePersonDto) => {
       console.log('From dialog: ', updatedPerson);
-      if (updatedPerson) this.updatePerson(person._id, updatedPerson);
+      if (updatedPerson) {
+        this.store.dispatch(userActions.updatePerson({ id: person._id, payload: updatedPerson }));
+      }
     });
-  }
-
-  updatePerson(id: string, dto: UpdatePersonDto) {
-    this.store;
   }
 
   getPersonPosition(person: Person): string {

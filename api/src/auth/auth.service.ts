@@ -34,8 +34,7 @@ export class AuthService {
       return null;
     }
 
-    const { hashedPassword, ...result } = user;
-    return result;
+    return this.stripPassword(user);
   }
 
   login(user: Omit<User, 'hashedPassword'>, userType: UserType) {
@@ -63,5 +62,10 @@ export class AuthService {
       .then((doc) => doc.toObject());
 
     return this.login(user, userType);
+  }
+
+  stripPassword(user: User): Omit<User, 'hashedPassword'> {
+    const { hashedPassword, ...result } = user;
+    return result;
   }
 }

@@ -2,6 +2,7 @@ import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { Person } from 'src/app/models';
 import { personActions } from '.';
+import { userActions } from '../user';
 
 export interface PersonState extends EntityState<Person> {
   selectedPersonId: string | null;
@@ -25,7 +26,11 @@ export const personReducer = createReducer(
   ),
   on(personActions.loadPersonFailure, (state, { error }) => ({
     ...state,
+    selectedPersonId: null,
     loading: false,
     error,
-  }))
+  })),
+  on(userActions.updatePersonSuccess, (state, { user }) =>
+    adapter.upsertOne(user, { ...state, loading: false, selectedPersonId: user._id })
+  )
 );

@@ -8,7 +8,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, map, take, tap } from 'rxjs';
+import { Observable, combineLatest, filter, from, map, take, takeUntil, tap } from 'rxjs';
 import { AppState } from '../state/app.state';
 import { fromAuth } from '../state/auth';
 
@@ -22,14 +22,18 @@ export class LoggedInAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.store.select(fromAuth.selectIsLoggedIn).pipe(
+    return combineLatest([
+      this.store.select(fromAuth.selectIsLoggedIn),
+      this.store.select(fromAuth.selectLoading),
+    ]).pipe(
+      filter(([_, isLoading]) => !isLoading),
       take(1),
-      tap((isAuthenticated) => {
+      tap(([isAuthenticated, _]) => {
         if (isAuthenticated) {
           this.router.navigate(['/']);
         }
       }),
-      map((isAuthenticated) => !isAuthenticated)
+      map(([isAuthenticated, _]) => !isAuthenticated)
     );
   }
 }

@@ -45,6 +45,7 @@ export class PersonsController {
     @Body() dto: PersonUpdateDto,
     @UploadedFile() image: Express.Multer.File,
   ): Promise<Person> {
+    console.log(dto, image);
     return await this.personsService.update(id, dto, image);
   }
 

@@ -3,13 +3,13 @@ import { User } from 'src/app/models';
 import { authActions } from '.';
 
 export interface AuthState {
-  user: User | null;
+  token: string | null;
   loading: boolean;
   error: any;
 }
 
 export const initialState: AuthState = {
-  user: null,
+  token: null,
   loading: false,
   error: null,
 };
@@ -20,10 +20,10 @@ export const authReducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(authActions.loginSuccess, authActions.registerSuccess, authActions.autoLoginSuccess, (_, { user }) => ({
-    user,
+  on(authActions.loginSuccess, authActions.registerSuccess, authActions.autoLoginSuccess, (state, { user }) => ({
+    ...state,
+    token: user.accessToken,
     loading: false,
-    error: null,
   })),
   on(authActions.loginFailure, authActions.registerFailure, (state, { error }) => ({
     ...state,

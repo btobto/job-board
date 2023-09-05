@@ -115,6 +115,10 @@ export class WorkExperienceFormGroupComponent implements ControlValueAccessor, V
     return this.jobGroup.get('position')!;
   }
 
+  get description() {
+    return this.jobGroup.get('description')!;
+  }
+
   get skills() {
     return this.jobGroup.get('skills')!;
   }
