@@ -24,7 +24,9 @@ export class PersonEffects {
     () =>
       this.actions$.pipe(
         ofType(personActions.loadPersonFailure),
-        tap(({ error }: { error: HttpErrorBody }) => this.notificationService.showError(error.error, error.message))
+        tap(({ error }: { error: HttpErrorBody }) =>
+          this.notificationService.showMessage('error', error.error, error.message)
+        )
       ),
     { dispatch: false }
   );

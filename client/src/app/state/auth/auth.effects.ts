@@ -42,10 +42,9 @@ export class AuthEffects {
   autoLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.autoLogin),
-      map(() => this.localStorageJwtService.getToken()),
-      switchMap((token) =>
+      switchMap(({ token }) =>
         this.authService.getUser().pipe(
-          map((user) => authActions.autoLoginSuccess({ user: { ...user, accessToken: token! } })),
+          map((user) => authActions.autoLoginSuccess({ user: { ...user, accessToken: token } })),
           catchError(() => of(authActions.autoLoginFaliure()))
         )
       )
@@ -82,7 +81,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(authActions.loginFailure, authActions.registerFailure),
         map(({ error }) => error.error),
-        tap((error: HttpErrorBody) => this.notificationService.showError(error.error, error.message))
+        tap((error: HttpErrorBody) => this.notificationService.showMessage('error', error.error, error.message))
       ),
     { dispatch: false }
   );

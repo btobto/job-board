@@ -16,7 +16,7 @@ export class UnauthorizedErrorInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           console.log('Unauthorized logging out');
           this.store.dispatch(authActions.logout());
-          this.notificationService.showError('Logging in error.', 'Please login again.');
+          this.notificationService.showMessage('error', 'Logging in error.', 'Please log in again.');
         }
         return throwError(() => new Error(error.error?.message || error.statusText));
       })

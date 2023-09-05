@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.localStorageJwtService.getToken()) this.store.dispatch(authActions.autoLogin());
+    const token = this.localStorageJwtService.getToken();
+    if (token) this.store.dispatch(authActions.autoLogin({ token }));
   }
 }

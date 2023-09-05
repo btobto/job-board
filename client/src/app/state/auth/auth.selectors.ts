@@ -8,4 +8,6 @@ export const selectError = createSelector(selectAuth, (state) => state.error?.er
 
 export const selectLoading = createSelector(selectAuth, (state) => state.loading);
 
-export const selectIsLoggedIn = createSelector(selectAuth, (state) => !!state.token);
+export const selectToken = createSelector(selectAuth, (state) => state.token);
+
+export const selectIsLoggedIn = createSelector(selectToken, (token) => !!token);

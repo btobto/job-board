@@ -18,10 +18,6 @@ export class NotificationService {
     });
   }
 
-  showError(summary: string, detail: string) {
-    this.showMessage('error', 'Error: ' + summary, detail);
-  }
-
   clear() {
     this.messageService.clear();
   }

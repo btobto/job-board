@@ -16,3 +16,9 @@ export const updatePersonSuccess = createAction('[Person API] Update person succ
 export const updateCompanySuccess = createAction('[Person API] Update company success', props<{ user: Company }>());
 
 export const updateUserFailure = createAction('[Person API] Update user failure', props<{ error: any }>());
+
+export const deletePerson = createAction('[Person page] Delete person', props<{ id: string }>());
+
+export const deleteCompany = createAction('[Person page] Delete company', props<{ id: string }>());
+
+export const deleteUserFailure = createAction('[Person/Company API] Delete user failure', props<{ error: any }>());

@@ -19,7 +19,6 @@ export const userReducer = createReducer(
     ...state,
     user,
   })),
-  on(authActions.logout, (_) => initialState),
   on(userActions.updatePersonSuccess, userActions.updateCompanySuccess, (state, { user }) => ({
     ...state,
     user,
@@ -27,5 +26,10 @@ export const userReducer = createReducer(
   on(userActions.updateUserFailure, (state, { error }) => ({
     ...state,
     error,
-  }))
+  })),
+  on(userActions.deleteUserFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+  on(authActions.logout, (_) => initialState)
 );

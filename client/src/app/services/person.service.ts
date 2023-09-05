@@ -17,4 +17,8 @@ export class PersonService {
   updatePerson(id: string, dto: UpdatePersonDto): Observable<Person> {
     return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}`, dto);
   }
+
+  deletePerson(id: string) {
+    return this.http.delete(`${environment.apiUrl}/persons/${id}`);
+  }
 }

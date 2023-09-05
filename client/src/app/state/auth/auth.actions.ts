@@ -15,7 +15,7 @@ export const registerSuccess = createAction('[Auth API] Register success', props
 
 export const registerFailure = createAction('[Auth API] Register failure', props<{ error: any }>());
 
-export const autoLogin = createAction('[Auth] Auto login');
+export const autoLogin = createAction('[Auth] Auto login', props<{ token: string }>());
 
 export const autoLoginSuccess = createAction('[Auth] Auto login success', props<{ user: User }>());
 
