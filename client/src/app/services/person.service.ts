@@ -21,4 +21,8 @@ export class PersonService {
   deletePerson(id: string) {
     return this.http.delete(`${environment.apiUrl}/persons/${id}`);
   }
+
+  uploadImage(id: string, formData: FormData): Observable<Person> {
+    return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}/image`, formData);
+  }
 }

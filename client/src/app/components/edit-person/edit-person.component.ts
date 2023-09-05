@@ -1,4 +1,14 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -6,9 +16,10 @@ import { FileUpload } from 'primeng/fileupload';
 import { Subscription, combineLatest } from 'rxjs';
 import { Education, FileSelectEvent, Person, UpdatePersonDto, WorkExperience } from 'src/app/models';
 import { MAX_YEAR, MIN_YEAR, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from 'src/app/shared/constants';
-import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
+import { objectsAreEqual, getUserImageUrl, removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { locationValidator, yearSpanValidator } from 'src/app/shared/validators';
 import { AppState } from 'src/app/state/app.state';
+import { userActions } from 'src/app/state/user';
 
 @Component({
   selector: 'app-edit-person',
@@ -25,16 +36,17 @@ export class EditPersonComponent {
   addWorkExperienceEnabled = true;
   submitFormEnabled = true;
 
-  buttonsEnabledSub!: Subscription;
+  initialFormValue: any;
 
   constructor(
     private dialogRef: DynamicDialogRef,
     private dialogConfig: DynamicDialogConfig,
     private fb: NonNullableFormBuilder,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private store: Store<AppState>
   ) {
     this.person = this.dialogConfig.data.person;
-    this.imageSource = this.person.imagePath ?? './assets/images/user-default-icon.png';
+    this.imageSource = getUserImageUrl(this.person);
 
     this.editForm = this.fb.group({
       name: [
@@ -47,10 +59,11 @@ export class EditPersonComponent {
       prevExperience: this.fb.array(this.person.prevExperience),
       education: this.fb.array(this.person.education),
     });
+
+    this.initialFormValue = removeEmptyValuesFromObject(this.editForm.getRawValue());
   }
 
   onImageSelected(event: FileSelectEvent) {
-    console.log(event);
     this.selectedFile = event.currentFiles[0];
     if (this.selectedFile) {
       const reader = new FileReader();
@@ -63,10 +76,19 @@ export class EditPersonComponent {
     this.fileUpload.clear();
   }
 
+  uploadImage() {
+    if (!this.selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+
+    this.store.dispatch(userActions.uploadPersonImage({ personId: this.person._id, formData }));
+  }
+
   saveChanges() {
     const formValue = removeEmptyValuesFromObject(this.editForm.getRawValue());
-    console.log(formValue);
-    this.dialogRef.close({ ...formValue, image: this.selectedFile });
+    const sendValue = objectsAreEqual(this.initialFormValue, formValue) ? null : formValue;
+    this.dialogRef.close(sendValue);
   }
 
   cancel() {

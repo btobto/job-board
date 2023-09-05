@@ -1,16 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ConfirmationService, PrimeIcons } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { FileUpload } from 'primeng/fileupload';
 import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
-import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto } from 'src/app/models';
+import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto, FileSelectEvent } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums/user-type.enum';
-import { getUserType, isNotNull } from 'src/app/shared/helpers';
+import { getUserImageUrl, getUserType, isNotNull } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { fromAuth } from 'src/app/state/auth';
 import { fromPerson, personActions } from 'src/app/state/person';
 import { fromUser, userActions } from 'src/app/state/user';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-person',
@@ -18,7 +21,12 @@ import { fromUser, userActions } from 'src/app/state/user';
   styleUrls: ['./person.component.scss'],
 })
 export class PersonComponent implements OnInit, OnDestroy {
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
+  constructor(
+    private store: Store<AppState>,
+    private route: ActivatedRoute,
+    public dialogService: DialogService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   loggedInUser$: Observable<User> = this.store.select(fromUser.selectUser).pipe(filter(isNotNull));
   selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
@@ -49,10 +57,25 @@ export class PersonComponent implements OnInit, OnDestroy {
     });
 
     this.dialogRef.onClose.subscribe((updatedPerson?: UpdatePersonDto) => {
-      console.log('From dialog: ', updatedPerson);
-      if (updatedPerson) {
-        this.store.dispatch(userActions.updatePerson({ id: person._id, payload: updatedPerson }));
-      }
+      this.updatePerson(person._id, updatedPerson);
+    });
+  }
+
+  updatePerson(personId: string, updatedPerson?: UpdatePersonDto) {
+    console.log('From dialog: ', updatedPerson);
+    if (updatedPerson) this.store.dispatch(userActions.updatePerson({ id: personId, payload: updatedPerson }));
+  }
+
+  deletePerson(person: Person) {
+    this.confirmationService.confirm({
+      header: 'Delete account confirmation',
+      message: 'Are you sure you want to delete your account? This action cannot be reversed.',
+      icon: PrimeIcons.EXCLAMATION_TRIANGLE,
+      acceptButtonStyleClass: 'p-button-danger',
+      key: 'deletePersonDialog',
+      accept: () => {
+        this.store.dispatch(userActions.deletePerson({ id: person._id }));
+      },
     });
   }
 
@@ -112,5 +135,9 @@ export class PersonComponent implements OnInit, OnDestroy {
       { label: 'Grade', value: education.grade },
       { label: 'Academic period', value: this.formatPeriod(education.yearFrom, education.yearTo) },
     ];
+  }
+
+  getImageUrl(person: Person): string {
+    return getUserImageUrl(person);
   }
 }

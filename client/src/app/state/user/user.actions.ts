@@ -11,6 +11,11 @@ export const updateCompany = createAction(
   props<{ id: string; payload: UpdateCompanyDto }>()
 );
 
+export const uploadPersonImage = createAction(
+  '[Person page] Upload image',
+  props<{ personId: string; formData: FormData }>()
+);
+
 export const updatePersonSuccess = createAction('[Person API] Update person success', props<{ user: Person }>());
 
 export const updateCompanySuccess = createAction('[Person API] Update company success', props<{ user: Company }>());

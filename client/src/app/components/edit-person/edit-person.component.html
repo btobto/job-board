@@ -4,16 +4,24 @@
       <!-- {{ editForm.value | json }} -->
       <div class="flex flex-column align-items-center gap-3">
         <div class="circle-crop"><img [src]="imageSource" class="circle-crop" /></div>
-        <div>
+        <div class="flex flex-column gap-2">
           <p-fileUpload
             #fileUpload
             mode="basic"
-            chooseLabel="Upload picture"
-            chooseIcon="pi pi-upload"
+            chooseLabel="Choose file"
+            chooseIcon="pi pi-plus"
             accept=".jpg,.jpeg,.png"
+            styleClass="p-button-outlined w-full"
             [maxFileSize]="10000000"
             (onSelect)="onImageSelected($event)"
           ></p-fileUpload>
+          <p-button
+            styleClass="w-full"
+            icon="pi pi-upload"
+            label="Upload image"
+            [disabled]="!selectedFile"
+            (click)="uploadImage()"
+          ></p-button>
         </div>
       </div>
 

@@ -21,11 +21,11 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string, userType: UserType) {
-    const user: User = await this.connection
+    const user = (await this.connection
       .model(userType)
       .findOne({ email })
       .lean()
-      .exec();
+      .exec()) as User;
 
     if (
       !user ||

@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useGlobalFilters(new MongoExceptionFilter());
   mongoose.set('runValidators', true);
 
-  app.enableCors();
+  app.enableCors({ origin: 'http://localhost:4200' });
   const host = configService.get<string>('HOST') || 'localhost';
   const port = configService.get<number>('PORT') || 3000;
   await app.listen(3000);

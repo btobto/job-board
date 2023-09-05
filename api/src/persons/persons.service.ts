@@ -3,6 +3,7 @@ import { Injectable, NotImplementedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
 import { Person, PersonDocument } from './schemas';
+import { unlink } from 'fs/promises';
 
 @Injectable()
 export class PersonsService {
@@ -40,24 +41,33 @@ export class PersonsService {
     return query.limit(10).select('name skills location').exec();
   }
 
-  update(
-    id: string,
-    dto: PersonUpdateDto,
-    img?: Express.Multer.File,
-  ): Promise<Person> {
+  async uploadImage(id: string, image: Express.Multer.File): Promise<Person> {
+    const person = await this.personModel.findById(id).orFail().exec();
+    if (person.imagePath) {
+      await unlink(person.imagePath);
+    }
+
     return this.personModel
       .findByIdAndUpdate(
         id,
-        img ? { ...dto, imagePath: '/' + img.filename } : { ...dto },
-        {
-          new: true,
-        },
+        { imagePath: `${image.destination}/${image.filename}` },
+        { new: true },
       )
       .orFail()
       .exec();
   }
 
-  delete(id: string) {
-    return this.personModel.findByIdAndDelete(id).orFail().exec();
+  update(id: string, dto: PersonUpdateDto): Promise<Person> {
+    return this.personModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .orFail()
+      .exec();
+  }
+
+  async delete(id: string) {
+    const person = await this.personModel.findByIdAndDelete(id).orFail().exec();
+    if (person.imagePath) {
+      await unlink(person.imagePath);
+    }
   }
 }

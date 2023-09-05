@@ -38,3 +38,9 @@ lerna-debug.log*
 .env
 .env.docker
 docker.env
+
+# Uploads
+/uploads/persons/*
+/uploads/companies/*
+
+!.gitkeep

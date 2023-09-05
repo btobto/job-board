@@ -10,8 +10,9 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards';
 import { DocumentToObjectInterceptor } from './common/interceptors';
 import { MongooseConfigService } from './config';
-import { MulterModule } from '@nestjs/platform-express';
-import { MulterConfigService } from './config/multer-config.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { FILE_UPLOAD_DEST } from './config/multer-config.service';
 
 @Module({
   imports: [
@@ -20,8 +21,10 @@ import { MulterConfigService } from './config/multer-config.service';
       imports: [ConfigModule],
       useClass: MongooseConfigService,
     }),
-    MulterModule.registerAsync({
-      useClass: MulterConfigService,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', `${FILE_UPLOAD_DEST}`),
+      serveRoot: `/${FILE_UPLOAD_DEST}`,
+      serveStaticOptions: { index: false },
     }),
     PersonsModule,
     CompaniesModule,

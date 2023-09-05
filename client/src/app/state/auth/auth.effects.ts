@@ -80,8 +80,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(authActions.loginFailure, authActions.registerFailure),
-        map(({ error }) => error.error),
-        tap((error: HttpErrorBody) => this.notificationService.showMessage('error', error.error, error.message))
+        tap(({ error }) => this.notificationService.showMessage('error', 'Error', error.message))
       ),
     { dispatch: false }
   );

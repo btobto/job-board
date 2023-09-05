@@ -1,19 +1,27 @@
+<p-confirmDialog key="deletePersonDialog" [style]="{ width: '30vw' }"></p-confirmDialog>
 <ng-container *ngIf="users$ | async as users">
   <div class="flex justify-content-center m-4">
     <div class="surface-card p-4 shadow-2 border-round w-screen xl:w-8">
       <div class="flex gap-4 mb-4">
         <div class="flex flex-column align-items-center gap-3">
-          <ng-container *ngIf="users.person.imagePath">aa</ng-container>
-          <ng-container *ngIf="!users.person.imagePath">
-            <img src="./assets/images/user-default-icon.png" style="width: 150px; height: 150px" />
-          </ng-container>
-          <p-button
-            *ngIf="isPersonLoggedInUser(users.person, users.loggedInUser)"
-            label="Edit profile"
-            icon="pi pi-user-edit"
-            styleClass="p-button-sm"
-            (click)="openEditPersonDialog(users.person)"
-          ></p-button>
+          <div class="circle-crop">
+            <img [src]="getImageUrl(users.person)" style="width: 150px; height: 150px" />
+          </div>
+
+          <div *ngIf="isPersonLoggedInUser(users.person, users.loggedInUser)" class="flex flex-column gap-2">
+            <p-button
+              label="Edit profile"
+              icon="pi pi-user-edit"
+              styleClass="p-button-sm w-full"
+              (click)="openEditPersonDialog(users.person)"
+            ></p-button>
+            <p-button
+              label="Delete profile"
+              icon="pi pi-cross"
+              styleClass="p-button-sm p-button-danger p-button-out w-full"
+              (click)="deletePerson(users.person)"
+            ></p-button>
+          </div>
         </div>
         <div>
           <div class="text-4xl font-medium text-900 mb-2">{{ users.person.name }}</div>
