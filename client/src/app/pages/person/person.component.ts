@@ -7,13 +7,13 @@ import { FileUpload } from 'primeng/fileupload';
 import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
 import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto, FileSelectEvent } from 'src/app/models';
-import { UserType } from 'src/app/shared/enums/user-type.enum';
-import { getUserImageUrl, getUserType, isNotNull } from 'src/app/shared/helpers';
+import { UserType } from 'src/app/shared/enums';
+import { filterNull, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
+import { selectUserAndPerson } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
 import { fromAuth } from 'src/app/state/auth';
-import { fromPerson, personActions } from 'src/app/state/person';
+import { fromPersons, personsActions } from 'src/app/state/persons';
 import { fromUser, userActions } from 'src/app/state/user';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-person',
@@ -28,16 +28,12 @@ export class PersonComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService
   ) {}
 
-  loggedInUser$: Observable<User> = this.store.select(fromUser.selectUser).pipe(filter(isNotNull));
-  selectedPerson$: Observable<Person> = this.store.select(fromPerson.selectSelectedPerson).pipe(filter(isNotNull));
-  users$ = combineLatest([this.selectedPerson$, this.loggedInUser$]).pipe(
-    map(([person, loggedInUser]) => ({ person, loggedInUser }))
-  );
+  users$ = this.store.select(selectUserAndPerson).pipe(filterNull());
   dialogRef?: DynamicDialogRef;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.store.dispatch(personActions.loadPerson({ personId: params['id'] }));
+      this.store.dispatch(personsActions.loadPerson({ personId: params['id'] }));
     });
   }
 

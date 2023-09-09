@@ -13,7 +13,6 @@ import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angul
 import { Store } from '@ngrx/store';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUpload } from 'primeng/fileupload';
-import { Subscription, combineLatest } from 'rxjs';
 import { Education, FileSelectEvent, Person, UpdatePersonDto, WorkExperience } from 'src/app/models';
 import { MAX_YEAR, MIN_YEAR, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from 'src/app/shared/constants';
 import { objectsAreEqual, getUserImageUrl, removeEmptyValuesFromObject } from 'src/app/shared/helpers';
@@ -30,13 +29,13 @@ export class EditPersonComponent {
   @ViewChild('fileUpload') fileUpload!: FileUpload;
   selectedFile: File | null = null;
   imageSource: string;
-  person!: Person;
-  editForm!: FormGroup;
+  editForm: FormGroup;
+  initialFormValue: any;
+
+  person: Person;
 
   addWorkExperienceEnabled = true;
   submitFormEnabled = true;
-
-  initialFormValue: any;
 
   constructor(
     private dialogRef: DynamicDialogRef,

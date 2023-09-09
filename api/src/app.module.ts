@@ -12,7 +12,7 @@ import { DocumentToObjectInterceptor } from './common/interceptors';
 import { MongooseConfigService } from './config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { FILE_UPLOAD_DEST } from './config/multer-config.service';
+import { FILE_UPLOAD_DEST } from './common/constants';
 
 @Module({
   imports: [

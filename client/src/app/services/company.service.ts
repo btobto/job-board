@@ -21,4 +21,8 @@ export class CompanyService {
   deleteCompany(id: string) {
     return this.http.delete(`${environment.apiUrl}/companies/${id}`);
   }
+
+  uploadImage(id: string, formData: FormData): Observable<Company> {
+    return this.http.patch<Company>(`${environment.apiUrl}/companies/${id}/image`, formData);
+  }
 }

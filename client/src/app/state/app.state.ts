@@ -1,9 +1,11 @@
 import { AuthState } from './auth/auth.reducer';
-import { PersonState } from './person/person.reducer';
+import { CompaniesState } from './companies/companies.reducer';
+import { PersonsState } from './persons/persons.reducer';
 import { UserState } from './user/user.reducer';
 
 export interface AppState {
   auth: AuthState;
   user: UserState;
-  person: PersonState;
+  persons: PersonsState;
+  companies: CompaniesState;
 }

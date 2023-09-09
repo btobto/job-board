@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, filter } from 'rxjs';
 import { User } from 'src/app/models';
-import { UserType } from 'src/app/shared/enums/user-type.enum';
+import { UserType } from 'src/app/shared/enums';
 import { getUserType } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { fromAuth } from 'src/app/state/auth';

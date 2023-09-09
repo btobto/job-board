@@ -14,6 +14,8 @@ export const URL_REGEX = /^((https?|http?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-z
 
 export const EMPTY_ERROR_KEY = 'emptyError';
 
+export const IMAGES_PATH = './assets/images';
+
 export const COUNTRY_LIST = [
   'Afghanistan',
   'Albania',

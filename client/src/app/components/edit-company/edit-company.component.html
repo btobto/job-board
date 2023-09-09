@@ -1,0 +1,107 @@
+<div>
+  <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
+    <div class="relative">
+      <div class="flex flex-column align-items-center gap-3">
+        <div class="circle-crop"><img [src]="imageSource" class="circle-crop" /></div>
+        <div class="flex flex-column gap-2">
+          <p-fileUpload
+            #fileUpload
+            mode="basic"
+            chooseLabel="Choose file"
+            chooseIcon="pi pi-plus"
+            accept=".jpg,.jpeg,.png"
+            styleClass="p-button-outlined w-full"
+            [maxFileSize]="10000000"
+            (onSelect)="onImageSelected($event)"
+          ></p-fileUpload>
+          <p-button
+            styleClass="w-full"
+            icon="pi pi-upload"
+            label="Upload image"
+            [disabled]="!selectedFile"
+            (click)="uploadImage()"
+          ></p-button>
+        </div>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="name" class="block text-900 font-medium mb-2 text-lg">Name</label>
+        <input pInputText formControlName="name" id="name" type="text" name="name" placeholder="Name" class="w-full" />
+        <app-control-error-message controlName="Name" [control]="name"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="website" class="block text-900 font-medium mb-2 text-lg">Website</label>
+        <input
+          pInputText
+          formControlName="website"
+          id="website"
+          type="text"
+          name="website"
+          placeholder="website"
+          class="w-full"
+        />
+        <app-control-error-message controlName="Website" [control]="website"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="about" class="block text-900 font-medium mb-2 text-lg">About</label>
+        <textarea
+          pInputTextarea
+          formControlName="about"
+          id="about"
+          name="about"
+          placeholder="About"
+          [autoResize]="true"
+          class="w-full"
+        ></textarea>
+        <app-control-error-message controlName="About" [control]="about"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3" formArrayName="locations">
+        <span class="block text-900 font-medium mb-2 text-lg">Offices</span>
+        <div class="field p-fluid" *ngFor="let location of locations.controls; let i = index">
+          <p-fieldset
+            [legend]="!!location?.value.companyName ? location.value.companyName : 'New office location'"
+            [toggleable]="true"
+          >
+            <app-location-form-group [formControlName]="i" [index]="i"></app-location-form-group>
+            <div class="flex justify-content-end">
+              <p-button
+                label="Delete office"
+                styleClass="p-button-danger w-auto mt-3"
+                icon="pi pi-trash"
+                (click)="deleteLocation(i)"
+              ></p-button>
+            </div>
+          </p-fieldset>
+        </div>
+        <div *ngIf="!locations.controls.length" class="mb-2">
+          <div>No offices added.</div>
+        </div>
+        <div class="flex justify-content-center">
+          <p-button
+            label="Add office"
+            (click)="addLocation()"
+            icon="pi pi-plus"
+            styleClass="p-button-secondary w-auto mb-3 font-normal"
+            [disabled]="locations.invalid"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="surface-card flex gap-3 w-full fixed left-0 bottom-0 p-4">
+      <div class="flex-1">
+        <p-button type="submit" label="Save changes" styleClass="w-full" [disabled]="editForm.invalid"></p-button>
+      </div>
+      <div class="flex-1">
+        <p-button
+          label="Cancel"
+          styleClass="p-button-outlined p-button-secondary w-full"
+          (onClick)="cancel()"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>

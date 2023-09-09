@@ -1,8 +1,8 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 
-export const selectPersonState = (state: AppState) => state.person;
+export const selectPersonsState = (state: AppState) => state.persons;
 
-export const selectSelectedPerson = createSelector(selectPersonState, (state) =>
+export const selectSelectedPerson = createSelector(selectPersonsState, (state) =>
   state.selectedPersonId ? state.entities[state.selectedPersonId]! : null
 );

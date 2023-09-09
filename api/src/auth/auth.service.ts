@@ -21,11 +21,10 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string, userType: UserType) {
-    const user = (await this.connection
+    const user = await this.connection
       .model(userType)
       .findOne({ email })
-      .lean()
-      .exec()) as User;
+      .exec();
 
     if (
       !user ||
@@ -34,7 +33,7 @@ export class AuthService {
       return null;
     }
 
-    return this.stripPassword(user);
+    return user.toObject();
   }
 
   login(user: Omit<User, 'hashedPassword'>, userType: UserType) {
@@ -62,10 +61,5 @@ export class AuthService {
       .then((doc) => doc.toObject());
 
     return this.login(user, userType);
-  }
-
-  stripPassword(user: User): Omit<User, 'hashedPassword'> {
-    const { hashedPassword, ...result } = user;
-    return result;
   }
 }

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserType } from '../shared/enums/user-type.enum';
-import { JwtTokenPayload } from '../models';
 
 const TOKEN_KEY = 'token';
 

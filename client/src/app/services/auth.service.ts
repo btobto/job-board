@@ -5,9 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, delay, tap } from 'rxjs';
 import { getUserType } from '../shared/helpers';
 import { Exact } from '../shared/types';
-import { UserType } from '../shared/enums/user-type.enum';
-
-// const USER_KEY = 'user';
+import { UserType } from '../shared/enums';
 
 @Injectable({
   providedIn: 'root',

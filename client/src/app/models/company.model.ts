@@ -8,6 +8,7 @@ export interface Company {
   about?: string;
   locations: Location[];
   rating: number;
+  ratingsCount: number;
   imagePath?: string;
   accessToken: string;
 }

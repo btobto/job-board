@@ -25,13 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       .model(payload[USER_TYPE_KEY])
       .findById(payload['sub'])
       .exec()
-      .then((doc) =>
-        doc.toObject({
-          transform: (doc, ret, opts) => {
-            if (ret._id) ret._id = ret._id.toHexString();
-            return ret;
-          },
-        }),
-      );
+      .then((doc) => {
+        const user = doc.toObject();
+        if (user._id) user._id = user._id.toHexString();
+        return user;
+      });
   }
 }

@@ -1,8 +1,10 @@
 import { environment } from 'src/environments/environment';
 import { Company, Person, User } from '../models';
-import { UserType } from './enums/user-type.enum';
+import { UserType } from './enums';
+import { Observable, filter } from 'rxjs';
+import { IMAGES_PATH } from './constants';
 
-export function getUserType<T>(user: Partial<User>): UserType {
+export function getUserType(user: Partial<User>): UserType {
   if (['website', 'locations', 'rating'].some((key) => key in user)) {
     return UserType.Company;
   }
@@ -11,6 +13,20 @@ export function getUserType<T>(user: Partial<User>): UserType {
 
 export function isNotNull<T>(val: T): val is NonNullable<T> {
   return val != null;
+}
+
+export function filterNull<T>() {
+  return (source: Observable<T>) => source.pipe(filter(isNotNull));
+}
+
+export function getUserImageUrl(user: User): string {
+  return user.imagePath ? environment.mediaUrl + '/' + user.imagePath : getDefaultImageUrl(user);
+}
+
+export function getDefaultImageUrl(user: User): string {
+  return (
+    `${IMAGES_PATH}/` + (getUserType(user) === UserType.Person ? 'user-default-icon.png' : 'company-default-icon.png')
+  );
 }
 
 export function removeEmptyValuesFromObject(obj: Record<string, any> | any[]): any {
@@ -25,10 +41,6 @@ export function removeEmptyValuesFromObject(obj: Record<string, any> | any[]): a
         .filter(([_, v]) => Array.isArray(v) || (!!v && (typeof v === 'object' ? Object.keys(v).length : true)))
     );
   }
-}
-
-export function getUserImageUrl(user: User): string {
-  return user.imagePath ? environment.mediaUrl + '/' + user.imagePath : './assets/images/user-default-icon.png';
 }
 
 export function objectsAreEqual(val1: any, val2: any): boolean {

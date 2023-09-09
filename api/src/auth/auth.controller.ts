@@ -15,7 +15,6 @@ import { AuthService } from './auth.service';
 import { ActiveUser, Public } from './decorators';
 import { UserType } from '../common/enums';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
-import { User } from 'src/common/types';
 
 @Public()
 @Controller('auth')
@@ -26,14 +25,14 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('user')
   getUser(@Request() req) {
-    return this.authService.stripPassword(req.user);
+    return req.user;
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard(UserType.Person))
   @Post('person/login')
   loginPerson(@Request() req) {
-    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
+    return this.authService.login(req.user, req[USER_TYPE_KEY]);
   }
 
   @Post('person/register')
@@ -45,7 +44,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard(UserType.Company))
   @Post('company/login')
   loginCompany(@Request() req) {
-    return this.authService.login(req['user'], req[USER_TYPE_KEY]);
+    return this.authService.login(req.user, req[USER_TYPE_KEY]);
   }
 
   @Post('company/register')

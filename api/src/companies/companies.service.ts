@@ -8,6 +8,7 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Connection, Error, Model } from 'mongoose';
 import { transactionHandler } from '../common/mongoose-helpers';
 import { Company, CompanyDocument } from './schemas';
+import { unlink } from 'fs/promises';
 
 @Injectable()
 export class CompaniesService {
@@ -53,6 +54,22 @@ export class CompaniesService {
       .exec();
   }
 
+  async uploadImage(id: string, image: Express.Multer.File): Promise<Company> {
+    const company = await this.companyModel.findById(id).orFail().exec();
+    if (company.imagePath) {
+      await unlink(company.imagePath);
+    }
+
+    return this.companyModel
+      .findByIdAndUpdate(
+        id,
+        { imagePath: `${image.destination}/${image.filename}` },
+        { new: true },
+      )
+      .orFail()
+      .exec();
+  }
+
   update(id: string, dto: CompanyUpdateDto): Promise<Company> {
     return this.companyModel
       .findByIdAndUpdate(id, dto, { new: true })
@@ -62,11 +79,17 @@ export class CompaniesService {
 
   delete(id: string) {
     return transactionHandler(this.connection, async (session) => {
-      return this.companyModel
+      const company = await this.companyModel
         .findByIdAndDelete(id)
         .orFail()
         .session(session)
         .exec();
+
+      if (company.imagePath) {
+        await unlink(company.imagePath);
+      }
+
+      return company;
     });
   }
 }

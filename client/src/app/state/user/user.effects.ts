@@ -46,6 +46,18 @@ export class UserEffects {
     )
   );
 
+  uploadCompanyImage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(userActions.uploadCompanyImage),
+      concatMap(({ companyId, formData }) =>
+        this.companyService.uploadImage(companyId, formData).pipe(
+          map((user) => userActions.updateCompanySuccess({ user })),
+          catchError((error) => of(userActions.updateUserFailure({ error })))
+        )
+      )
+    )
+  );
+
   updateUserSuccess$ = createEffect(
     () =>
       this.actions$.pipe(

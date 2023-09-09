@@ -36,9 +36,9 @@ import { MenubarModule } from 'primeng/menubar';
 import { SearchComponent } from './pages/search/search.component';
 import { PersonComponent } from './pages/person/person.component';
 import { CompanyComponent } from './pages/company/company.component';
-import { personReducer } from './state/person/person.reducer';
+import { personsReducer } from './state/persons/persons.reducer';
 import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
-import { PersonEffects } from './state/person/person.effects';
+import { PersonsEffects } from './state/persons/persons.effects';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChipModule } from 'primeng/chip';
 import { ListItemComponent } from './components/list-item/list-item.component';
@@ -55,6 +55,14 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { UnauthorizedErrorInterceptor } from './interceptors/unauthorized-error.interceptor';
 import { userReducer } from './state/user/user.reducer';
 import { UserEffects } from './state/user/user.effects';
+import { companiesReducer } from './state/companies/companies.reducer';
+import { CompaniesEffects } from './state/companies/companies.effects';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { PostingsComponent } from './components/postings/postings.component';
+import { ReviewsComponent } from './components/reviews/reviews.component';
+import { AboutCompanyComponent } from './components/about-company/about-company.component';
+import { EditCompanyComponent } from './components/edit-company/edit-company.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +83,11 @@ import { UserEffects } from './state/user/user.effects';
     LocationFormGroupComponent,
     WorkExperienceFormGroupComponent,
     EducationFormGroupComponent,
+    SafeUrlPipe,
+    PostingsComponent,
+    ReviewsComponent,
+    AboutCompanyComponent,
+    EditCompanyComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,12 +99,17 @@ import { UserEffects } from './state/user/user.effects';
     CheckboxModule,
     ButtonModule,
     MessagesModule,
-    StoreModule.forRoot<AppState>({ auth: authReducer, user: userReducer, person: personReducer }),
+    StoreModule.forRoot<AppState>({
+      auth: authReducer,
+      user: userReducer,
+      persons: personsReducer,
+      companies: companiesReducer,
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([AuthEffects, UserEffects, PersonEffects]),
+    EffectsModule.forRoot([AuthEffects, UserEffects, PersonsEffects, CompaniesEffects]),
     HttpClientModule,
     ToastModule,
     ProgressSpinnerModule,
@@ -106,6 +124,7 @@ import { UserEffects } from './state/user/user.effects';
     InputTextareaModule,
     InputNumberModule,
     FieldsetModule,
+    TabMenuModule,
   ],
   providers: [
     MessageService,

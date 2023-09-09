@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, filter, of, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, filter, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../state/app.state';
 import { authActions, fromAuth } from '../state/auth';
@@ -12,9 +12,11 @@ export class UnauthorizedErrorInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return this.store.select(fromAuth.selectIsLoggedIn).pipe(
+      take(1),
       switchMap((isLoggedIn) =>
         next.handle(request).pipe(
           catchError((error) => {
+            console.log(isLoggedIn);
             if (isLoggedIn && error instanceof HttpErrorResponse && error.status === 401) {
               console.log('Unauthorized logging out');
               this.store.dispatch(authActions.logout());

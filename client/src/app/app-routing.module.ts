@@ -10,6 +10,9 @@ import { AuthGuard, LoggedInAuthGuard } from './guards';
 import { SearchComponent } from './pages/search/search.component';
 import { PersonComponent } from './pages/person/person.component';
 import { CompanyComponent } from './pages/company/company.component';
+import { PostingsComponent } from './components/postings/postings.component';
+import { ReviewsComponent } from './components/reviews/reviews.component';
+import { AboutCompanyComponent } from './components/about-company/about-company.component';
 
 const routes: Routes = [
   {
@@ -20,7 +23,16 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'search', component: SearchComponent },
       { path: 'person/:id', component: PersonComponent },
-      { path: 'company/:id', component: CompanyComponent },
+      {
+        path: 'company/:id',
+        component: CompanyComponent,
+        children: [
+          { path: 'about', component: AboutCompanyComponent },
+          { path: 'postings', component: PostingsComponent },
+          { path: 'reviews', component: ReviewsComponent },
+          { path: '', redirectTo: 'about', pathMatch: 'full' },
+        ],
+      },
       { path: '404', component: PageNotFoundComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
     ],

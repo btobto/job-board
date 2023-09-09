@@ -16,6 +16,11 @@ export const uploadPersonImage = createAction(
   props<{ personId: string; formData: FormData }>()
 );
 
+export const uploadCompanyImage = createAction(
+  '[Company page] Upload image',
+  props<{ companyId: string; formData: FormData }>()
+);
+
 export const updatePersonSuccess = createAction('[Person API] Update person success', props<{ user: Person }>());
 
 export const updateCompanySuccess = createAction('[Person API] Update company success', props<{ user: Company }>());

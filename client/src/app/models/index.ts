@@ -12,4 +12,3 @@ export * from './list-item.model';
 export * from './file-select-event.model';
 export * from './update-person-dto.model';
 export * from './update-company-dto.model';
-export * from './jwt-token-payload.model';

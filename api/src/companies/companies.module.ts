@@ -8,6 +8,8 @@ import { ReviewsService } from '../reviews/reviews.service';
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
 import { Company, CompanyDocument, CompanySchema } from './schemas';
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterConfigService } from 'src/config/multer-config.service';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { Company, CompanyDocument, CompanySchema } from './schemas';
         inject: [ReviewsService, PostingsService],
       },
     ]),
+    MulterModule.registerAsync({ useClass: MulterConfigService }),
   ],
   controllers: [CompaniesController],
   providers: [CompaniesService],

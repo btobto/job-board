@@ -7,7 +7,9 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { ResourceOwhershipGuard } from 'src/auth/guards';
@@ -19,6 +21,7 @@ import {
   CompanyUpdateDto,
 } from './dto';
 import { Company } from './schemas';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('companies')
 export class CompaniesController {
@@ -43,6 +46,17 @@ export class CompaniesController {
     @Body() dto: CompanyUpdateDto,
   ): Promise<Company> {
     return await this.companiesService.update(id, dto);
+  }
+
+  @Patch(':id/image')
+  @UseGuards(ResourceOwhershipGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadImage(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @UploadedFile()
+    image: Express.Multer.File,
+  ) {
+    return await this.companiesService.uploadImage(id, image);
   }
 
   @Delete(':id')
