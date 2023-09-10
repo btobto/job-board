@@ -1,5 +1,5 @@
 import { environment } from 'src/environments/environment';
-import { Company, Person, User } from '../models';
+import { Company, Person, User, Location } from '../models';
 import { UserType } from './enums';
 import { Observable, filter } from 'rxjs';
 import { IMAGES_PATH } from './constants';
@@ -27,6 +27,14 @@ export function getDefaultImageUrl(user: User): string {
   return (
     `${IMAGES_PATH}/` + (getUserType(user) === UserType.Person ? 'user-default-icon.png' : 'company-default-icon.png')
   );
+}
+
+export function getLocationString(location: Location): string {
+  return Object.values(location).join(', ');
+}
+
+export function isSameUser(user: User, user2: User): boolean {
+  return getUserType(user) === getUserType(user2) && user._id === user2._id;
 }
 
 export function removeEmptyValuesFromObject(obj: Record<string, any> | any[]): any {

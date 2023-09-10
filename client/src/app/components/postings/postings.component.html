@@ -1,1 +1,12 @@
-<p>postings works!</p>
+<ng-container *ngIf="users$ | async as users">
+  <div *ngIf="isLoggedInUser(users.company, users.loggedInUser)" class="flex justify-content-end">
+    <p-button
+      label="New posting"
+      icon="pi pi-plus"
+      styleClass="mb-3"
+      (click)="newPosting(users.company.locations)"
+    ></p-button>
+  </div>
+</ng-container>
+
+<app-posting *ngFor="let posting of postings$ | async" [posting]="posting"></app-posting>

@@ -8,7 +8,7 @@ import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
 import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto, FileSelectEvent } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
-import { filterNull, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
+import { filterNull, getUserImageUrl, getUserType, isSameUser } from 'src/app/shared/helpers';
 import { selectUserAndPerson } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
 import { fromAuth } from 'src/app/state/auth';
@@ -97,7 +97,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   isPersonLoggedInUser(person: Person, loggedInUser: User): boolean {
-    return getUserType(loggedInUser) === UserType.Person && person._id === loggedInUser._id;
+    return isSameUser(person, loggedInUser);
   }
 
   getNoAttributeMessage(person: Person, loggedInUser: User, attribute: string) {

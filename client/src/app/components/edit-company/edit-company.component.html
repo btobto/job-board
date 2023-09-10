@@ -62,7 +62,7 @@
         <span class="block text-900 font-medium mb-2 text-lg">Offices</span>
         <div class="field p-fluid" *ngFor="let location of locations.controls; let i = index">
           <p-fieldset
-            [legend]="!!location?.value.companyName ? location.value.companyName : 'New office location'"
+            [legend]="!!location?.value.country ? location.value.country : 'New office location'"
             [toggleable]="true"
           >
             <app-location-form-group [formControlName]="i" [index]="i"></app-location-form-group>

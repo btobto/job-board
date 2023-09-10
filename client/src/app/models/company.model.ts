@@ -10,5 +10,5 @@ export interface Company {
   rating: number;
   ratingsCount: number;
   imagePath?: string;
-  accessToken: string;
+  accessToken?: string;
 }

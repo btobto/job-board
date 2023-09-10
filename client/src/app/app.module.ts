@@ -63,6 +63,13 @@ import { PostingsComponent } from './components/postings/postings.component';
 import { ReviewsComponent } from './components/reviews/reviews.component';
 import { AboutCompanyComponent } from './components/about-company/about-company.component';
 import { EditCompanyComponent } from './components/edit-company/edit-company.component';
+import { PostingComponent } from './components/posting/posting.component';
+import { ReviewComponent } from './components/review/review.component';
+import { postingsReducer } from './state/postings/postings.reducer';
+import { PostingsEffects } from './state/postings/postings.effects';
+import { CardModule } from 'primeng/card';
+import { UserTypeofPipe } from './pipes/user-typeof.pipe';
+import { CreatePostingComponent } from './components/create-posting/create-posting.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +95,10 @@ import { EditCompanyComponent } from './components/edit-company/edit-company.com
     ReviewsComponent,
     AboutCompanyComponent,
     EditCompanyComponent,
+    PostingComponent,
+    ReviewComponent,
+    UserTypeofPipe,
+    CreatePostingComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,12 +115,13 @@ import { EditCompanyComponent } from './components/edit-company/edit-company.com
       user: userReducer,
       persons: personsReducer,
       companies: companiesReducer,
+      postings: postingsReducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([AuthEffects, UserEffects, PersonsEffects, CompaniesEffects]),
+    EffectsModule.forRoot([AuthEffects, UserEffects, PersonsEffects, CompaniesEffects, PostingsEffects]),
     HttpClientModule,
     ToastModule,
     ProgressSpinnerModule,
@@ -125,6 +137,7 @@ import { EditCompanyComponent } from './components/edit-company/edit-company.com
     InputNumberModule,
     FieldsetModule,
     TabMenuModule,
+    CardModule,
   ],
   providers: [
     MessageService,

@@ -12,13 +12,13 @@
             <p-button
               label="Edit profile"
               icon="pi pi-user-edit"
-              styleClass="p-button-sm w-full"
+              styleClass="p-button-sm w-full p-button-outlined"
               (click)="openEditCompanyDialog(users.company)"
             ></p-button>
             <p-button
               label="Delete profile"
-              icon="pi pi-cross"
-              styleClass="p-button-sm p-button-danger p-button-out w-full"
+              icon="pi pi-trash"
+              styleClass="p-button-sm p-button-danger p-button-outlined w-full"
               (click)="deleteCompany(users.company)"
             ></p-button>
           </div>
@@ -31,11 +31,16 @@
             ratings)
           </div>
           <div class="text-lg font-medium text-600 mb-2">
-            <a [href]="users.company.website | safeUrl" class="no-underline hover:underline text-primary">Website</a>
+            <a [href]="users.company.website | safeUrl" class="no-underline hover:underline text-primary"
+              >Website <i class="pi pi-external-link ml-1" style="font-size: 0.8rem"></i
+            ></a>
           </div>
-          <div class="text-lg font-medium text-600 mb-1">Offices</div>
-          <div class="mb-3" *ngIf="users.company.locations.length">
-            <div class="text-600 mb-1" *ngFor="let loc of users.company.locations">{{ getCompanyLocation(loc) }}</div>
+          <div class="text-lg font-medium text-600 mb-1"><i class="pi pi-map-marker mr-1"></i>Offices</div>
+          <div class="mb-3 text-600">
+            <ng-container *ngIf="users.company.locations.length">
+              <div class="mb-1" *ngFor="let loc of users.company.locations">{{ getCompanyLocation(loc) }}</div>
+            </ng-container>
+            <ng-container *ngIf="!users.company.locations.length">No offices provided.</ng-container>
           </div>
         </div>
       </div>

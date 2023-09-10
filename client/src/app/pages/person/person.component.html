@@ -12,13 +12,13 @@
             <p-button
               label="Edit profile"
               icon="pi pi-user-edit"
-              styleClass="p-button-sm w-full"
+              styleClass="p-button-sm w-full p-button-outlined"
               (click)="openEditPersonDialog(users.person)"
             ></p-button>
             <p-button
               label="Delete profile"
-              icon="pi pi-cross"
-              styleClass="p-button-sm p-button-danger p-button-out w-full"
+              icon="pi pi-trash"
+              styleClass="p-button-sm p-button-danger w-full p-button-outlined"
               (click)="deletePerson(users.person)"
             ></p-button>
           </div>
@@ -27,7 +27,7 @@
           <div class="text-4xl font-medium text-900 mb-2">{{ users.person.name }}</div>
           <div class="text-lg font-medium text-600 mb-2">{{ getPersonPosition(users.person) }}</div>
           <div *ngIf="getPersonLocation(users.person) as location" class="text-lg font-medium text-600 mb-2">
-            {{ location }}
+            <i class="pi pi-map-marker"></i> {{ location }}
           </div>
           <div *ngIf="users.person.about as about" class="text-600 mb-3">{{ about }}</div>
         </div>

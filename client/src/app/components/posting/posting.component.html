@@ -1,0 +1,47 @@
+<div class="surface-card p-4 shadow-3 border-round mb-3">
+  <!-- logo + companyname -->
+
+  <div class="mb-3">
+    <div class="text-2xl font-medium text-900 mb-1">{{ posting.position }}</div>
+    <ng-container *ngFor="let info of postingDetails">
+      <div *ngIf="info.value" class="text-lg text-600 mb-1">
+        <i class="ml-1 mr-2" [ngClass]="info.icon"></i> {{ info.value }}
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="mb-3">
+    <div class="text-900 font-medium mb-2">Job description</div>
+    <div class="text-700">
+      <ng-container *ngIf="posting.description">{{ posting.description }}</ng-container>
+      <ng-container *ngIf="!posting.description">No job description provided.</ng-container>
+    </div>
+  </div>
+
+  <div class="mb-3" *ngIf="this.posting.requirements.length">
+    <div class="text-900 font-medium mb-2">Requirements</div>
+    <div class="chips-wrapper">
+      <p-chip *ngFor="let skill of this.posting.requirements" [label]="skill"></p-chip>
+    </div>
+  </div>
+
+  <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="(user | userTypeof) === UserType.Company && user._id === posting.company">
+      <div class="flex flex-row justify-content-end gap-2 mb-3">
+        <p-button label="Edit" icon="pi pi-file-edit" styleClass="p-button-sm p-button-outlined  w-7rem"></p-button>
+        <p-button
+          label="Delete"
+          icon="pi pi-trash"
+          styleClass="p-button-sm p-button-danger p-button-outlined  w-7rem"
+        ></p-button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(user | userTypeof) === UserType.Person"> i am person </ng-container>
+  </ng-container>
+
+  <!-- edit posting, delete posting if company -->
+  <!-- applicants if company -->
+  <!-- apply if user -->
+
+  <div class="text-600 text-xs">Posted on: {{ posting.datePosted | date }}</div>
+</div>

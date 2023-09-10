@@ -66,7 +66,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(authActions.loginSuccess, authActions.registerSuccess),
         tap(({ user }) => {
-          this.localStorageJwtService.setToken(user.accessToken);
+          this.localStorageJwtService.setToken(user.accessToken!);
           this.router.navigate(['/']);
           console.log('Auth success: ', user);
         })

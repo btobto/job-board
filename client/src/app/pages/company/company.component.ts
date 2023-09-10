@@ -8,10 +8,11 @@ import { Observable, combineLatest, filter, map, tap } from 'rxjs';
 import { EditCompanyComponent } from 'src/app/components/edit-company/edit-company.component';
 import { Company, Location, UpdateCompanyDto, User } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
-import { filterNull, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
+import { filterNull, getLocationString, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
 import { selectUserAndCompany, selectUserAndPerson } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
 import { companiesActions, fromCompanies } from 'src/app/state/companies';
+import { postingsActions } from 'src/app/state/postings';
 import { fromUser, userActions } from 'src/app/state/user';
 
 @Component({
@@ -50,7 +51,9 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.store.dispatch(companiesActions.loadCompany({ companyId: params['id'] }));
+      const companyId = params['id'];
+      this.store.dispatch(companiesActions.loadCompany({ companyId }));
+      this.store.dispatch(postingsActions.loadCompanyPostings({ companyId }));
     });
   }
 
@@ -94,7 +97,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
   }
 
   getCompanyLocation(location: Location): string {
-    return Object.values(location).join(', ');
+    return getLocationString(location);
   }
 
   getImageUrl(company: Company) {

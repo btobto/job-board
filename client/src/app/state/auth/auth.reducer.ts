@@ -27,7 +27,7 @@ export const authReducer = createReducer(
   })),
   on(authActions.loginSuccess, authActions.registerSuccess, authActions.autoLoginSuccess, (state, { user }) => ({
     ...state,
-    token: user.accessToken,
+    token: user.accessToken!,
     loading: false,
   })),
   on(authActions.loginFailure, authActions.registerFailure, (state, { error }) => ({

@@ -12,5 +12,5 @@ export interface Person {
   prevExperience: WorkExperience[];
   education: Education[];
   imagePath?: string;
-  accessToken: string;
+  accessToken?: string;
 }
