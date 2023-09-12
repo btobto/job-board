@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Company, Location, User } from 'src/app/models';
-import { getLocationString, isSameUser } from 'src/app/shared/helpers';
+import { Company, Location, Posting, PostingDto, User } from 'src/app/models';
+import { filterNull, getLocationString, isSameUser } from 'src/app/shared/helpers';
 import { selectUserAndCompany } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
-import { fromPostings } from 'src/app/state/postings';
+import { fromPostings, postingsActions } from 'src/app/state/postings';
 import { fromUser } from 'src/app/state/user';
-import { CreatePostingComponent } from '../create-posting/create-posting.component';
+import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
 
 @Component({
   selector: 'app-postings',
@@ -26,20 +26,22 @@ export class PostingsComponent implements OnDestroy {
     if (this.dialogRef) this.dialogRef.destroy();
   }
 
-  newPosting(locations: Location[]) {
-    this.dialogRef = this.dialogService.open(CreatePostingComponent, {
+  openCreatePostingDialog(locations: Location[]) {
+    this.dialogRef = this.dialogService.open(UpsertPostingComponent, {
       header: 'New posting',
       dismissableMask: true,
-      data: { locations: locations.map(getLocationString) },
+      data: { locations },
       styleClass: 'sm:w-full xl:w-5',
       contentStyle: {
-        'padding-bottom': '70px',
+        'padding-bottom': '90px',
       },
     });
 
-    this.dialogRef.onClose.subscribe((posting) => {
-      console.log(posting);
-    });
+    this.dialogRef.onClose.pipe(filterNull()).subscribe((posting) => this.createPosting(posting));
+  }
+
+  createPosting(dto: PostingDto) {
+    this.store.dispatch(postingsActions.createPosting({ dto }));
   }
 
   isLoggedInUser(company: Company, user: User) {

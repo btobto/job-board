@@ -1,0 +1,91 @@
+<div>
+  <form [formGroup]="createForm" (ngSubmit)="create()">
+    <div class="relative">
+      <div class="field p-fluid mb-3">
+        <label for="position" class="block text-900 font-medium mb-2 text-lg">Position</label>
+        <input
+          pInputText
+          formControlName="position"
+          id="position"
+          type="text"
+          name="position"
+          placeholder="Position"
+          class="w-full"
+        />
+        <app-control-error-message controlName="Position" [control]="position"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <div class="flex align-items-center">
+          <p-checkbox
+            formControlName="remoteAvailable"
+            inputId="remoteAvailable"
+            [binary]="true"
+            styleClass="mr-2"
+            name="remoteAvailable"
+          ></p-checkbox>
+          <label for="remoteAvailable" class="text-900">Remote available?</label>
+        </div>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="posting-location" class="block text-900 font-medium mb-2 text-lg">Location</label>
+        <p-dropdown
+          [options]="locationsValues"
+          formControlName="location"
+          inputId="posting-location"
+          type="text"
+          placeholder="Location"
+          [showClear]="true"
+          [autoDisplayFirst]="false"
+        ></p-dropdown>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="posting-desc" class="block text-900 font-medium mb-2 text-lg">Description</label>
+        <textarea
+          pInputTextarea
+          formControlName="description"
+          id="posting-desc"
+          name="description"
+          placeholder="Description"
+          [autoResize]="true"
+          class="w-full"
+        ></textarea>
+        <app-control-error-message controlName="Description" [control]="description"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="salary" class="block text-900 font-medium mb-2 text-lg">Salary</label>
+        <input
+          pInputText
+          formControlName="salary"
+          id="salary"
+          type="text"
+          name="salary"
+          placeholder="Salary"
+          class="w-full"
+        />
+        <app-control-error-message controlName="Salary" [control]="salary"></app-control-error-message>
+      </div>
+
+      <div class="field p-fluid mb-3">
+        <label for="requirements" class="block text-900 font-medium mb-2 text-lg">Requirements</label>
+        <p-chips inputId="requirements" formControlName="requirements"></p-chips>
+      </div>
+    </div>
+
+    <div class="surface-card flex gap-3 w-full fixed left-0 bottom-0 p-4">
+      <div class="flex-1">
+        <p-button type="submit" label="Save changes" styleClass="w-full" [disabled]="createForm.invalid"></p-button>
+      </div>
+      <div class="flex-1">
+        <p-button
+          label="Cancel"
+          styleClass="p-button-outlined p-button-secondary w-full"
+          (onClick)="cancel()"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>

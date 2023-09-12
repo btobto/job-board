@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Company, UpdateCompanyDto } from 'src/app/models';
+import { Company, CompanyUpdateDto } from 'src/app/models';
 
 export const loadCompany = createAction('[Company page] Load company', props<{ companyId: string }>());
 

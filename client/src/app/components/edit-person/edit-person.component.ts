@@ -13,7 +13,7 @@ import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angul
 import { Store } from '@ngrx/store';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUpload } from 'primeng/fileupload';
-import { Education, FileSelectEvent, Person, UpdatePersonDto, WorkExperience } from 'src/app/models';
+import { Education, FileSelectEvent, Person, PersonUpdateDto, WorkExperience } from 'src/app/models';
 import { MAX_YEAR, MIN_YEAR, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from 'src/app/shared/constants';
 import { objectsAreEqual, getUserImageUrl, removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { locationValidator, yearSpanValidator } from 'src/app/shared/validators';

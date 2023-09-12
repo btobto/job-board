@@ -14,13 +14,15 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { PostingsService } from './postings.service';
 import { Posting } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
-import { Person } from 'src/persons/schemas';
+import { PostingInterceptor } from 'src/common/interceptors';
 
+@UseInterceptors(PostingInterceptor)
 @Controller('postings')
 export class PostingsController {
   constructor(private postingsService: PostingsService) {}

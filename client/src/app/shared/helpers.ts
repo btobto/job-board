@@ -33,22 +33,8 @@ export function getLocationString(location: Location): string {
   return Object.values(location).join(', ');
 }
 
-export function isSameUser(user: User, user2: User): boolean {
-  return getUserType(user) === getUserType(user2) && user._id === user2._id;
-}
-
-export function removeEmptyValuesFromObject(obj: Record<string, any> | any[]): any {
-  if (Array.isArray(obj)) {
-    return obj
-      .map((v) => (typeof v === 'object' && v !== null ? removeEmptyValuesFromObject(v) : v))
-      .filter((v) => !!v && Object.keys(v).length);
-  } else {
-    return Object.fromEntries(
-      Object.entries(obj)
-        .map(([k, v]) => (typeof v === 'object' && v !== null ? [k, removeEmptyValuesFromObject(v)] : [k, v]))
-        .filter(([_, v]) => Array.isArray(v) || (!!v && (typeof v === 'object' ? Object.keys(v).length : true)))
-    );
-  }
+export function isSameUser(user1: User, user2: User): boolean {
+  return getUserType(user1) === getUserType(user2) && user1._id === user2._id;
 }
 
 export function objectsAreEqual(val1: any, val2: any): boolean {
@@ -56,4 +42,21 @@ export function objectsAreEqual(val1: any, val2: any): boolean {
     ? Object.keys(val1).length === Object.keys(val2).length &&
         Object.keys(val1).every((key) => objectsAreEqual(val1[key], val2[key]))
     : val1 === val2;
+}
+
+export function removeEmptyValuesFromObject(obj: Record<string, any> | any[]): any {
+  if (Array.isArray(obj)) {
+    return obj
+      .map((v) => (typeof v === 'object' && v !== null ? removeEmptyValuesFromObject(v) : v))
+      .filter((v) => v != null && v !== '' && Object.keys(v).length);
+  } else {
+    return Object.fromEntries(
+      Object.entries(obj)
+        .map(([k, v]) => (typeof v === 'object' && v !== null ? [k, removeEmptyValuesFromObject(v)] : [k, v]))
+        .filter(
+          ([_, v]) =>
+            Array.isArray(v) || (v != null && v !== '' && (typeof v === 'object' ? Object.keys(v).length : true))
+        )
+    );
+  }
 }

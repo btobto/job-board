@@ -6,7 +6,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUpload } from 'primeng/fileupload';
 import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
-import { Education, Person, User, WorkExperience, ListItem, UpdatePersonDto, FileSelectEvent } from 'src/app/models';
+import { Education, Person, User, WorkExperience, ListItem, PersonUpdateDto, FileSelectEvent } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
 import { filterNull, getUserImageUrl, getUserType, isSameUser } from 'src/app/shared/helpers';
 import { selectUserAndPerson } from 'src/app/state/app.selectors';
@@ -52,14 +52,14 @@ export class PersonComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.dialogRef.onClose.subscribe((updatedPerson?: UpdatePersonDto) => {
+    this.dialogRef.onClose.pipe(filterNull()).subscribe((updatedPerson: PersonUpdateDto) => {
       this.updatePerson(person._id, updatedPerson);
     });
   }
 
-  updatePerson(personId: string, updatedPerson?: UpdatePersonDto) {
+  updatePerson(personId: string, updatedPerson: PersonUpdateDto) {
     console.log('From dialog: ', updatedPerson);
-    if (updatedPerson) this.store.dispatch(userActions.updatePerson({ id: personId, payload: updatedPerson }));
+    this.store.dispatch(userActions.updatePerson({ id: personId, payload: updatedPerson }));
   }
 
   deletePerson(person: Person) {

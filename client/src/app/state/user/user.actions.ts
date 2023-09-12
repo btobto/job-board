@@ -1,14 +1,14 @@
 import { createAction, props } from '@ngrx/store';
-import { Company, Person, UpdateCompanyDto, UpdatePersonDto, User } from 'src/app/models';
+import { Company, Person, CompanyUpdateDto, PersonUpdateDto, User } from 'src/app/models';
 
 export const updatePerson = createAction(
   '[Person page] Update person',
-  props<{ id: string; payload: UpdatePersonDto }>()
+  props<{ id: string; payload: PersonUpdateDto }>()
 );
 
 export const updateCompany = createAction(
   '[Company page] Update company',
-  props<{ id: string; payload: UpdateCompanyDto }>()
+  props<{ id: string; payload: CompanyUpdateDto }>()
 );
 
 export const uploadPersonImage = createAction(

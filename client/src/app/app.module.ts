@@ -69,7 +69,8 @@ import { postingsReducer } from './state/postings/postings.reducer';
 import { PostingsEffects } from './state/postings/postings.effects';
 import { CardModule } from 'primeng/card';
 import { UserTypeofPipe } from './pipes/user-typeof.pipe';
-import { CreatePostingComponent } from './components/create-posting/create-posting.component';
+import { UpsertPostingComponent } from './components/upsert-posting/upsert-posting.component';
+import { UserToTypePipe } from './pipes/user-to-type.pipe';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { CreatePostingComponent } from './components/create-posting/create-posti
     PostingComponent,
     ReviewComponent,
     UserTypeofPipe,
-    CreatePostingComponent,
+    UpsertPostingComponent,
+    UserToTypePipe,
   ],
   imports: [
     BrowserModule,

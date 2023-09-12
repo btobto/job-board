@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Company, UpdateCompanyDto } from '../models';
+import { Company, CompanyUpdateDto } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -14,7 +14,7 @@ export class CompanyService {
     return this.http.get<Company>(`${environment.apiUrl}/companies/${id}`);
   }
 
-  updateCompany(id: string, dto: UpdateCompanyDto): Observable<Company> {
+  updateCompany(id: string, dto: CompanyUpdateDto): Observable<Company> {
     return this.http.patch<Company>(`${environment.apiUrl}/companies/${id}`, dto);
   }
 

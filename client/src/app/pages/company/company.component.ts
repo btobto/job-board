@@ -6,7 +6,7 @@ import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Observable, combineLatest, filter, map, tap } from 'rxjs';
 import { EditCompanyComponent } from 'src/app/components/edit-company/edit-company.component';
-import { Company, Location, UpdateCompanyDto, User } from 'src/app/models';
+import { Company, Location, CompanyUpdateDto, User } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
 import { filterNull, getLocationString, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
 import { selectUserAndCompany, selectUserAndPerson } from 'src/app/state/app.selectors';
@@ -72,14 +72,14 @@ export class CompanyComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.dialogRef.onClose.subscribe((updatedCompany?: UpdateCompanyDto) => {
+    this.dialogRef.onClose.pipe(filterNull()).subscribe((updatedCompany: CompanyUpdateDto) => {
       this.updateCompany(company._id, updatedCompany);
     });
   }
 
-  updateCompany(companyId: string, updatedCompany?: UpdateCompanyDto) {
+  updateCompany(companyId: string, updatedCompany: CompanyUpdateDto) {
     console.log('From dialog:', updatedCompany);
-    if (updatedCompany) this.store.dispatch(userActions.updateCompany({ id: companyId, payload: updatedCompany }));
+    this.store.dispatch(userActions.updateCompany({ id: companyId, payload: updatedCompany }));
   }
 
   deleteCompany(company: Company) {

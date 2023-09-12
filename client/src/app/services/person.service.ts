@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Person, UpdatePersonDto } from '../models';
+import { Person, PersonUpdateDto } from '../models';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class PersonService {
     return this.http.get<Person>(`${environment.apiUrl}/persons/${id}`);
   }
 
-  updatePerson(id: string, dto: UpdatePersonDto): Observable<Person> {
+  updatePerson(id: string, dto: PersonUpdateDto): Observable<Person> {
     return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}`, dto);
   }
 

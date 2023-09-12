@@ -11,7 +11,7 @@ export interface PostingsState extends EntityState<Posting> {
 
 export const postingsAdapter = createEntityAdapter<Posting>({
   selectId: (posting: Posting) => posting._id,
-  sortComparer: false,
+  sortComparer: (a: Posting, b: Posting): number => b.datePosted.valueOf() - a.datePosted.valueOf(),
 });
 
 const initialState: PostingsState = postingsAdapter.getInitialState({
@@ -22,16 +22,32 @@ const initialState: PostingsState = postingsAdapter.getInitialState({
 
 export const postingsReducer = createReducer(
   initialState,
-  on(postingsActions.loadCompanyPostings, postingsActions.loadPosting, (state) => ({ ...state, loading: true })),
+  on(
+    postingsActions.loadCompanyPostings,
+    postingsActions.loadPosting,
+    postingsActions.createPosting,
+    postingsActions.updatePosting,
+    postingsActions.deletePosting,
+    (state) => ({
+      ...state,
+      loading: true,
+    })
+  ),
   on(postingsActions.loadCompanyPostingsSuccess, (state, { postings }) =>
     postingsAdapter.setAll(postings, { ...state, loading: false })
   ),
-  on(postingsActions.loadPostingSuccess, (state, { posting }) =>
+  on(postingsActions.loadPostingSuccess, postingsActions.createPostingSuccess, (state, { posting }) =>
     postingsAdapter.addOne(posting, { ...state, loading: false })
   ),
-  on(postingsActions.deletePosting, (state, { id }) => postingsAdapter.removeOne(id, state)),
+  on(postingsActions.updatePostingSuccess, (state, { posting }) =>
+    postingsAdapter.upsertOne(posting, { ...state, loading: false })
+  ),
+  on(postingsActions.deletePostingSuccess, (state, { id }) =>
+    postingsAdapter.removeOne(id, { ...state, loading: false })
+  ),
   on(postingsActions.postingFailure, (state, { error }) => ({
     ...state,
+    loading: false,
     error,
   }))
 );

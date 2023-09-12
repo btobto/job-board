@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Posting } from 'src/app/models';
+import { Posting, PostingDto } from 'src/app/models';
 
 export const loadCompanyPostings = createAction('[Company page] Load company postings', props<{ companyId: string }>());
 
@@ -21,6 +21,17 @@ export const applyToPosting = createAction(
   props<{ postingId: string }>()
 );
 
-// export const updatePosting = createAction('[Company page] Update posting', )
+export const createPosting = createAction('[Company page] Create posting', props<{ dto: PostingDto }>());
+
+export const createPostingSuccess = createAction('[Posting API] Create posting success', props<{ posting: Posting }>());
+
+export const updatePosting = createAction(
+  '[Company page] Update posting',
+  props<{ postingId: string; dto: PostingDto }>()
+);
+
+export const updatePostingSuccess = createAction('[Posting API] Update posting success', props<{ posting: Posting }>());
 
 export const deletePosting = createAction('[Company page] Delete posting', props<{ id: string }>());
+
+export const deletePostingSuccess = createAction('[Posting API] Delete posting success', props<{ id: string }>());

@@ -11,4 +11,5 @@ export interface Posting {
   salary?: string;
   requirements: string[];
   applicants?: string[];
+  applied?: boolean;
 }

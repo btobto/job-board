@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Person, UpdatePersonDto } from 'src/app/models';
+import { Person, PersonUpdateDto } from 'src/app/models';
 
 export const loadPerson = createAction('[Person page] Load person', props<{ personId: string }>());
 
