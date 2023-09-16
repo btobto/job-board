@@ -32,7 +32,7 @@ export class PersonsController {
 
   @Get(':id')
   async get(@Param('id', ParseObjectIdPipe) id: string): Promise<Person> {
-    return await this.personsService.findById(id);
+    return await this.personsService.find(id);
   }
 
   @Patch(':id')

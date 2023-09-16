@@ -55,6 +55,18 @@ export class PostingsEffects {
     )
   );
 
+  toggleApplyPosting$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(postingsActions.toggleApplyPosting),
+      concatMap(({ postingId }) =>
+        this.postingService.toggleApply(postingId).pipe(
+          map((posting) => postingsActions.toggleApplyPostingSuccess({ posting })),
+          catchError(({ error }) => of(postingsActions.postingFailure({ error })))
+        )
+      )
+    )
+  );
+
   deletePosting$ = createEffect(() =>
     this.actions$.pipe(
       ofType(postingsActions.deletePosting),
@@ -73,13 +85,26 @@ export class PostingsEffects {
         ofType(
           postingsActions.createPostingSuccess,
           postingsActions.updatePostingSuccess,
-          postingsActions.deletePostingSuccess
+          postingsActions.deletePostingSuccess,
+          postingsActions.toggleApplyPostingSuccess
         ),
         tap((action) => {
           this.notificationService.showMessage('success', 'Success', this.actionTypeToMessage[action.type]);
         })
       ),
     { dispatch: false }
+  );
+
+  loadApplicants$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(postingsActions.loadPostingApplicants),
+      switchMap(({ postingId }) =>
+        this.postingService.getApplicants(postingId).pipe(
+          map((applicants) => postingsActions.loadPostingApplicantsSuccess({ applicants })),
+          catchError(({ error }) => of(postingsActions.loadPostingApplicantsFailure({ error })))
+        )
+      )
+    )
   );
 
   postingFailure$ = createEffect(
@@ -97,6 +122,7 @@ export class PostingsEffects {
     [postingsActions.createPostingSuccess.type]: 'Posting created successfully!',
     [postingsActions.updatePostingSuccess.type]: 'Posting updated successfully!',
     [postingsActions.deletePostingSuccess.type]: 'Posting deleted successfully!',
+    [postingsActions.toggleApplyPostingSuccess.type]: 'Application status successfully changed!',
   };
 
   constructor(

@@ -2,7 +2,7 @@
   <!-- logo + companyname -->
 
   <div class="mb-3">
-    <div class="text-2xl font-medium text-900 mb-1">{{ posting.position }}</div>
+    <div class="text-2xl font-medium text-900 mb-2">{{ posting.position }}</div>
     <ng-container *ngFor="let info of postingDetails">
       <div *ngIf="info.value" class="text-lg text-600 mb-1">
         <i class="ml-1 mr-2" [ngClass]="info.icon"></i> {{ info.value }}
@@ -26,8 +26,14 @@
   </div>
 
   <ng-container *ngIf="user$ | async as user">
-    <ng-container *ngIf="(user | userTypeof) === UserType.Company && user._id === posting.company">
-      <div class="flex flex-row justify-content-end gap-2 mb-3">
+    <div class="flex flex-row justify-content-end gap-2 mb-3">
+      <ng-container *ngIf="(user | userTypeof) === UserType.Company && user._id === posting.company">
+        <p-button
+          label="Show applicants"
+          icon="pi pi-users"
+          styleClass="p-button-sm p-button-outlined"
+          (click)="openApplicantsDialog()"
+        ></p-button>
         <p-button
           label="Edit"
           icon="pi pi-file-edit"
@@ -40,13 +46,18 @@
           styleClass="p-button-sm p-button-danger p-button-outlined w-7rem"
           (click)="deletePosting()"
         ></p-button>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="(user | userTypeof) === UserType.Person"> {{ posting.applied }} </ng-container>
+      </ng-container>
+      <ng-container *ngIf="(user | userTypeof) === UserType.Person">
+        <p-button
+          [label]="posting.applied ? 'Cancel' : 'Apply'"
+          [styleClass]="posting.applied ? 'p-button-sm p-button-outlined' : 'p-button-sm'"
+          (click)="toggleApply()"
+        ></p-button>
+      </ng-container>
+    </div>
   </ng-container>
 
   <!-- applicants if company -->
-  <!-- apply if user -->
 
   <div class="text-600 text-xs">Posted on: {{ posting.datePosted | date }}</div>
 </div>

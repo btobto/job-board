@@ -8,11 +8,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
 import { Person } from 'src/persons/schemas';
+import { PersonsService } from 'src/persons/persons.service';
 
 @Injectable()
 export class PostingsService {
   constructor(
     @InjectModel(Posting.name) private postingModel: Model<PostingDocument>,
+    private personsService: PersonsService,
   ) {}
 
   search(queryDto: PostingSearchQueryDto): Promise<Posting[]> {
@@ -65,22 +67,25 @@ export class PostingsService {
   }
 
   async findById(id: string, userId: string): Promise<Posting> {
-    const posting = await this.postingModel.findById(id).orFail().exec();
-
-    if ((posting.company as mongoose.Types.ObjectId).toHexString() === userId) {
-      await posting.populate({
-        path: 'applicants',
-        select: 'name email',
-      });
-
-      return posting.toObject({ transform: (doc, ret, opts) => ret });
-    }
-
-    return posting.toObject();
+    return this.postingModel.findById(id).orFail().exec();
   }
 
   findAllCompanyPostings(companyId: string): Promise<Posting[]> {
     return this.postingModel.where('company').equals(companyId).exec();
+  }
+
+  async getApplicants(postingId: string, companyId: string) {
+    const posting = await this.postingModel
+      .findOne({
+        _id: postingId,
+        company: companyId,
+      })
+      .orFail()
+      .exec();
+
+    return this.personsService.findMany(
+      posting.applicants as unknown as string[],
+    );
   }
 
   update(

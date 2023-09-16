@@ -14,4 +14,4 @@ export * from './person-update-dto.model';
 export * from './company-update-dto.model';
 export * from './posting.model';
 export * from './review.model';
-export * from './posting-update-dto.model';
+export * from './posting-dto.model';

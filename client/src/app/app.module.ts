@@ -71,6 +71,12 @@ import { CardModule } from 'primeng/card';
 import { UserTypeofPipe } from './pipes/user-typeof.pipe';
 import { UpsertPostingComponent } from './components/upsert-posting/upsert-posting.component';
 import { UserToTypePipe } from './pipes/user-to-type.pipe';
+import { PostingInterceptor } from './interceptors';
+import { ApplicantsDialogComponent } from './components/applicants-dialog/applicants-dialog.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @NgModule({
   declarations: [
@@ -101,6 +107,7 @@ import { UserToTypePipe } from './pipes/user-to-type.pipe';
     UserTypeofPipe,
     UpsertPostingComponent,
     UserToTypePipe,
+    ApplicantsDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -140,6 +147,10 @@ import { UserToTypePipe } from './pipes/user-to-type.pipe';
     FieldsetModule,
     TabMenuModule,
     CardModule,
+    TableModule,
+    PaginatorModule,
+    AvatarModule,
+    AvatarGroupModule,
   ],
   providers: [
     MessageService,
@@ -148,6 +159,7 @@ import { UserToTypePipe } from './pipes/user-to-type.pipe';
     { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: PostingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

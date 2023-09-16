@@ -9,6 +9,7 @@ import { AppState } from 'src/app/state/app.state';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
 import { postingsActions } from 'src/app/state/postings';
+import { ApplicantsDialogComponent } from '../applicants-dialog/applicants-dialog.component';
 
 @Component({
   selector: 'app-posting',
@@ -71,6 +72,15 @@ export class PostingComponent implements OnInit, OnDestroy {
     this.store.dispatch(postingsActions.updatePosting({ postingId, dto }));
   }
 
+  openApplicantsDialog() {
+    this.dialogRef = this.dialogService.open(ApplicantsDialogComponent, {
+      header: 'Applicants',
+      dismissableMask: true,
+      data: { postingId: this.posting._id },
+      styleClass: 'sm:w-full xl:w-7',
+    });
+  }
+
   deletePosting() {
     this.confirmationService.confirm({
       header: 'Delete posting confirmation',
@@ -82,6 +92,10 @@ export class PostingComponent implements OnInit, OnDestroy {
         this.store.dispatch(postingsActions.deletePosting({ id: this.posting._id }));
       },
     });
+  }
+
+  toggleApply() {
+    this.store.dispatch(postingsActions.toggleApplyPosting({ postingId: this.posting._id }));
   }
 
   getPostingLocationString(location: Location) {

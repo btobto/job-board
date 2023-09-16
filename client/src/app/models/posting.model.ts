@@ -10,6 +10,5 @@ export interface Posting {
   remoteAvailable: boolean;
   salary?: string;
   requirements: string[];
-  applicants?: string[];
   applied?: boolean;
 }

@@ -28,6 +28,7 @@ export const postingsReducer = createReducer(
     postingsActions.createPosting,
     postingsActions.updatePosting,
     postingsActions.deletePosting,
+    postingsActions.toggleApplyPosting,
     (state) => ({
       ...state,
       loading: true,
@@ -39,7 +40,7 @@ export const postingsReducer = createReducer(
   on(postingsActions.loadPostingSuccess, postingsActions.createPostingSuccess, (state, { posting }) =>
     postingsAdapter.addOne(posting, { ...state, loading: false })
   ),
-  on(postingsActions.updatePostingSuccess, (state, { posting }) =>
+  on(postingsActions.updatePostingSuccess, postingsActions.toggleApplyPostingSuccess, (state, { posting }) =>
     postingsAdapter.upsertOne(posting, { ...state, loading: false })
   ),
   on(postingsActions.deletePostingSuccess, (state, { id }) =>

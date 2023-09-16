@@ -11,8 +11,12 @@ export class PersonsService {
     @InjectModel(Person.name) private personModel: Model<PersonDocument>,
   ) {}
 
-  findById(id: string): Promise<Person> {
+  find(id: string): Promise<Person> {
     return this.personModel.findById(id).orFail().exec();
+  }
+
+  findMany(ids: string[]): Promise<Person[]> {
+    return this.personModel.find().where('_id').in(ids).exec();
   }
 
   findByEmail(email: string): Promise<Person> {

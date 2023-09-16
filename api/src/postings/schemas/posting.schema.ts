@@ -10,7 +10,7 @@ export type PostingDocument = HydratedDocument<Posting>;
 
 @Schema({
   toObject: {
-    transform: (doc, ret, opts) => {
+    transform: (doc, ret, options) => {
       delete ret.applicants;
       return ret;
     },

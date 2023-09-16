@@ -12,17 +12,28 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseArrayPipe,
   Patch,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { PostingsService } from './postings.service';
 import { Posting } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
-import { PostingInterceptor } from 'src/common/interceptors';
+import {
+  POSTING_INTERCEPTOR_KEY as POSTINGS_INTERCEPTOR_KEY,
+  PostingsInterceptor,
+} from './interceptors/postings.interceptor';
+import mongoose, { mongo } from 'mongoose';
+import { RoleGuard } from 'src/auth/guards';
+import { UserType } from 'src/common/enums';
+import { SkipInterceptor } from 'src/common/decorators';
+import { PersonsService } from 'src/persons/persons.service';
+import { Person } from 'src/persons/schemas';
 
-@UseInterceptors(PostingInterceptor)
+@UseInterceptors(PostingsInterceptor)
 @Controller('postings')
 export class PostingsController {
   constructor(private postingsService: PostingsService) {}
@@ -42,6 +53,16 @@ export class PostingsController {
     return await this.postingsService.findAllCompanyPostings(companyId);
   }
 
+  @SkipInterceptor(POSTINGS_INTERCEPTOR_KEY)
+  @UseGuards(RoleGuard(UserType.Company))
+  @Get(':postingId/applicants')
+  async getPostingApplicants(
+    @Param('postingId', ParseObjectIdPipe) postingId: string,
+    @ActiveUser('_id') companyId: string,
+  ): Promise<Person[]> {
+    return await this.postingsService.getApplicants(postingId, companyId);
+  }
+
   @Get(':id')
   async getPosting(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -50,6 +71,7 @@ export class PostingsController {
     return await this.postingsService.findById(id, userId);
   }
 
+  @UseGuards(RoleGuard(UserType.Company))
   @Post()
   async post(
     @Body() dto: PostingCreateDto,
@@ -58,6 +80,7 @@ export class PostingsController {
     return await this.postingsService.create(companyId, dto);
   }
 
+  @UseGuards(RoleGuard(UserType.Person))
   @Patch(':postingId/application')
   async apply(
     @Param('postingId', ParseObjectIdPipe) postingId: string,

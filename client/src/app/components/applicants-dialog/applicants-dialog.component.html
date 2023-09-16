@@ -1,0 +1,26 @@
+<ng-container *ngIf="applicants$ | async as applicants">
+  <p-table [value]="applicants" responsiveLayout="scroll" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Location</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-applicant>
+      <tr>
+        <td>
+          <div class="flex align-items-center cursor-pointer hover:underline" [routerLink]="['/person', applicant._id]">
+            <p-avatar [image]="getImageUrl(applicant)" styleClass="mr-3 mt-1" shape="circle"></p-avatar>
+            <span>{{ applicant.name }}</span>
+          </div>
+        </td>
+        <td>{{ applicant.email }}</td>
+        <td>{{ getLocation(applicant) }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <div class="text-xl font-medium m-3">No applicants yet.</div>
+    </ng-template>
+  </p-table>
+</ng-container>
