@@ -15,3 +15,8 @@ export * from './company-update-dto.model';
 export * from './posting.model';
 export * from './review.model';
 export * from './posting-dto.model';
+export * from './pagination-query.model';
+export * from './pagination-result.model';
+export * from './pagination.model';
+export * from './rating.model';
+export * from './page-event.model';

@@ -8,9 +8,7 @@ export type CompanyDocument = HydratedDocument<Company>;
   toObject: {
     transform: (doc, ret, options) => {
       const rating =
-        ret.ratingsCount === 0
-          ? 0
-          : (ret.ratingsSum / ret.ratingsCount).toFixed(2);
+        ret.ratingsCount === 0 ? 0 : ret.ratingsSum / ret.ratingsCount;
 
       delete ret.ratingsSum;
       delete ret.hashedPassword;

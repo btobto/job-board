@@ -16,6 +16,8 @@ export const EMPTY_ERROR_KEY = 'emptyError';
 
 export const IMAGES_PATH = './assets/images';
 
+export const REVIEW_TAKE_LIMIT = 10;
+
 export const COUNTRY_LIST = [
   'Afghanistan',
   'Albania',

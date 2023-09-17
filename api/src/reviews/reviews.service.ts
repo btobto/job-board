@@ -52,7 +52,7 @@ export class ReviewsService {
   async findCompanyReviews(
     companyId: string,
     { page, take, skip }: PaginationOptionsDto,
-  ): Promise<PaginationResult<Review[]>> {
+  ): Promise<PaginationResult<Review>> {
     const query = this.reviewModel.where('company').equals(companyId);
 
     const total = await query.clone().countDocuments().exec();

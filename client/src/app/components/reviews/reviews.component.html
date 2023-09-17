@@ -1,1 +1,44 @@
-<p>reviews works!</p>
+<p-confirmDialog key="deleteReviewDialog" [style]="{ width: '30vw' }"></p-confirmDialog>
+
+<ng-container *ngIf="users$ | async as users">
+  <ng-container *ngIf="(users.loggedInUser | userTypeof) === UserType.Person">
+    <ng-container *ngIf="userReview$ | async as review; else noReview">
+      <div class="text-xl font-medium text-900 mb-2">Your review</div>
+      <app-review [review]="review" [showButtons]="true"></app-review>
+    </ng-container>
+    <ng-template #noReview>
+      <div class="flex justify-content-between align-items-center mb-2">
+        <div>
+          <div class="text-xl font-medium text-900 mb-2">Rate this company</div>
+          <div class="text-600">Tell others about your experience with the company.</div>
+        </div>
+        <p-button
+          label="Leave a review"
+          icon="pi pi-plus"
+          styleClass="p-button-sm"
+          (click)="openCreateReviewDialog(users.company._id)"
+        ></p-button>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <p-divider></p-divider>
+
+  <ng-container *ngIf="reviewsResults$ | async as result">
+    <div class="text-xl font-medium text-900 mb-3">Ratings and reviews</div>
+    <ng-container *ngIf="result.reviews.length">
+      <div *ngFor="let review of result.reviews" class="mb-3">
+        <app-review [review]="review"></app-review>
+      </div>
+      <p-paginator
+        (onPageChange)="onPageChange(users.company._id, $event)"
+        [first]="0"
+        [rows]="result.pagination.take"
+        [totalRecords]="result.pagination.totalCount"
+      ></p-paginator>
+    </ng-container>
+    <ng-container *ngIf="!result.reviews.length">
+      <div class="text-600">No reviews yet.</div>
+    </ng-container>
+  </ng-container>
+</ng-container>

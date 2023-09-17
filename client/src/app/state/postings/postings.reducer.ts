@@ -1,7 +1,7 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { Posting } from 'src/app/models';
-import { postingsActions } from '.';
+import { postingsActions } from './';
 
 export interface PostingsState extends EntityState<Posting> {
   selectedPostingId: string | null;

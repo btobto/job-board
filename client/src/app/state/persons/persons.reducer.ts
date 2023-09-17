@@ -1,7 +1,7 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { Person } from 'src/app/models';
-import { personsActions } from '.';
+import { personsActions } from './';
 import { userActions } from '../user';
 import { postingsActions } from '../postings';
 

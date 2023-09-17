@@ -77,6 +77,11 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { reviewsReducer } from './state/reviews/reviews.reducer';
+import { ReviewsEffects } from './state/reviews/reviews.effects';
+import { DividerModule } from 'primeng/divider';
+import { UpsertReviewComponent } from './components/upsert-review/upsert-review.component';
+import { PanelModule } from 'primeng/panel';
 
 @NgModule({
   declarations: [
@@ -108,6 +113,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
     UpsertPostingComponent,
     UserToTypePipe,
     ApplicantsDialogComponent,
+    UpsertReviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -125,12 +131,20 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
       persons: personsReducer,
       companies: companiesReducer,
       postings: postingsReducer,
+      reviews: reviewsReducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([AuthEffects, UserEffects, PersonsEffects, CompaniesEffects, PostingsEffects]),
+    EffectsModule.forRoot([
+      AuthEffects,
+      UserEffects,
+      PersonsEffects,
+      CompaniesEffects,
+      PostingsEffects,
+      ReviewsEffects,
+    ]),
     HttpClientModule,
     ToastModule,
     ProgressSpinnerModule,
@@ -151,6 +165,8 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
     PaginatorModule,
     AvatarModule,
     AvatarGroupModule,
+    DividerModule,
+    PanelModule,
   ],
   providers: [
     MessageService,

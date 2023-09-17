@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Company, Location, Posting, PostingDto, User } from 'src/app/models';
@@ -8,19 +8,26 @@ import { AppState } from 'src/app/state/app.state';
 import { fromPostings, postingsActions } from 'src/app/state/postings';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-postings',
   templateUrl: './postings.component.html',
   styleUrls: ['./postings.component.scss'],
 })
-export class PostingsComponent implements OnDestroy {
+export class PostingsComponent implements OnInit, OnDestroy {
   postings$ = this.store.select(fromPostings.selectAllPostings);
   users$ = this.store.select(selectUserAndCompany);
 
   dialogRef?: DynamicDialogRef;
 
-  constructor(private store: Store<AppState>, public dialogService: DialogService) {}
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
+
+  ngOnInit(): void {
+    this.route.parent?.params.subscribe((params) => {
+      this.store.dispatch(postingsActions.loadCompanyPostings({ companyId: params['id'] }));
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.dialogRef) this.dialogRef.destroy();

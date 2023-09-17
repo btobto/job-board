@@ -1,1 +1,24 @@
-<p>review works!</p>
+<p-panel>
+  <ng-template pTemplate="header">
+    <div class="flex justify-content-between align-items-center w-full">
+      <p-rating [ngModel]="review.rating" [readonly]="true" [cancel]="false"></p-rating>
+      <div *ngIf="showButtons && (userReview$ | async)?._id === review._id" class="flex gap-2">
+        <p-button
+          label="Edit review"
+          icon="pi pi-pencil"
+          styleClass="p-button-sm p-button-outlined"
+          (click)="openEditReviewDialog()"
+        ></p-button>
+        <p-button
+          label="Delete review"
+          icon="pi pi-trash"
+          styleClass="p-button-sm p-button-danger p-button-outlined"
+          (click)="deleteReview()"
+        ></p-button>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="mb-3">{{ review.description ? review.description : "No description." }}</div>
+  <div class="text-600 text-xs my-1">Posted on: {{ review.datePosted | date }}</div>
+</p-panel>

@@ -7,7 +7,14 @@ import { UserType } from 'src/common/enums';
 
 export type ReviewDocument = HydratedDocument<Review>;
 
-@Schema()
+@Schema({
+  toObject: {
+    transform: (doc, ret, opts) => {
+      delete ret.person;
+      return ret;
+    },
+  },
+})
 export class Review {
   _id: mongoose.Types.ObjectId;
 

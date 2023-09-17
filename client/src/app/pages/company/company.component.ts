@@ -51,9 +51,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      const companyId = params['id'];
-      this.store.dispatch(companiesActions.loadCompany({ companyId }));
-      this.store.dispatch(postingsActions.loadCompanyPostings({ companyId }));
+      this.store.dispatch(companiesActions.loadCompany({ companyId: params['id'] }));
     });
   }
 

@@ -11,6 +11,7 @@ import { Person } from 'src/persons/schemas';
 import { UserType } from '../common/enums';
 import { HashingService } from './hashing';
 import { User } from 'src/common/types';
+import { JwtPayload } from './models';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +38,7 @@ export class AuthService {
   }
 
   login(user: Omit<User, 'hashedPassword'>, userType: UserType) {
-    const payload = {
+    const payload: JwtPayload = {
       email: user.email,
       sub: user._id,
       [USER_TYPE_KEY]: userType,

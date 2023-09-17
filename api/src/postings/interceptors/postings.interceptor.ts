@@ -48,7 +48,7 @@ export class PostingsInterceptor implements NestInterceptor {
 
         return data;
       }),
-      tap(console.log),
+      // tap(console.log),
     );
   }
 

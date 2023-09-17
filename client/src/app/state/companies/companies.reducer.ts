@@ -32,5 +32,6 @@ export const companiesReducer = createReducer(
   })),
   on(userActions.updateCompanySuccess, (state, { user }) =>
     adapter.upsertOne(user, { ...state, loading: false, selectedCompanyId: user._id })
-  )
+  ),
+  on(companiesActions.updateRating, (state, { changes }) => adapter.updateOne(changes, state))
 );

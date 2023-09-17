@@ -6,11 +6,12 @@ import { Connection } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { USER_TYPE_KEY } from 'src/common/constants';
 import { PersonsService } from 'src/persons/persons.service';
+import { JwtPayload } from '../models';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
+    configService: ConfigService,
     @InjectConnection() private connection: Connection,
   ) {
     super({
@@ -21,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(req: Request, payload: any) {
+  async validate(req: Request, payload: JwtPayload) {
     req[USER_TYPE_KEY] = payload[USER_TYPE_KEY];
 
     return await this.connection

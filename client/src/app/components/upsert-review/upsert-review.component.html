@@ -1,0 +1,37 @@
+<div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="field p-fluid mb-3">
+      <div class="flex align-items-center gap-3">
+        <label for="rating" class="block text-900 font-medium text-lg">Rating</label>
+        <p-rating formControlName="rating" [cancel]="false" id="rating"></p-rating>
+      </div>
+      <app-control-error-message controlName="Rating" [control]="rating"></app-control-error-message>
+    </div>
+
+    <div class="field p-fluid mb-3">
+      <label for="posting-desc" class="block text-900 font-medium mb-3 text-lg">Description</label>
+      <textarea
+        pInputTextarea
+        formControlName="description"
+        id="posting-desc"
+        name="description"
+        placeholder="Description"
+        [autoResize]="true"
+        class="w-full"
+      ></textarea>
+    </div>
+
+    <div class="surface-card flex gap-3 w-full">
+      <div class="flex-1">
+        <p-button type="submit" label="Save changes" styleClass="w-full" [disabled]="form.invalid"></p-button>
+      </div>
+      <div class="flex-1">
+        <p-button
+          label="Cancel"
+          styleClass="p-button-outlined p-button-secondary w-full"
+          (onClick)="cancel()"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>

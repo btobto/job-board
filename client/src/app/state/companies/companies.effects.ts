@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { CompanyService } from 'src/app/services/company.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { companiesActions } from '.';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { companiesActions, fromCompanies } from '.';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { HttpErrorBody } from 'src/app/models';
+import { reviewsActions } from '../reviews';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.state';
+import { filterNull } from 'src/app/shared/helpers';
 
 @Injectable()
 export class CompaniesEffects {
@@ -31,8 +35,26 @@ export class CompaniesEffects {
     { dispatch: false }
   );
 
+  updateRating = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        reviewsActions.createReviewSuccess,
+        reviewsActions.updateReviewSuccess,
+        reviewsActions.deleteReviewSuccess,
+        reviewsActions.deleteReviewSuccessRefresh
+      ),
+      concatLatestFrom(() => this.store.select(fromCompanies.selectSelectedCompany).pipe(filterNull())),
+      exhaustMap(([_, company]) =>
+        this.companyService
+          .getRating(company._id)
+          .pipe(map((rating) => companiesActions.updateRating({ changes: { id: company._id, changes: rating } })))
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
+    private store: Store<AppState>,
     private companyService: CompanyService,
     private notificationService: NotificationService
   ) {}

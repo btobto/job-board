@@ -2,6 +2,7 @@ import {
   CompanyCreateDto,
   CompanySearchQueryDto,
   CompanyUpdateDto,
+  Rating,
 } from './dto';
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
@@ -91,5 +92,18 @@ export class CompaniesService {
 
       return company;
     });
+  }
+
+  async getRating(id: string): Promise<Rating> {
+    const company = await this.companyModel.findById(id).orFail().lean().exec();
+    const rating =
+      company.ratingsCount === 0
+        ? 0
+        : company.ratingsSum / company.ratingsCount;
+
+    return {
+      rating,
+      ratingsCount: company.ratingsCount,
+    };
   }
 }

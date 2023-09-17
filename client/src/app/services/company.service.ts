@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Company, CompanyUpdateDto } from '../models';
+import { Observable, tap } from 'rxjs';
+import { Company, CompanyUpdateDto, Rating } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -24,5 +24,9 @@ export class CompanyService {
 
   uploadImage(id: string, formData: FormData): Observable<Company> {
     return this.http.patch<Company>(`${environment.apiUrl}/companies/${id}/image`, formData);
+  }
+
+  getRating(id: string): Observable<Rating> {
+    return this.http.get<Company>(`${environment.apiUrl}/companies/${id}/rating`);
   }
 }

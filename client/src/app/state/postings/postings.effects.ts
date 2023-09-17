@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { postingsActions } from '.';
+import { postingsActions } from './';
 import { catchError, concatMap, map, of, switchMap, tap } from 'rxjs';
 import { PostingService } from 'src/app/services/posting.service';
 import { NotificationService } from 'src/app/services/notification.service';

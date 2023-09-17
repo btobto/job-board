@@ -19,6 +19,7 @@ import {
   CompanyCreateDto,
   CompanySearchQueryDto,
   CompanyUpdateDto,
+  Rating,
 } from './dto';
 import { Company } from './schemas';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -32,6 +33,13 @@ export class CompaniesController {
   async search(@Body() queryDto: CompanySearchQueryDto): Promise<Company[]> {
     console.log(queryDto);
     return await this.companiesService.search(queryDto);
+  }
+
+  @Get(':id/rating')
+  async getCompanyRating(
+    @Param('id', ParseObjectIdPipe) id: string,
+  ): Promise<Rating> {
+    return await this.companiesService.getRating(id);
   }
 
   @Get(':id')

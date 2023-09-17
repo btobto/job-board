@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { PaginationOptionsDto, PaginationResult } from '../common/dto';
@@ -18,6 +19,8 @@ import { ReviewsService } from './reviews.service';
 import { Review } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
 import { Person } from 'src/persons/schemas';
+import { RoleGuard } from 'src/auth/guards';
+import { UserType } from 'src/common/enums';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -38,10 +41,11 @@ export class ReviewsController {
   async getCompanyReviews(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
     @Query() searchQuery: PaginationOptionsDto,
-  ): Promise<PaginationResult<Review[]>> {
+  ): Promise<PaginationResult<Review>> {
     return await this.reviewsService.findCompanyReviews(companyId, searchQuery);
   }
 
+  @UseGuards(RoleGuard(UserType.Person))
   @Post(':companyId')
   async post(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
