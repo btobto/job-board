@@ -8,22 +8,27 @@ import { PaginationResult } from 'src/app/models/pagination/pagination-result.mo
 import { Review } from 'src/app/models';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { fromReviews } from '.';
 import { fromCompanies } from '../companies';
 import { filterNull } from 'src/app/shared/helpers';
 import { REVIEW_TAKE_LIMIT } from 'src/app/shared/constants';
+import { fromPagination, paginationActions } from '../pagination';
 
 @Injectable()
 export class ReviewsEffects {
   loadCompanyReviews$ = createEffect(() =>
     this.actions$.pipe(
       ofType(reviewsActions.loadCompanyReviews),
-      switchMap(({ companyId, query }) =>
-        this.reviewService.getCompanyReviews(companyId, query).pipe(
-          map((result: PaginationResult<Review>) => reviewsActions.loadCompanyReviewsSuccess({ result })),
-          catchError(({ error }) => of(reviewsActions.reviewFailure({ error })))
-        )
-      )
+      concatLatestFrom(() => this.store.select(fromPagination.selectPages)),
+      switchMap(([{ companyId, query }, pages]) => {
+        if (pages.includes(query.page)) {
+          return of(paginationActions.changeCurrentPage({ newPage: query.page }));
+        } else {
+          return this.reviewService.getCompanyReviews(companyId, query).pipe(
+            map((result: PaginationResult<Review>) => reviewsActions.loadCompanyReviewsSuccess({ result })),
+            catchError((error) => of(reviewsActions.reviewFailure({ error })))
+          );
+        }
+      })
     )
   );
 
@@ -33,7 +38,7 @@ export class ReviewsEffects {
       switchMap(({ companyId }) =>
         this.reviewService.getUserReviewForCompany(companyId).pipe(
           map((review) => reviewsActions.loadPersonReviewSuccess({ review })),
-          catchError(({ error }) => of(reviewsActions.reviewFailure({ error })))
+          catchError((error) => of(reviewsActions.reviewFailure({ error })))
         )
       )
     )
@@ -45,7 +50,7 @@ export class ReviewsEffects {
       concatMap(({ companyId, dto }) =>
         this.reviewService.postReview(companyId, dto).pipe(
           map((review) => reviewsActions.createReviewSuccess({ review })),
-          catchError(({ error }) => of(reviewsActions.reviewFailure({ error })))
+          catchError((error) => of(reviewsActions.reviewFailure({ error })))
         )
       )
     )
@@ -57,7 +62,7 @@ export class ReviewsEffects {
       concatMap(({ reviewId, dto }) =>
         this.reviewService.updateReview(reviewId, dto).pipe(
           map((review) => reviewsActions.updateReviewSuccess({ review })),
-          catchError(({ error }) => of(reviewsActions.reviewFailure({ error })))
+          catchError((error) => of(reviewsActions.reviewFailure({ error })))
         )
       )
     )
@@ -66,30 +71,37 @@ export class ReviewsEffects {
   deleteReview$ = createEffect(() =>
     this.actions$.pipe(
       ofType(reviewsActions.deleteReview),
-      concatLatestFrom(() => [
-        this.store.select(fromReviews.selectReviewsIds),
-        this.store.select(fromReviews.selectPaginationInfo),
-        this.store.select(fromCompanies.selectSelectedCompany).pipe(filterNull()),
-      ]),
-      mergeMap(([{ id }, ids, pagination, company]) =>
+      concatMap(({ id }) =>
         this.reviewService.deleteReview(id).pipe(
-          map(() =>
-            ids.includes(id)
-              ? reviewsActions.deleteReviewSuccessRefresh({
-                  companyId: company._id,
-                  query: { page: pagination.page, take: REVIEW_TAKE_LIMIT },
-                })
-              : reviewsActions.deleteReviewSuccess()
-          ),
-          catchError(({ error }) => of(reviewsActions.reviewFailure({ error })))
+          map(() => reviewsActions.deleteReviewSuccess()),
+          catchError((error) => of(reviewsActions.reviewFailure({ error })))
         )
       )
     )
   );
 
-  deleteReviewSuccess$ = createEffect(() =>
+  orderChanged$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(reviewsActions.deleteReviewSuccessRefresh),
+      ofType(reviewsActions.createReviewSuccess, reviewsActions.deleteReviewSuccess),
+      concatLatestFrom(() => [
+        this.store.select(fromCompanies.selectSelectedCompany).pipe(filterNull()),
+        this.store.select(fromPagination.selectPaginationInfo),
+      ]),
+      map(([_, company, pagination]) =>
+        reviewsActions.refreshPage({
+          companyId: company._id,
+          query: {
+            page: pagination.currentPage,
+            take: REVIEW_TAKE_LIMIT,
+          },
+        })
+      )
+    )
+  );
+
+  refreshPage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(reviewsActions.refreshPage),
       map(({ companyId, query }) => reviewsActions.loadCompanyReviews({ companyId, query }))
     )
   );
@@ -113,7 +125,6 @@ export class ReviewsEffects {
     [reviewsActions.createReviewSuccess.type]: 'Review posted successfully!',
     [reviewsActions.updateReviewSuccess.type]: 'Review updated successfully!',
     [reviewsActions.deleteReviewSuccess.type]: 'Review deleted successfully!',
-    [reviewsActions.deleteReviewSuccessRefresh.type]: 'Review deleted successfully!',
   };
 
   constructor(

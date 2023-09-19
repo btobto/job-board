@@ -1,5 +1,6 @@
 import { AuthState } from './auth/auth.reducer';
 import { CompaniesState } from './companies/companies.reducer';
+import { PaginationState } from './pagination/pagination.reducer';
 import { PersonsState } from './persons/persons.reducer';
 import { PostingsState } from './postings/postings.reducer';
 import { ReviewsState } from './reviews/reviews.reducer';
@@ -12,4 +13,5 @@ export interface AppState {
   companies: CompaniesState;
   postings: PostingsState;
   reviews: ReviewsState;
+  pagination: PaginationState;
 }

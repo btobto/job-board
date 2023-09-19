@@ -40,8 +40,7 @@ export class CompaniesEffects {
       ofType(
         reviewsActions.createReviewSuccess,
         reviewsActions.updateReviewSuccess,
-        reviewsActions.deleteReviewSuccess,
-        reviewsActions.deleteReviewSuccessRefresh
+        reviewsActions.deleteReviewSuccess
       ),
       concatLatestFrom(() => this.store.select(fromCompanies.selectSelectedCompany).pipe(filterNull())),
       exhaustMap(([_, company]) =>

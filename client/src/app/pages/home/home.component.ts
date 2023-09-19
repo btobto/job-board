@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(fromUser.selectUserType)
-      .pipe(filterNull(), take(1), untilDestroyed(this))
+      .pipe(filterNull(), untilDestroyed(this))
       .subscribe((type) => {
         if (type === UserType.Person) {
           this.store.dispatch(postingsActions.getRecommendedPostings());

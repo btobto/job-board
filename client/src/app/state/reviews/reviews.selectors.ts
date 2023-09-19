@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { reviewsAdapter } from './reviews.reducer';
+import { fromPagination } from '../pagination';
 
 const { selectAll, selectEntities, selectTotal } = reviewsAdapter.getSelectors();
 
@@ -14,15 +15,16 @@ export const selectReviewsEntities = createSelector(selectReviewsState, selectEn
 
 export const selectReviewsTotal = createSelector(selectReviewsState, selectTotal);
 
-export const selectPaginationInfo = createSelector(selectReviewsState, (state) => state.pagination);
-
 export const selectUserReview = createSelector(selectReviewsState, (state) => state.userReview);
 
+export const selectCurrentPageReviews = createSelector(
+  selectReviewsEntities,
+  fromPagination.selectCurrentPage,
+  (entities, page) => (page ? page.ids.map((id) => entities[id]!) : [])
+);
+
 export const selectReviewsWithPagination = createSelector(
-  selectAllReviews,
-  selectPaginationInfo,
-  (reviews, pagination) => ({
-    reviews,
-    pagination,
-  })
+  selectCurrentPageReviews,
+  fromPagination.selectPaginationInfo,
+  (reviews, pagination) => ({ reviews, pagination })
 );

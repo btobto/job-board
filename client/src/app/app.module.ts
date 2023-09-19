@@ -91,6 +91,7 @@ import { PersonSearchCardComponent } from './components/person-search-card/perso
 import { CompanySearchCardComponent } from './components/company-search-card/company-search-card.component';
 import { PostingSearchCardComponent } from './components/posting-search-card/posting-search-card.component';
 import { PostingDetailsComponent } from './components/posting-details/posting-details.component';
+import { paginationReducer } from './state/pagination/pagination.reducer';
 
 @NgModule({
   declarations: [
@@ -148,6 +149,7 @@ import { PostingDetailsComponent } from './components/posting-details/posting-de
       companies: companiesReducer,
       postings: postingsReducer,
       reviews: reviewsReducer,
+      pagination: paginationReducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

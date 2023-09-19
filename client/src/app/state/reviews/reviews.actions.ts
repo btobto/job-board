@@ -37,7 +37,7 @@ export const deleteReview = createAction('[Company page] Delete review', props<{
 
 export const deleteReviewSuccess = createAction('[Reviews API] Delete review success');
 
-export const deleteReviewSuccessRefresh = createAction(
-  '[Reviews API] Delete review success with refresh',
+export const refreshPage = createAction(
+  '[Company page] Refresh page',
   props<{ companyId: string; query: PaginationQuery }>()
 );
