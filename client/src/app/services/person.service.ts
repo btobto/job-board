@@ -3,30 +3,31 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Person, PersonSearchQuery, PersonUpdateDto } from '../models';
 import { environment } from 'src/environments/environment';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PersonService {
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   getPerson(id: string): Observable<Person> {
-    return this.http.get<Person>(`${environment.apiUrl}/persons/${id}`);
+    return this.apiService.get<Person>(`/persons/${id}`);
   }
 
   updatePerson(id: string, dto: PersonUpdateDto): Observable<Person> {
-    return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}`, dto);
+    return this.apiService.patch<Person, PersonUpdateDto>(`/persons/${id}`, dto);
   }
 
   deletePerson(id: string) {
-    return this.http.delete(`${environment.apiUrl}/persons/${id}`);
+    return this.apiService.delete(`/persons/${id}`);
   }
 
   uploadImage(id: string, formData: FormData): Observable<Person> {
-    return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}/image`, formData);
+    return this.apiService.patch<Person, FormData>(`/persons/${id}/image`, formData);
   }
 
   search(query: PersonSearchQuery): Observable<Person[]> {
-    return this.http.post<Person[]>(`${environment.apiUrl}/persons/search`, query);
+    return this.apiService.post<Person[], PersonSearchQuery>(`/persons/search`, query);
   }
 }

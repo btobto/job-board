@@ -6,24 +6,25 @@ import { Observable, delay, tap } from 'rxjs';
 import { getUserType } from '../shared/helpers';
 import { Exact } from '../shared/types';
 import { UserType } from '../shared/enums';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   getUser(): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}/auth/user`);
+    return this.apiService.get<User>('/auth/user');
   }
 
   login(payload: UserLogin, isCompany: boolean): Observable<User> {
     const type = isCompany ? UserType.Company : UserType.Person;
-    return this.http.post<User>(`${environment.apiUrl}/auth/${type}/login`, payload);
+    return this.apiService.post<User, UserLogin>(`/auth/${type}/login`, payload);
   }
 
   register(payload: PersonRegister | CompanyRegister): Observable<User> {
     const type = getUserType(payload);
-    return this.http.post<User>(`${environment.apiUrl}/auth/${type}/register`, payload);
+    return this.apiService.post<User, PersonRegister | CompanyRegister>(`/auth/${type}/register`, payload);
   }
 }

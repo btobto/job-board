@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { PaginationQuery, Review } from 'src/app/models';
-import { PaginationResult } from 'src/app/models/pagination-result.model';
-import { ReviewDto } from 'src/app/models/review-dto.model';
+import { PaginationResult } from 'src/app/models/pagination/pagination-result.model';
+import { ReviewDto } from 'src/app/models/review/review-dto.model';
 
 export const loadCompanyReviews = createAction(
   '[Company page] Load company reviews',

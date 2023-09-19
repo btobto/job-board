@@ -1,10 +1,8 @@
 import { environment } from 'src/environments/environment';
-import { Company, Person, User, Location, Posting, PostingLabel } from '../models';
+import { Company, Person, User, Location } from '../models';
 import { UserType } from './enums';
 import { Observable, debounceTime, distinctUntilChanged, filter, fromEvent, map, tap } from 'rxjs';
 import { IMAGES_PATH } from './constants';
-import { query } from '@angular/animations';
-import { PrimeIcons } from 'primeng/api';
 
 export function getUserType(user: Partial<User>): UserType {
   if (['website', 'locations', 'rating'].some((key) => key in user)) {
@@ -43,23 +41,6 @@ export function getDefaultImageUrl(user: Partial<User>): string {
   return (
     `${IMAGES_PATH}/` + (getUserType(user) === UserType.Person ? 'user-default-icon.png' : 'company-default-icon.png')
   );
-}
-
-export function getPostingLabels(posting: Posting): PostingLabel[] {
-  return [
-    {
-      icon: PrimeIcons.MONEY_BILL,
-      value: posting.salary,
-    },
-    {
-      icon: PrimeIcons.MAP_MARKER,
-      value: posting.location ? getLocationString(posting.location) : null,
-    },
-    {
-      icon: PrimeIcons.GLOBE,
-      value: posting.remoteAvailable ? 'Remote available' : null,
-    },
-  ];
 }
 
 export function getLocationString(location: Location): string {

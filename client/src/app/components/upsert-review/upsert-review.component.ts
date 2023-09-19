@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ReviewDto } from 'src/app/models/review-dto.model';
+import { ReviewDto } from 'src/app/models/review/review-dto.model';
 import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 
 @Component({

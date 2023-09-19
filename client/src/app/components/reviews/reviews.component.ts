@@ -11,7 +11,7 @@ import { fromReviews, reviewsActions } from 'src/app/state/reviews';
 import { fromUser } from 'src/app/state/user';
 import { UpsertReviewComponent } from '../upsert-review/upsert-review.component';
 import { filterNull } from 'src/app/shared/helpers';
-import { ReviewDto } from 'src/app/models/review-dto.model';
+import { ReviewDto } from 'src/app/models/review/review-dto.model';
 
 @Component({
   selector: 'app-reviews',

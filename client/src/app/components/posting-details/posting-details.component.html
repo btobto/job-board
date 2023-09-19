@@ -1,0 +1,5 @@
+<ng-container *ngFor="let info of postingDetails">
+  <div *ngIf="info.value" class="text-lg text-600 mb-1">
+    <i class="ml-1 mr-2" [ngClass]="info.icon"></i> {{ info.value }}
+  </div>
+</ng-container>

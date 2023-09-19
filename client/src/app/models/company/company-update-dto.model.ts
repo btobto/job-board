@@ -1,4 +1,4 @@
-import { OmitStrict } from '../shared/types';
+import { OmitStrict } from '../../shared/types';
 import { Company } from './company.model';
 
 export type CompanyUpdateDto = OmitStrict<

@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, fromEvent, map, of, startWith, switchMap } from 'rxjs';
-import { PostingPopulated } from 'src/app/models/posting-populated.model';
+import { PostingPopulated } from 'src/app/models/posting/posting-populated.model';
 import { filterNull, inputValueObservable, searchPipe } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { companiesActions, fromCompanies } from 'src/app/state/companies';
@@ -18,7 +18,7 @@ interface Category {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   categories: Category[] = [
     { name: 'People', textLabel: 'Name' },
     { name: 'Companies', textLabel: 'Name' },
@@ -35,6 +35,10 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.selectedCategory = this.categories[0];
     this.resetStates();
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(postingsActions.resetState());
   }
 
   resetStates() {

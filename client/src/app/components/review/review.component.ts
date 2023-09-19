@@ -4,7 +4,7 @@ import { Review } from 'src/app/models';
 import { AppState } from 'src/app/state/app.state';
 import { fromUser } from 'src/app/state/user';
 import { UpsertReviewComponent } from '../upsert-review/upsert-review.component';
-import { ReviewDto } from 'src/app/models/review-dto.model';
+import { ReviewDto } from 'src/app/models/review/review-dto.model';
 import { filterNull } from 'src/app/shared/helpers';
 import { fromReviews, reviewsActions } from 'src/app/state/reviews';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';

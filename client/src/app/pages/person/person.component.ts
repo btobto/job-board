@@ -7,6 +7,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { Observable, combineLatest, filter, map } from 'rxjs';
 import { EditPersonComponent } from 'src/app/components/edit-person/edit-person.component';
 import { Education, Person, User, WorkExperience, ListItem, PersonUpdateDto, FileSelectEvent } from 'src/app/models';
+import { DIALOG_DEFAULT } from 'src/app/shared/constants';
 import { UserType } from 'src/app/shared/enums';
 import { filterNull, getUserImageUrl, getUserType, isSameUser } from 'src/app/shared/helpers';
 import { selectUserAndPerson } from 'src/app/state/app.selectors';
@@ -43,13 +44,10 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   openEditPersonDialog(person: Person) {
     this.dialogRef = this.dialogService.open(EditPersonComponent, {
+      ...DIALOG_DEFAULT,
       header: 'Edit profile',
-      dismissableMask: true,
       data: { person },
-      styleClass: 'sm:w-full xl:w-5',
-      contentStyle: {
-        'padding-bottom': '70px',
-      },
+      dismissableMask: true,
     });
 
     this.dialogRef.onClose.pipe(filterNull()).subscribe((updatedPerson: PersonUpdateDto) => {

@@ -1,4 +1,4 @@
-import { Location } from './location.model';
+import { Location } from '../shared/location.model';
 
 export interface PostingSearchQuery {
   position?: string;

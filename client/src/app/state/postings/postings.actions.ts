@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Person, Posting, PostingDto, PostingSearchQuery } from 'src/app/models';
-import { PostingPopulated } from 'src/app/models/posting-populated.model';
+import { PostingPopulated } from 'src/app/models/posting/posting-populated.model';
 
 export const loadCompanyPostings = createAction('[Company page] Load company postings', props<{ companyId: string }>());
 

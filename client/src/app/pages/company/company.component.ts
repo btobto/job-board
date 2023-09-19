@@ -7,6 +7,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Observable, combineLatest, filter, map, tap } from 'rxjs';
 import { EditCompanyComponent } from 'src/app/components/edit-company/edit-company.component';
 import { Company, Location, CompanyUpdateDto, User } from 'src/app/models';
+import { DIALOG_DEFAULT } from 'src/app/shared/constants';
 import { UserType } from 'src/app/shared/enums';
 import { filterNull, getLocationString, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
 import { selectUserAndCompany, selectUserAndPerson } from 'src/app/state/app.selectors';
@@ -61,13 +62,9 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   openEditCompanyDialog(company: Company) {
     this.dialogRef = this.dialogService.open(EditCompanyComponent, {
+      ...DIALOG_DEFAULT,
       header: 'Edit company profile',
-      dismissableMask: true,
       data: { company },
-      styleClass: 'sm:w-full xl:w-5',
-      contentStyle: {
-        'padding-bottom': '70px',
-      },
     });
 
     this.dialogRef.onClose.pipe(filterNull()).subscribe((updatedCompany: CompanyUpdateDto) => {

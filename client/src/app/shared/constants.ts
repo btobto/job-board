@@ -1,4 +1,6 @@
-import { PrimeIcons } from 'primeng/api';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+
+export const GLOBAL_MSG_SERVICE_KEY = 'globalToast';
 
 export const PASSWORD_MIN_LENGTH = 10;
 export const PASSWORD_MAX_LENGTH = 128;
@@ -19,6 +21,14 @@ export const EMPTY_ERROR_KEY = 'emptyError';
 export const IMAGES_PATH = './assets/images';
 
 export const REVIEW_TAKE_LIMIT = 10;
+
+export const DIALOG_DEFAULT: DynamicDialogConfig = {
+  dismissableMask: true,
+  styleClass: 'sm:w-full xl:w-5',
+  contentStyle: {
+    'padding-bottom': '90px',
+  },
+};
 
 export const COUNTRY_LIST = [
   'Afghanistan',

@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ConfirmationService, PrimeIcons } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Company, Location, Posting, PostingDto, PostingLabel, User } from 'src/app/models';
+import { Company, Location, Posting, PostingDto, User } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
-import { filterNull, getLocationString, getPostingLabels, getUserType } from 'src/app/shared/helpers';
+import { filterNull, getLocationString, getUserType } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
@@ -12,19 +12,19 @@ import { postingsActions } from 'src/app/state/postings';
 import { ApplicantsDialogComponent } from '../applicants-dialog/applicants-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
+import { DIALOG_DEFAULT } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-posting',
   templateUrl: './posting.component.html',
   styleUrls: ['./posting.component.scss'],
 })
-export class PostingComponent implements OnInit, OnDestroy {
+export class PostingComponent implements AfterViewInit, OnDestroy {
   UserType = UserType;
   @Input() posting!: Posting;
 
   user$ = this.store.select(fromUser.selectUser);
 
-  postingDetails: PostingLabel[] = [];
   dialogRef?: DynamicDialogRef;
 
   constructor(
@@ -35,8 +35,7 @@ export class PostingComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService
   ) {}
 
-  ngOnInit(): void {
-    this.postingDetails = getPostingLabels(this.posting);
+  ngAfterViewInit(): void {
     this.activatedRoute.fragment.pipe(filterNull()).subscribe((fragment) => {
       this.viewportScroller.scrollToAnchor(fragment);
     });
@@ -48,13 +47,9 @@ export class PostingComponent implements OnInit, OnDestroy {
 
   openEditPostingDialog(company: User) {
     this.dialogRef = this.dialogService.open(UpsertPostingComponent, {
+      ...DIALOG_DEFAULT,
       header: 'Edit posting',
-      dismissableMask: true,
       data: { locations: (company as Company).locations, posting: this.posting },
-      styleClass: 'sm:w-full xl:w-5',
-      contentStyle: {
-        'padding-bottom': '90px',
-      },
     });
 
     this.dialogRef.onClose.pipe(filterNull()).subscribe((postingDto) => {

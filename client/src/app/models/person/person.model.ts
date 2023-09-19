@@ -1,6 +1,6 @@
-import { Education } from './education.model';
-import { Location } from './location.model';
-import { WorkExperience } from './work-experience.model';
+import { Education } from '../shared/education.model';
+import { Location } from '../shared/location.model';
+import { WorkExperience } from '../shared/work-experience.model';
 
 export interface Person {
   _id: string;

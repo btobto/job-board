@@ -37,7 +37,6 @@ import { SearchComponent } from './pages/search/search.component';
 import { PersonComponent } from './pages/person/person.component';
 import { CompanyComponent } from './pages/company/company.component';
 import { personsReducer } from './state/persons/persons.reducer';
-import { GLOBAL_MSG_SERVICE_KEY } from './services/notification.service';
 import { PersonsEffects } from './state/persons/persons.effects';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChipModule } from 'primeng/chip';
@@ -91,6 +90,7 @@ import { SliderModule } from 'primeng/slider';
 import { PersonSearchCardComponent } from './components/person-search-card/person-search-card.component';
 import { CompanySearchCardComponent } from './components/company-search-card/company-search-card.component';
 import { PostingSearchCardComponent } from './components/posting-search-card/posting-search-card.component';
+import { PostingDetailsComponent } from './components/posting-details/posting-details.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +129,7 @@ import { PostingSearchCardComponent } from './components/posting-search-card/pos
     PersonSearchCardComponent,
     CompanySearchCardComponent,
     PostingSearchCardComponent,
+    PostingDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -190,7 +191,6 @@ import { PostingSearchCardComponent } from './components/posting-search-card/pos
     MessageService,
     ConfirmationService,
     DialogService,
-    { provide: GLOBAL_MSG_SERVICE_KEY, useValue: 'globalToast' },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: PostingInterceptor, multi: true },

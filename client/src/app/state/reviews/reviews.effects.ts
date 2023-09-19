@@ -4,7 +4,7 @@ import { catchError, concatMap, exhaustMap, map, mergeMap, of, switchMap, tap } 
 import { NotificationService } from 'src/app/services/notification.service';
 import { ReviewService } from 'src/app/services/review.service';
 import * as reviewsActions from './reviews.actions';
-import { PaginationResult } from 'src/app/models/pagination-result.model';
+import { PaginationResult } from 'src/app/models/pagination/pagination-result.model';
 import { Review } from 'src/app/models';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';

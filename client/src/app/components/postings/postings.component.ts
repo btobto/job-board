@@ -9,6 +9,7 @@ import { fromPostings, postingsActions } from 'src/app/state/postings';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
 import { ActivatedRoute } from '@angular/router';
+import { DIALOG_DEFAULT } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-postings',
@@ -35,13 +36,9 @@ export class PostingsComponent implements OnInit, OnDestroy {
 
   openCreatePostingDialog(locations: Location[]) {
     this.dialogRef = this.dialogService.open(UpsertPostingComponent, {
+      ...DIALOG_DEFAULT,
       header: 'New posting',
-      dismissableMask: true,
       data: { locations },
-      styleClass: 'sm:w-full xl:w-5',
-      contentStyle: {
-        'padding-bottom': '90px',
-      },
     });
 
     this.dialogRef.onClose.pipe(filterNull()).subscribe((posting) => this.createPosting(posting));

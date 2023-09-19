@@ -1,17 +1,16 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
-
-export const GLOBAL_MSG_SERVICE_KEY = new InjectionToken<string>('msgKey');
+import { GLOBAL_MSG_SERVICE_KEY } from '../shared/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(@Inject(GLOBAL_MSG_SERVICE_KEY) private msgServiceKey: string, private messageService: MessageService) {}
+  constructor(private messageService: MessageService) {}
 
   showMessage(severity: 'success' | 'info' | 'warn' | 'error', summary: string, detail: string) {
     this.messageService.add({
-      key: this.msgServiceKey,
+      key: GLOBAL_MSG_SERVICE_KEY,
       severity,
       summary,
       detail,
