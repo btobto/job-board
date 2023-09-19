@@ -41,3 +41,7 @@ body {
 		object-fit: cover;
 	}
 }
+
+.search-result-card {
+	@include styleclass('cursor-pointer hover:underline hover:surface-200 border-round border-1 border-solid border-300 mb-2 p-2')
+}

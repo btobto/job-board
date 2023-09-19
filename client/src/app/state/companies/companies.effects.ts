@@ -52,6 +52,19 @@ export class CompaniesEffects {
     )
   );
 
+  searchCompanies$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(companiesActions.searchCompanies),
+      switchMap(({ query }) =>
+        this.companyService.search(query).pipe(
+          tap(console.log),
+          map((companies) => companiesActions.searchCompaniesSuccess({ companies })),
+          catchError((error) => of(companiesActions.searchCompaniesFailure({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,

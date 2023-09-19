@@ -82,6 +82,15 @@ import { ReviewsEffects } from './state/reviews/reviews.effects';
 import { DividerModule } from 'primeng/divider';
 import { UpsertReviewComponent } from './components/upsert-review/upsert-review.component';
 import { PanelModule } from 'primeng/panel';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { PeopleSearchFiltersComponent } from './components/people-search-filters/people-search-filters.component';
+import { CompaniesSearchFiltersComponent } from './components/companies-search-filters/companies-search-filters.component';
+import { PostingsSearchFiltersComponent } from './components/postings-search-filters/postings-search-filters.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SliderModule } from 'primeng/slider';
+import { PersonSearchCardComponent } from './components/person-search-card/person-search-card.component';
+import { CompanySearchCardComponent } from './components/company-search-card/company-search-card.component';
+import { PostingSearchCardComponent } from './components/posting-search-card/posting-search-card.component';
 
 @NgModule({
   declarations: [
@@ -114,6 +123,12 @@ import { PanelModule } from 'primeng/panel';
     UserToTypePipe,
     ApplicantsDialogComponent,
     UpsertReviewComponent,
+    PeopleSearchFiltersComponent,
+    CompaniesSearchFiltersComponent,
+    PostingsSearchFiltersComponent,
+    PersonSearchCardComponent,
+    CompanySearchCardComponent,
+    PostingSearchCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -167,6 +182,9 @@ import { PanelModule } from 'primeng/panel';
     AvatarGroupModule,
     DividerModule,
     PanelModule,
+    RadioButtonModule,
+    OverlayPanelModule,
+    SliderModule,
   ],
   providers: [
     MessageService,

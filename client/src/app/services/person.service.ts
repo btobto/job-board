@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Person, PersonUpdateDto } from '../models';
+import { Person, PersonSearchQuery, PersonUpdateDto } from '../models';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -24,5 +24,9 @@ export class PersonService {
 
   uploadImage(id: string, formData: FormData): Observable<Person> {
     return this.http.patch<Person>(`${environment.apiUrl}/persons/${id}/image`, formData);
+  }
+
+  search(query: PersonSearchQuery): Observable<Person[]> {
+    return this.http.post<Person[]>(`${environment.apiUrl}/persons/search`, query);
   }
 }

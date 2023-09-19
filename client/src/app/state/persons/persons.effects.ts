@@ -5,6 +5,7 @@ import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { PersonService } from 'src/app/services/person.service';
 import { HttpErrorBody, Person } from 'src/app/models';
 import { NotificationService } from 'src/app/services/notification.service';
+import { postingsActions } from '../postings';
 
 @Injectable()
 export class PersonsEffects {
@@ -29,6 +30,19 @@ export class PersonsEffects {
         )
       ),
     { dispatch: false }
+  );
+
+  searchPeople$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(personsActions.searchPeople),
+      switchMap(({ query }) =>
+        this.personSerice.search(query).pipe(
+          tap(console.log),
+          map((people) => personsActions.searchPeopleSuccess({ people })),
+          catchError((error) => of(personsActions.searchPeopleFailure({ error })))
+        )
+      )
+    )
   );
 
   constructor(

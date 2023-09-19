@@ -16,7 +16,6 @@ export class UnauthorizedErrorInterceptor implements HttpInterceptor {
       switchMap((isLoggedIn) =>
         next.handle(request).pipe(
           catchError((error) => {
-            console.log(isLoggedIn);
             if (isLoggedIn && error instanceof HttpErrorResponse && error.status === 401) {
               console.log('Unauthorized logging out');
               this.store.dispatch(authActions.logout());

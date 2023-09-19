@@ -1,0 +1,10 @@
+<div class="search-result-card flex align-items-center" [routerLink]="['/person', person._id]">
+  <p-avatar [image]="getImageUrl()" styleClass="mr-2 mt-1" shape="circle"></p-avatar>
+  <div *ngIf="person.location" class="flex flex-column">
+    <span>{{ person.name }}</span>
+    <span class="text-600 text-xs">{{ getLocation() }}</span>
+  </div>
+  <div *ngIf="!person.location">
+    <span>{{ person.name }}</span>
+  </div>
+</div>

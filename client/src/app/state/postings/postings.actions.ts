@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Person, Posting, PostingDto } from 'src/app/models';
+import { Person, Posting, PostingDto, PostingSearchQuery } from 'src/app/models';
+import { PostingPopulated } from 'src/app/models/posting-populated.model';
 
 export const loadCompanyPostings = createAction('[Company page] Load company postings', props<{ companyId: string }>());
 
@@ -50,3 +51,14 @@ export const loadPostingApplicantsFailure = createAction(
 export const deletePosting = createAction('[Company page] Delete posting', props<{ id: string }>());
 
 export const deletePostingSuccess = createAction('[Posting API] Delete posting success', props<{ id: string }>());
+
+export const searchPostings = createAction('[Search page] Search postings', props<{ query: PostingSearchQuery }>());
+
+export const searchPostingsSuccess = createAction(
+  '[Posting API] Search postings success',
+  props<{ postings: PostingPopulated[] }>()
+);
+
+export const searchPostingsFailure = createAction('[Search page] Search postings failure', props<{ error: any }>());
+
+export const resetState = createAction('[Search page] Clear postings');

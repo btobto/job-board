@@ -10,9 +10,9 @@ export interface CompaniesState extends EntityState<Company> {
   error: any;
 }
 
-const adapter = createEntityAdapter<Company>({ selectId: (company: Company) => company._id });
+export const companiesAdapter = createEntityAdapter<Company>({ selectId: (company: Company) => company._id });
 
-const initialState: CompaniesState = adapter.getInitialState({
+const initialState: CompaniesState = companiesAdapter.getInitialState({
   selectedCompanyId: null,
   loading: false,
   error: null,
@@ -20,18 +20,22 @@ const initialState: CompaniesState = adapter.getInitialState({
 
 export const companiesReducer = createReducer(
   initialState,
-  on(companiesActions.loadCompany, (state) => ({ ...state, loading: true })),
+  on(companiesActions.loadCompany, companiesActions.searchCompanies, (state) => ({ ...state, loading: true })),
   on(companiesActions.loadCompanySuccess, (state, { company }) =>
-    adapter.upsertOne(company, { ...state, loading: false, selectedCompanyId: company._id })
+    companiesAdapter.upsertOne(company, { ...state, loading: false, selectedCompanyId: company._id })
   ),
-  on(companiesActions.loadCompanyFailure, (state, { error }) => ({
+  on(companiesActions.loadCompanyFailure, companiesActions.searchCompaniesFailure, (state, { error }) => ({
     ...state,
     selectedCompanyId: null,
     loading: false,
     error,
   })),
   on(userActions.updateCompanySuccess, (state, { user }) =>
-    adapter.upsertOne(user, { ...state, loading: false, selectedCompanyId: user._id })
+    companiesAdapter.upsertOne(user, { ...state, loading: false, selectedCompanyId: user._id })
   ),
-  on(companiesActions.updateRating, (state, { changes }) => adapter.updateOne(changes, state))
+  on(companiesActions.updateRating, (state, { changes }) => companiesAdapter.updateOne(changes, state)),
+  on(companiesActions.searchCompaniesSuccess, (state, { companies }) =>
+    companiesAdapter.setAll(companies, { ...state, loading: false, selectedCompanyId: null })
+  ),
+  on(companiesActions.resetState, () => ({ ...initialState }))
 );

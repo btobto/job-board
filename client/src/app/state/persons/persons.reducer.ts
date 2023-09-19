@@ -21,7 +21,10 @@ const initialState: PersonsState = personsAdapter.getInitialState({
 
 export const personsReducer = createReducer(
   initialState,
-  on(personsActions.loadPerson, postingsActions.loadPostingApplicants, (state) => ({ ...state, loading: true })),
+  on(personsActions.loadPerson, postingsActions.loadPostingApplicants, personsActions.searchPeople, (state) => ({
+    ...state,
+    loading: true,
+  })),
   on(personsActions.loadPersonSuccess, (state, { person }) =>
     personsAdapter.setOne(person, { ...state, loading: false, selectedPersonId: person._id })
   ),
@@ -34,12 +37,16 @@ export const personsReducer = createReducer(
   on(userActions.updatePersonSuccess, (state, { user }) =>
     personsAdapter.upsertOne(user, { ...state, loading: false, selectedPersonId: user._id })
   ),
+  on(personsActions.searchPeopleSuccess, (state, { people }) =>
+    personsAdapter.setAll(people, { ...state, loading: false, selectedPersonId: null })
+  ),
   on(postingsActions.loadPostingApplicantsSuccess, (state, { applicants }) =>
     personsAdapter.setAll(applicants, { ...state, loading: false, selectedPersonId: null })
   ),
-  on(postingsActions.loadPostingApplicantsFailure, (state, { error }) => ({
+  on(postingsActions.loadPostingApplicantsFailure, personsActions.searchPeopleFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
-  }))
+  })),
+  on(personsActions.resetState, () => ({ ...initialState }))
 );

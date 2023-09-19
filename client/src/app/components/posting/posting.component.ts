@@ -2,14 +2,16 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ConfirmationService, PrimeIcons } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Company, Location, Posting, PostingDto, User } from 'src/app/models';
+import { Company, Location, Posting, PostingDto, PostingLabel, User } from 'src/app/models';
 import { UserType } from 'src/app/shared/enums';
-import { filterNull, getLocationString, getUserType } from 'src/app/shared/helpers';
+import { filterNull, getLocationString, getPostingLabels, getUserType } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
 import { postingsActions } from 'src/app/state/postings';
 import { ApplicantsDialogComponent } from '../applicants-dialog/applicants-dialog.component';
+import { ActivatedRoute } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-posting',
@@ -22,30 +24,22 @@ export class PostingComponent implements OnInit, OnDestroy {
 
   user$ = this.store.select(fromUser.selectUser);
 
-  postingDetails: { icon: PrimeIcons; value?: string | null }[] = [];
+  postingDetails: PostingLabel[] = [];
   dialogRef?: DynamicDialogRef;
 
   constructor(
     private store: Store<AppState>,
+    private activatedRoute: ActivatedRoute,
+    private viewportScroller: ViewportScroller,
     public dialogService: DialogService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
-    this.postingDetails = [
-      {
-        icon: PrimeIcons.MONEY_BILL,
-        value: this.posting.salary,
-      },
-      {
-        icon: PrimeIcons.MAP_MARKER,
-        value: this.posting.location ? getLocationString(this.posting.location) : null,
-      },
-      {
-        icon: PrimeIcons.GLOBE,
-        value: this.posting.remoteAvailable ? 'Remote available' : null,
-      },
-    ];
+    this.postingDetails = getPostingLabels(this.posting);
+    this.activatedRoute.fragment.pipe(filterNull()).subscribe((fragment) => {
+      this.viewportScroller.scrollToAnchor(fragment);
+    });
   }
 
   ngOnDestroy(): void {

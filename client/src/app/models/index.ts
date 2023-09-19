@@ -20,3 +20,7 @@ export * from './pagination-result.model';
 export * from './pagination.model';
 export * from './rating.model';
 export * from './page-event.model';
+export * from './person-search-query.model';
+export * from './company-search-query.model';
+export * from './posting-search-query.model';
+export * from './posting-label.model';

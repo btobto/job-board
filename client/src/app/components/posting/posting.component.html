@@ -1,6 +1,4 @@
-<div class="surface-card p-4 shadow-3 border-round mb-3">
-  <!-- logo + companyname -->
-
+<div class="surface-card p-4 shadow-3 border-round mb-3" [id]="posting._id">
   <div class="mb-3">
     <div class="text-2xl font-medium text-900 mb-2">{{ posting.position }}</div>
     <ng-container *ngFor="let info of postingDetails">
@@ -56,8 +54,6 @@
       </ng-container>
     </div>
   </ng-container>
-
-  <!-- applicants if company -->
 
   <div class="text-600 text-xs">Posted on: {{ posting.datePosted | date }}</div>
 </div>

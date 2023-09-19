@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Person, Posting, PostingDto } from '../models';
+import { Person, Posting, PostingDto, PostingSearchQuery } from '../models';
 import { environment } from 'src/environments/environment';
 import { excludeFromPostingInterceptor } from '../interceptors';
+import { PostingPopulated } from '../models/posting-populated.model';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +40,9 @@ export class PostingService {
     return this.http.get<Person[]>(`${environment.apiUrl}/postings/${id}/applicants`, {
       context: excludeFromPostingInterceptor(),
     });
+  }
+
+  search(query: PostingSearchQuery): Observable<PostingPopulated[]> {
+    return this.http.post<PostingPopulated[]>(`${environment.apiUrl}/postings/search`, query);
   }
 }

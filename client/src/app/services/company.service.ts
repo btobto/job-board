@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Company, CompanyUpdateDto, Rating } from '../models';
+import { Company, CompanySearchQuery, CompanyUpdateDto, Rating } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -28,5 +28,9 @@ export class CompanyService {
 
   getRating(id: string): Observable<Rating> {
     return this.http.get<Company>(`${environment.apiUrl}/companies/${id}/rating`);
+  }
+
+  search(query: CompanySearchQuery): Observable<Company[]> {
+    return this.http.post<Company[]>(`${environment.apiUrl}/companies/search`, query);
   }
 }

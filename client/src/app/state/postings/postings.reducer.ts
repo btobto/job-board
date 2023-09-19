@@ -29,12 +29,13 @@ export const postingsReducer = createReducer(
     postingsActions.updatePosting,
     postingsActions.deletePosting,
     postingsActions.toggleApplyPosting,
+    postingsActions.searchPostings,
     (state) => ({
       ...state,
       loading: true,
     })
   ),
-  on(postingsActions.loadCompanyPostingsSuccess, (state, { postings }) =>
+  on(postingsActions.loadCompanyPostingsSuccess, postingsActions.searchPostingsSuccess, (state, { postings }) =>
     postingsAdapter.setAll(postings, { ...state, loading: false })
   ),
   on(postingsActions.loadPostingSuccess, postingsActions.createPostingSuccess, (state, { posting }) =>
@@ -46,9 +47,10 @@ export const postingsReducer = createReducer(
   on(postingsActions.deletePostingSuccess, (state, { id }) =>
     postingsAdapter.removeOne(id, { ...state, loading: false })
   ),
-  on(postingsActions.postingFailure, (state, { error }) => ({
+  on(postingsActions.postingFailure, postingsActions.searchPostingsFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
-  }))
+  })),
+  on(postingsActions.resetState, () => ({ ...initialState }))
 );

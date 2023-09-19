@@ -33,8 +33,8 @@ export class PostingsService {
     if (queryDto.datePosted) {
       query.gte('datePosted', queryDto.datePosted);
     }
-    if (queryDto.remoteAvailable != null) {
-      query.where('remoteAvailable').equals(queryDto.remoteAvailable);
+    if (queryDto.remoteAvailable === true) {
+      query.where('remoteAvailable').equals(true);
     }
     if (queryDto.requirements) {
       query.where({ requirements: { $all: queryDto.requirements } });
@@ -43,7 +43,7 @@ export class PostingsService {
     console.log(query);
 
     return query
-      .populate('company', 'name website ratingsSum ratingsCount')
+      .populate('company', '_id name imagePath ratingsSum ratingsCount')
       .limit(10)
       .exec();
   }

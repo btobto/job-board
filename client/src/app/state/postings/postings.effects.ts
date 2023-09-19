@@ -107,6 +107,19 @@ export class PostingsEffects {
     )
   );
 
+  searchPostings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(postingsActions.searchPostings),
+      switchMap(({ query }) =>
+        this.postingService.search(query).pipe(
+          tap(console.log),
+          map((postings) => postingsActions.searchPostingsSuccess({ postings })),
+          catchError((error) => of(postingsActions.searchPostingsFailure({ error })))
+        )
+      )
+    )
+  );
+
   postingFailure$ = createEffect(
     () =>
       this.actions$.pipe(

@@ -42,7 +42,7 @@ export class PersonsService {
 
     console.log(query);
 
-    return query.limit(10).select('name skills location').exec();
+    return query.limit(10).exec();
   }
 
   async uploadImage(id: string, image: Express.Multer.File): Promise<Person> {
