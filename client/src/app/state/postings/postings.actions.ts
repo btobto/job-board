@@ -62,3 +62,10 @@ export const searchPostingsSuccess = createAction(
 export const searchPostingsFailure = createAction('[Search page] Search postings failure', props<{ error: any }>());
 
 export const resetState = createAction('[Search page] Clear postings');
+
+export const getRecommendedPostings = createAction('[Home page] Get recommended postings');
+
+export const getRecommendedPostingsSuccess = createAction(
+  '[Postings API] Get recommended postings success',
+  props<{ postings: PostingPopulated[] }>()
+);

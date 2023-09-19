@@ -46,6 +46,15 @@ export class PostingsController {
     return await this.postingsService.search(queryDto);
   }
 
+  @SkipInterceptor(POSTINGS_INTERCEPTOR_KEY)
+  @UseGuards(RoleGuard(UserType.Person))
+  @Get('recommended')
+  async getRecommendedPostings(@ActiveUser() person: Person) {
+    const a = await this.postingsService.getRecommended(person);
+    console.log(a);
+    return a;
+  }
+
   @Get('company/:companyId')
   async getCompanyPostings(
     @Param('companyId', ParseObjectIdPipe) companyId: string,

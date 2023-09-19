@@ -65,6 +65,19 @@ export class CompaniesEffects {
     )
   );
 
+  getHighestRatedCompanies$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(companiesActions.getHighestRatedCompanies),
+      exhaustMap(() =>
+        this.companyService.getHighestRated().pipe(
+          tap(console.log),
+          map((companies) => companiesActions.getHighestRatedCompaniesSuccess({ companies })),
+          catchError((error) => of(companiesActions.getHighestRatedCompaniesFailure({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,

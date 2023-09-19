@@ -1,2 +1,14 @@
-<p>home works!</p>
-<p>{{ getUserType((user$ | async)!) }}</p>
+<ng-container *ngIf="getUserType((user$ | async)!) === UserType.Person">
+  <div class="mb-4">
+    <div class="text-2xl font-medium text-900 mb-3">Recommended postings</div>
+    <div *ngIf="postings$ | async as postings">
+      <app-posting-search-card *ngFor="let posting of postings" [posting]="posting"></app-posting-search-card>
+    </div>
+  </div>
+</ng-container>
+<div>
+  <div class="text-2xl font-medium text-900 mb-3">Top rated companies</div>
+  <div *ngIf="companies$ | async as companies">
+    <app-company-search-card *ngFor="let company of companies" [company]="company"></app-company-search-card>
+  </div>
+</div>

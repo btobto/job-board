@@ -34,4 +34,8 @@ export class CompanyService {
   search(query: CompanySearchQuery): Observable<Company[]> {
     return this.apiService.post<Company[], CompanySearchQuery>(`/companies/search`, query);
   }
+
+  getHighestRated(): Observable<Company[]> {
+    return this.apiService.get<Company[]>('/companies/top');
+  }
 }

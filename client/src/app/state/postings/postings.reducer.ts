@@ -30,13 +30,17 @@ export const postingsReducer = createReducer(
     postingsActions.deletePosting,
     postingsActions.toggleApplyPosting,
     postingsActions.searchPostings,
+    postingsActions.getRecommendedPostings,
     (state) => ({
       ...state,
       loading: true,
     })
   ),
-  on(postingsActions.loadCompanyPostingsSuccess, postingsActions.searchPostingsSuccess, (state, { postings }) =>
-    postingsAdapter.setAll(postings, { ...state, loading: false })
+  on(
+    postingsActions.loadCompanyPostingsSuccess,
+    postingsActions.searchPostingsSuccess,
+    postingsActions.getRecommendedPostingsSuccess,
+    (state, { postings }) => postingsAdapter.setAll(postings, { ...state, loading: false })
   ),
   on(postingsActions.loadPostingSuccess, postingsActions.createPostingSuccess, (state, { posting }) =>
     postingsAdapter.addOne(posting, { ...state, loading: false })

@@ -35,6 +35,11 @@ export class CompaniesController {
     return await this.companiesService.search(queryDto);
   }
 
+  @Get('top')
+  async getHighestRated(): Promise<Company[]> {
+    return await this.companiesService.getHighestRatedCompanies();
+  }
+
   @Get(':id/rating')
   async getCompanyRating(
     @Param('id', ParseObjectIdPipe) id: string,

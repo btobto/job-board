@@ -7,7 +7,7 @@
     <p-avatar [image]="getImageUrl()" styleClass="mr-2 mt-1" shape="circle"></p-avatar>
     <div class="flex gap-2">
       <span>{{ posting.company.name }}</span>
-      <span> ({{ posting.company.rating.toFixed(2) }} <i class="pi pi-star"></i>) </span>
+      <span> ({{ getRating().toFixed(2) }} <i class="pi pi-star"></i>) </span>
     </div>
   </div>
 

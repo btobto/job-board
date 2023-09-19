@@ -55,6 +55,26 @@ export class CompaniesService {
       .exec();
   }
 
+  getHighestRatedCompanies(): Promise<Company[]> {
+    return this.companyModel
+      .aggregate()
+      .addFields({
+        rating: {
+          $cond: [
+            { $eq: ['$ratingsCount', 0] },
+            0,
+            { $divide: ['$ratingsSum', '$ratingsCount'] },
+          ],
+        },
+      })
+      .sort({
+        rating: -1,
+        ratingsCount: -1,
+      })
+      .limit(10)
+      .exec();
+  }
+
   async uploadImage(id: string, image: Express.Multer.File): Promise<Company> {
     const company = await this.companyModel.findById(id).orFail().exec();
     if (company.imagePath) {

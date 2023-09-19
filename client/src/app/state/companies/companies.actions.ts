@@ -20,3 +20,15 @@ export const searchCompaniesSuccess = createAction(
 export const searchCompaniesFailure = createAction('[Search page] Search companies failure', props<{ error: any }>());
 
 export const resetState = createAction('[Search page] Clear companies');
+
+export const getHighestRatedCompanies = createAction('[Home page] Get highest rated companies');
+
+export const getHighestRatedCompaniesSuccess = createAction(
+  '[Companies API] Get highest rated companies success',
+  props<{ companies: Company[] }>()
+);
+
+export const getHighestRatedCompaniesFailure = createAction(
+  '[Companies API] Get highest rated companies failure',
+  props<{ error: any }>()
+);

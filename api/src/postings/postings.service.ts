@@ -48,6 +48,75 @@ export class PostingsService {
       .exec();
   }
 
+  getRecommended(person: Person): Promise<Posting[]> {
+    return this.postingModel
+      .aggregate()
+      .match({
+        requirements: { $exists: true, $not: { $size: 0 } },
+      })
+      .addFields({
+        skillsMatch: {
+          $size: {
+            $setIntersection: ['$requirements', person.skills],
+          },
+        },
+        locationMatch: {
+          $cond: [
+            {
+              $and: [
+                { $eq: ['$location.country', person.location.country] },
+                { $eq: ['$location.city', person.location.city] },
+              ],
+            },
+            1,
+            0,
+          ],
+        },
+        remoteMatch: {
+          $cond: [{ $eq: ['$remoteAvailable', true] }, 1, 0],
+        },
+        positionMatch: {
+          $cond: [
+            {
+              $in: [
+                '$position',
+                person.prevExperience.map(
+                  (job) => new RegExp(job.position, 'i'),
+                ),
+              ],
+            },
+            3,
+            0,
+          ],
+        },
+      })
+      .addFields({
+        totalWeight: {
+          $add: [
+            '$skillsMatch',
+            '$locationMatch',
+            '$remoteMatch',
+            '$positionMatch',
+          ],
+        },
+      })
+      .match({
+        totalWeight: { $gt: 0 },
+      })
+      .sort({
+        totalWeight: -1,
+      })
+      .limit(5)
+      .lookup({
+        from: 'companies',
+        localField: 'company',
+        foreignField: '_id',
+        as: 'company',
+      })
+      .unwind('$company')
+      .exec();
+  }
+
   create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
     return this.postingModel.create({ ...dto, company: companyId });
   }

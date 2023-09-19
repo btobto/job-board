@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { postingsActions } from './';
-import { catchError, concatMap, map, of, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { PostingService } from 'src/app/services/posting.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
@@ -115,6 +115,19 @@ export class PostingsEffects {
           tap(console.log),
           map((postings) => postingsActions.searchPostingsSuccess({ postings })),
           catchError((error) => of(postingsActions.searchPostingsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  getRecommendedPostings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(postingsActions.getRecommendedPostings),
+      exhaustMap(() =>
+        this.postingService.getRecommended().pipe(
+          tap(console.log),
+          map((postings) => postingsActions.getRecommendedPostingsSuccess({ postings })),
+          catchError((error) => of(postingsActions.postingFailure({ error })))
         )
       )
     )

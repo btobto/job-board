@@ -17,4 +17,13 @@ export class PostingSearchCardComponent {
   getLocation() {
     return getLocationString(this.posting.location!);
   }
+
+  getRating() {
+    return (
+      this.posting.company.rating ??
+      (this.posting.company.ratingsCount === 0
+        ? 0
+        : this.posting.company.ratingsSum! / this.posting.company.ratingsCount)
+    );
+  }
 }

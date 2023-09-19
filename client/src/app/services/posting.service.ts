@@ -46,4 +46,8 @@ export class PostingService {
   search(query: PostingSearchQuery): Observable<PostingPopulated[]> {
     return this.apiService.post<PostingPopulated[], PostingSearchQuery>(`/postings/search`, query);
   }
+
+  getRecommended(): Observable<Posting[]> {
+    return this.apiService.get('/postings/recommended');
+  }
 }
