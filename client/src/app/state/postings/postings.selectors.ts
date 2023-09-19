@@ -11,3 +11,9 @@ export const selectPostingsIds = createSelector(selectPostingsState, selectIds);
 export const selectAllPostings = createSelector(selectPostingsState, selectAll);
 
 export const selectPostingsTotal = createSelector(selectPostingsState, selectTotal);
+
+export const selectPostingsIfLoaded = createSelector(selectPostingsState, selectAllPostings, (state, postings) =>
+  state.loading ? [] : postings
+);
+
+export const selectIsLoaded = createSelector(selectPostingsState, (state) => state.loading);

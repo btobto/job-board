@@ -15,12 +15,18 @@ export class CompaniesEffects {
   loadCompany$ = createEffect(() =>
     this.actions$.pipe(
       ofType(companiesActions.loadCompany),
-      switchMap(({ companyId }) =>
-        this.companyService.getCompany(companyId).pipe(
-          map((company) => companiesActions.loadCompanySuccess({ company })),
-          catchError((error) => of(companiesActions.loadCompanyFailure({ error: error.error })))
-        )
-      )
+      concatLatestFrom(() => this.store.select(fromCompanies.selectCompaniesEntities)),
+      switchMap(([{ companyId }, entities]) => {
+        if (entities[companyId]) {
+          console.log('Cached', entities[companyId]);
+          return of(companiesActions.loadCompanySuccess({ company: entities[companyId]! }));
+        } else {
+          return this.companyService.getCompany(companyId).pipe(
+            map((company) => companiesActions.loadCompanySuccess({ company })),
+            catchError((error) => of(companiesActions.loadCompanyFailure({ error: error.error })))
+          );
+        }
+      })
     )
   );
 

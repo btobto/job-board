@@ -18,7 +18,7 @@ interface Category {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit {
   categories: Category[] = [
     { name: 'People', textLabel: 'Name' },
     { name: 'Companies', textLabel: 'Name' },
@@ -35,10 +35,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.selectedCategory = this.categories[0];
     this.resetStates();
-  }
-
-  ngOnDestroy(): void {
-    this.store.dispatch(postingsActions.resetState());
   }
 
   resetStates() {

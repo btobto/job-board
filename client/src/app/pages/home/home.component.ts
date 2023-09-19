@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   UserType = UserType;
 
   user$ = this.store.select(fromUser.selectUser).pipe(filterNull());
-  postings$ = this.store.select(fromPostings.selectAllPostings) as Observable<PostingPopulated[]>;
+  postings$ = this.store.select(fromPostings.selectPostingsIfLoaded) as Observable<PostingPopulated[]>;
   companies$ = this.store.select(fromCompanies.selectAllCompanies);
 
   constructor(private store: Store<AppState>) {}

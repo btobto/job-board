@@ -21,6 +21,7 @@ export class ReviewsEffects {
       concatLatestFrom(() => this.store.select(fromPagination.selectPages)),
       switchMap(([{ companyId, query }, pages]) => {
         if (pages.includes(query.page)) {
+          console.log('Cached');
           return of(paginationActions.changeCurrentPage({ newPage: query.page }));
         } else {
           return this.reviewService.getCompanyReviews(companyId, query).pipe(

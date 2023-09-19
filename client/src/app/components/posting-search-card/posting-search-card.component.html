@@ -1,8 +1,4 @@
-<div
-  class="search-result-card hover:no-underline p-3"
-  [routerLink]="['/company', posting.company._id, 'postings']"
-  [fragment]="posting._id"
->
+<div class="search-result-card hover:no-underline p-3" [routerLink]="['/company', posting.company._id, 'postings']">
   <div class="flex align-items-center mb-2">
     <p-avatar [image]="getImageUrl()" styleClass="mr-2 mt-1" shape="circle"></p-avatar>
     <div class="flex gap-2">

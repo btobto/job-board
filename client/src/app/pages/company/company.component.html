@@ -35,7 +35,7 @@
       </div>
       <div class="text-lg font-medium text-600 mb-1"><i class="pi pi-map-marker mr-1"></i>Offices</div>
       <div class="mb-3 text-600">
-        <ng-container *ngIf="users.company.locations.length">
+        <ng-container *ngIf="users.company.locations?.length">
           <div class="mb-1" *ngFor="let loc of users.company.locations">{{ getCompanyLocation(loc) }}</div>
         </ng-container>
         <ng-container *ngIf="!users.company.locations.length">No offices provided.</ng-container>

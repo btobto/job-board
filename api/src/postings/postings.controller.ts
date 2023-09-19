@@ -42,7 +42,6 @@ export class PostingsController {
   async searchPostings(
     @Body() queryDto: PostingSearchQueryDto,
   ): Promise<Posting[]> {
-    // console.log(queryDto);
     return await this.postingsService.search(queryDto);
   }
 
@@ -50,9 +49,9 @@ export class PostingsController {
   @UseGuards(RoleGuard(UserType.Person))
   @Get('recommended')
   async getRecommendedPostings(@ActiveUser() person: Person) {
-    const a = await this.postingsService.getRecommended(person);
-    console.log(a);
-    return a;
+    const postings = await this.postingsService.getRecommended(person);
+    console.log(postings);
+    return postings;
   }
 
   @Get('company/:companyId')

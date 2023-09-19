@@ -49,47 +49,52 @@ export class PostingsService {
   }
 
   getRecommended(person: Person): Promise<Posting[]> {
+    const fields: Record<string, any> = {
+      skillsMatch: {
+        $size: {
+          $setIntersection: ['$requirements', person.skills],
+        },
+      },
+      remoteMatch: {
+        $cond: [{ $eq: ['$remoteAvailable', true] }, 1, 0],
+      },
+      positionMatch: {
+        $cond: [
+          {
+            $in: [
+              '$position',
+              person.prevExperience.map((job) => new RegExp(job.position, 'i')),
+            ],
+          },
+          3,
+          0,
+        ],
+      },
+    };
+
+    if (person.location && person.location?.country) {
+      fields.locationMatch = {
+        $cond: [
+          {
+            $and: [
+              { $eq: ['$location.country', person.location.country] },
+              person.location.country && {
+                $eq: ['$location.city', person.location.city],
+              },
+            ],
+          },
+          1,
+          0,
+        ],
+      };
+    }
+
     return this.postingModel
       .aggregate()
       .match({
         requirements: { $exists: true, $not: { $size: 0 } },
       })
-      .addFields({
-        skillsMatch: {
-          $size: {
-            $setIntersection: ['$requirements', person.skills],
-          },
-        },
-        locationMatch: {
-          $cond: [
-            {
-              $and: [
-                { $eq: ['$location.country', person.location.country] },
-                { $eq: ['$location.city', person.location.city] },
-              ],
-            },
-            1,
-            0,
-          ],
-        },
-        remoteMatch: {
-          $cond: [{ $eq: ['$remoteAvailable', true] }, 1, 0],
-        },
-        positionMatch: {
-          $cond: [
-            {
-              $in: [
-                '$position',
-                person.prevExperience.map(
-                  (job) => new RegExp(job.position, 'i'),
-                ),
-              ],
-            },
-            3,
-            0,
-          ],
-        },
-      })
+      .addFields(fields)
       .addFields({
         totalWeight: {
           $add: [
@@ -111,6 +116,20 @@ export class PostingsService {
         from: 'companies',
         localField: 'company',
         foreignField: '_id',
+        pipeline: [
+          {
+            $addFields: {
+              rating: {
+                $cond: [
+                  { $eq: ['$ratingsCount', 0] },
+                  0,
+                  { $divide: ['$ratingsSum', '$ratingsCount'] },
+                ],
+              },
+            },
+          },
+          { $project: { hashedPassword: 0, ratingsSum: 0 } },
+        ],
         as: 'company',
       })
       .unwind('$company')

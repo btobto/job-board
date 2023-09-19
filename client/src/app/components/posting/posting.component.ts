@@ -8,18 +8,19 @@ import { filterNull, getLocationString, getUserType } from 'src/app/shared/helpe
 import { AppState } from 'src/app/state/app.state';
 import { fromUser } from 'src/app/state/user';
 import { UpsertPostingComponent } from '../upsert-posting/upsert-posting.component';
-import { postingsActions } from 'src/app/state/postings';
+import { fromPostings, postingsActions } from 'src/app/state/postings';
 import { ApplicantsDialogComponent } from '../applicants-dialog/applicants-dialog.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
 import { DIALOG_DEFAULT } from 'src/app/shared/constants';
+import { combineLatest, filter, switchMap, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-posting',
   templateUrl: './posting.component.html',
   styleUrls: ['./posting.component.scss'],
 })
-export class PostingComponent implements AfterViewInit, OnDestroy {
+export class PostingComponent implements OnDestroy {
   UserType = UserType;
   @Input() posting!: Posting;
 
@@ -30,16 +31,11 @@ export class PostingComponent implements AfterViewInit, OnDestroy {
   constructor(
     private store: Store<AppState>,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private viewportScroller: ViewportScroller,
     public dialogService: DialogService,
     private confirmationService: ConfirmationService
   ) {}
-
-  ngAfterViewInit(): void {
-    this.activatedRoute.fragment.pipe(filterNull()).subscribe((fragment) => {
-      this.viewportScroller.scrollToAnchor(fragment);
-    });
-  }
 
   ngOnDestroy(): void {
     if (this.dialogRef) this.dialogRef.destroy();

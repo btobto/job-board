@@ -52,6 +52,7 @@ export class CompaniesService {
       .match(match)
       .sort({ rating: -1 })
       .limit(10)
+      .project({ hashedPassword: 0, ratingsSum: 0 })
       .exec();
   }
 
@@ -72,6 +73,7 @@ export class CompaniesService {
         ratingsCount: -1,
       })
       .limit(10)
+      .project({ hashedPassword: 0, ratingsSum: 0 })
       .exec();
   }
 
