@@ -36,5 +36,5 @@ export const paginationReducer = createReducer(
     )
   ),
   on(paginationActions.changeCurrentPage, (state, { newPage }) => ({ ...state, currentPage: newPage })),
-  on(reviewsActions.refreshPage, () => ({ ...initialState }))
+  on(reviewsActions.refreshPage, reviewsActions.clearReviews, () => ({ ...initialState }))
 );

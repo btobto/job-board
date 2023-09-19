@@ -41,3 +41,5 @@ export const refreshPage = createAction(
   '[Company page] Refresh page',
   props<{ companyId: string; query: PaginationQuery }>()
 );
+
+export const clearReviews = createAction('[Company page] Clear reviews');

@@ -55,7 +55,7 @@ export const reviewsReducer = createReducer(
   })),
   on(reviewsActions.updateReviewSuccess, (state, { review }) => updateReview(state, review)),
   on(reviewsActions.deleteReviewSuccess, (state) => ({ ...state, loading: false, userReview: null })),
-  on(reviewsActions.refreshPage, (state) => reviewsAdapter.removeAll(state)),
+  on(reviewsActions.refreshPage, reviewsActions.clearReviews, (state) => reviewsAdapter.removeAll(state)),
   on(reviewsActions.reviewFailure, (state, { error }) => ({
     ...state,
     loading: false,

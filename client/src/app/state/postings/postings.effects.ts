@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { postingsActions } from './';
-import { catchError, concatMap, exhaustMap, map, of, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, exhaustMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { PostingService } from 'src/app/services/posting.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
@@ -70,7 +70,7 @@ export class PostingsEffects {
   deletePosting$ = createEffect(() =>
     this.actions$.pipe(
       ofType(postingsActions.deletePosting),
-      concatMap(({ id }) =>
+      mergeMap(({ id }) =>
         this.postingService.deletePosting(id).pipe(
           map(() => postingsActions.deletePostingSuccess({ id })),
           catchError(({ error }) => of(postingsActions.postingFailure({ error })))

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -8,7 +8,6 @@ import { UserType } from 'src/app/shared/enums';
 import { selectUserAndCompany } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
 import { fromReviews, reviewsActions } from 'src/app/state/reviews';
-import { fromUser } from 'src/app/state/user';
 import { UpsertReviewComponent } from '../upsert-review/upsert-review.component';
 import { filterNull } from 'src/app/shared/helpers';
 import { ReviewDto } from 'src/app/models/review/review-dto.model';
@@ -18,7 +17,7 @@ import { ReviewDto } from 'src/app/models/review/review-dto.model';
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss'],
 })
-export class ReviewsComponent implements OnInit {
+export class ReviewsComponent implements OnInit, OnDestroy {
   UserType = UserType;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
@@ -40,6 +39,10 @@ export class ReviewsComponent implements OnInit {
       );
       this.store.dispatch(reviewsActions.loadPersonReview({ companyId }));
     });
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(reviewsActions.clearReviews());
   }
 
   openCreateReviewDialog(companyId: string) {

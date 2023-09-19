@@ -72,7 +72,7 @@ export class ReviewsEffects {
   deleteReview$ = createEffect(() =>
     this.actions$.pipe(
       ofType(reviewsActions.deleteReview),
-      concatMap(({ id }) =>
+      mergeMap(({ id }) =>
         this.reviewService.deleteReview(id).pipe(
           map(() => reviewsActions.deleteReviewSuccess()),
           catchError((error) => of(reviewsActions.reviewFailure({ error })))

@@ -49,7 +49,7 @@ export class CompaniesEffects {
         reviewsActions.deleteReviewSuccess
       ),
       concatLatestFrom(() => this.store.select(fromCompanies.selectSelectedCompany).pipe(filterNull())),
-      exhaustMap(([_, company]) =>
+      switchMap(([_, company]) =>
         this.companyService
           .getRating(company._id)
           .pipe(map((rating) => companiesActions.updateRating({ changes: { id: company._id, changes: rating } })))

@@ -14,7 +14,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(authActions.login),
       // delay(2000),
-      exhaustMap(({ payload, isCompany }) =>
+      switchMap(({ payload, isCompany }) =>
         this.authService.login(payload, isCompany).pipe(
           tap((user) => console.log('login dispatched', user)),
           map((user: User) => authActions.loginSuccess({ user })),
@@ -27,7 +27,7 @@ export class AuthEffects {
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.registerPerson, authActions.registerCompany),
-      exhaustMap(({ payload }) =>
+      switchMap(({ payload }) =>
         this.authService.register(payload).pipe(
           map((user: User) => authActions.registerSuccess({ user })),
           catchError((error) => of(authActions.registerFailure({ error })))
