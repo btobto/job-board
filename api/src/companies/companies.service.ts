@@ -1,15 +1,11 @@
-import {
-  CompanyCreateDto,
-  CompanySearchQueryDto,
-  CompanyUpdateDto,
-  Rating,
-} from './dto';
+import { CompanyCreateDto, CompanySearchQueryDto, CompanyUpdateDto, Rating } from './dto';
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Connection, Error, Model } from 'mongoose';
 import { transactionHandler } from '../common/mongoose-helpers';
 import { Company, CompanyDocument } from './schemas';
 import { unlink } from 'fs/promises';
+import { COMPANY_ADD_RATING_FIELD, COMPANY_REMOVE_FIELDS } from 'src/common/constants';
 
 @Injectable()
 export class CompaniesService {
@@ -40,40 +36,21 @@ export class CompaniesService {
 
     return this.companyModel
       .aggregate()
-      .addFields({
-        rating: {
-          $cond: [
-            { $eq: ['$ratingsCount', 0] },
-            0,
-            { $divide: ['$ratingsSum', '$ratingsCount'] },
-          ],
-        },
-      })
+      .addFields(COMPANY_ADD_RATING_FIELD)
       .match(match)
-      .sort({ rating: -1 })
+      .sort({ rating: -1, ratingsCount: -1 })
       .limit(10)
-      .project({ hashedPassword: 0, ratingsSum: 0 })
+      .project(COMPANY_REMOVE_FIELDS)
       .exec();
   }
 
   getHighestRatedCompanies(): Promise<Company[]> {
     return this.companyModel
       .aggregate()
-      .addFields({
-        rating: {
-          $cond: [
-            { $eq: ['$ratingsCount', 0] },
-            0,
-            { $divide: ['$ratingsSum', '$ratingsCount'] },
-          ],
-        },
-      })
-      .sort({
-        rating: -1,
-        ratingsCount: -1,
-      })
+      .addFields(COMPANY_ADD_RATING_FIELD)
+      .sort({ rating: -1, ratingsCount: -1 })
       .limit(10)
-      .project({ hashedPassword: 0, ratingsSum: 0 })
+      .project(COMPANY_REMOVE_FIELDS)
       .exec();
   }
 
@@ -94,10 +71,7 @@ export class CompaniesService {
   }
 
   update(id: string, dto: CompanyUpdateDto): Promise<Company> {
-    return this.companyModel
-      .findByIdAndUpdate(id, dto, { new: true })
-      .orFail()
-      .exec();
+    return this.companyModel.findByIdAndUpdate(id, dto, { new: true }).orFail().exec();
   }
 
   delete(id: string) {
@@ -119,9 +93,7 @@ export class CompaniesService {
   async getRating(id: string): Promise<Rating> {
     const company = await this.companyModel.findById(id).orFail().lean().exec();
     const rating =
-      company.ratingsCount === 0
-        ? 0
-        : company.ratingsSum / company.ratingsCount;
+      company.ratingsCount === 0 ? 0 : company.ratingsSum / company.ratingsCount;
 
     return {
       rating,

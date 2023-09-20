@@ -17,3 +17,7 @@ export const selectPostingsIfLoaded = createSelector(selectPostingsState, select
 );
 
 export const selectIsLoaded = createSelector(selectPostingsState, (state) => state.loading);
+
+export const selectPostingsSorted = createSelector(selectAllPostings, (postings) =>
+  postings.sort((a, b): number => b.datePosted.valueOf() - a.datePosted.valueOf())
+);

@@ -17,7 +17,7 @@ import { DIALOG_DEFAULT } from 'src/app/shared/constants';
   styleUrls: ['./postings.component.scss'],
 })
 export class PostingsComponent implements OnInit, OnDestroy {
-  postings$ = this.store.select(fromPostings.selectAllPostings);
+  postings$ = this.store.select(fromPostings.selectPostingsSorted);
   users$ = this.store.select(selectUserAndCompany);
 
   dialogRef?: DynamicDialogRef;

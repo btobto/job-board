@@ -6,3 +6,15 @@ export const USER_TYPE_KEY = 'userType';
 export const IS_PUBLIC_KEY = 'isPublic';
 
 export const FILE_UPLOAD_DEST = 'uploads';
+
+export const COMPANY_ADD_RATING_FIELD = {
+  rating: {
+    $cond: [
+      { $eq: ['$ratingsCount', 0] },
+      0,
+      { $divide: ['$ratingsSum', '$ratingsCount'] },
+    ],
+  },
+};
+
+export const COMPANY_REMOVE_FIELDS = { hashedPassword: 0, ratingsSum: 0 };

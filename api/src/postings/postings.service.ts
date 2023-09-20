@@ -1,14 +1,12 @@
-import {
-  PostingCreateDto,
-  PostingSearchQueryDto,
-  PostingUpdateDto,
-} from './dto';
+import { PostingCreateDto, PostingSearchQueryDto, PostingUpdateDto } from './dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
 import { Person } from 'src/persons/schemas';
 import { PersonsService } from 'src/persons/persons.service';
+import { COMPANY_REMOVE_FIELDS, COMPANY_ADD_RATING_FIELD } from 'src/common/constants';
+import { inspect } from 'util';
 
 @Injectable()
 export class PostingsService {
@@ -51,12 +49,32 @@ export class PostingsService {
   getRecommended(person: Person): Promise<Posting[]> {
     const fields: Record<string, any> = {
       skillsMatch: {
-        $size: {
-          $setIntersection: ['$requirements', person.skills],
-        },
+        $multiply: [2, { $size: { $setIntersection: ['$requirements', person.skills] } }],
       },
+      countryMatch: person.location?.country
+        ? { $cond: [{ $eq: ['$location.country', person.location.country] }, 1, 0] }
+        : 0,
+      cityMatch:
+        person.location?.country && person.location?.city
+          ? {
+              $cond: [
+                {
+                  $and: [
+                    { $ne: ['$countryMatch', 0] },
+                    { $eq: ['$location.city', person.location.city] },
+                  ],
+                },
+                2,
+                0,
+              ],
+            }
+          : 0,
       remoteMatch: {
-        $cond: [{ $eq: ['$remoteAvailable', true] }, 1, 0],
+        $cond: [
+          { $eq: ['$remoteAvailable', true] },
+          { $cond: [{ $ne: ['$cityMatch', 0] }, 1, 2] },
+          0,
+        ],
       },
       positionMatch: {
         $cond: [
@@ -72,44 +90,25 @@ export class PostingsService {
       },
     };
 
-    if (person.location && person.location?.country) {
-      fields.locationMatch = {
-        $cond: [
-          {
-            $and: [
-              { $eq: ['$location.country', person.location.country] },
-              person.location.country && {
-                $eq: ['$location.city', person.location.city],
-              },
-            ],
-          },
-          1,
-          0,
-        ],
-      };
-    }
+    // console.log(inspect(fields, { showHidden: false, depth: null, colors: true }));
 
     return this.postingModel
       .aggregate()
-      .match({
-        requirements: { $exists: true, $not: { $size: 0 } },
-      })
       .addFields(fields)
       .addFields({
         totalWeight: {
           $add: [
             '$skillsMatch',
-            '$locationMatch',
+            '$countryMatch',
+            '$cityMatch',
             '$remoteMatch',
             '$positionMatch',
           ],
         },
       })
-      .match({
-        totalWeight: { $gt: 0 },
-      })
       .sort({
         totalWeight: -1,
+        _id: 1,
       })
       .limit(5)
       .lookup({
@@ -117,23 +116,18 @@ export class PostingsService {
         localField: 'company',
         foreignField: '_id',
         pipeline: [
-          {
-            $addFields: {
-              rating: {
-                $cond: [
-                  { $eq: ['$ratingsCount', 0] },
-                  0,
-                  { $divide: ['$ratingsSum', '$ratingsCount'] },
-                ],
-              },
-            },
-          },
-          { $project: { hashedPassword: 0, ratingsSum: 0 } },
+          { $addFields: COMPANY_ADD_RATING_FIELD },
+          { $project: COMPANY_REMOVE_FIELDS },
         ],
         as: 'company',
       })
       .unwind('$company')
+      .sort({ totalWeight: -1, 'company.rating': -1 })
       .exec();
+    // .then((postings) => {
+    //   console.log(postings.map((p) => p.totalWeight));
+    //   return postings;
+    // });
   }
 
   create(companyId: string, dto: PostingCreateDto): Promise<Posting> {
@@ -171,16 +165,10 @@ export class PostingsService {
       .orFail()
       .exec();
 
-    return this.personsService.findMany(
-      posting.applicants as unknown as string[],
-    );
+    return this.personsService.findMany(posting.applicants as unknown as string[]);
   }
 
-  update(
-    id: string,
-    companyId: string,
-    dto: PostingUpdateDto,
-  ): Promise<Posting> {
+  update(id: string, companyId: string, dto: PostingUpdateDto): Promise<Posting> {
     return this.postingModel
       .findOneAndUpdate(
         { _id: id, company: companyId },

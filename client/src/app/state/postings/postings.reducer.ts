@@ -11,7 +11,7 @@ export interface PostingsState extends EntityState<Posting> {
 
 export const postingsAdapter = createEntityAdapter<Posting>({
   selectId: (posting: Posting) => posting._id,
-  sortComparer: (a: Posting, b: Posting): number => b.datePosted.valueOf() - a.datePosted.valueOf(),
+  sortComparer: false,
 });
 
 const initialState: PostingsState = postingsAdapter.getInitialState({

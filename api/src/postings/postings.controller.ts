@@ -1,8 +1,4 @@
-import {
-  PostingCreateDto,
-  PostingSearchQueryDto,
-  PostingUpdateDto,
-} from './dto';
+import { PostingCreateDto, PostingSearchQueryDto, PostingUpdateDto } from './dto';
 import {
   BadRequestException,
   Body,
@@ -39,9 +35,7 @@ export class PostingsController {
   constructor(private postingsService: PostingsService) {}
 
   @Post('search')
-  async searchPostings(
-    @Body() queryDto: PostingSearchQueryDto,
-  ): Promise<Posting[]> {
+  async searchPostings(@Body() queryDto: PostingSearchQueryDto): Promise<Posting[]> {
     return await this.postingsService.search(queryDto);
   }
 
@@ -49,9 +43,7 @@ export class PostingsController {
   @UseGuards(RoleGuard(UserType.Person))
   @Get('recommended')
   async getRecommendedPostings(@ActiveUser() person: Person) {
-    const postings = await this.postingsService.getRecommended(person);
-    console.log(postings);
-    return postings;
+    return await this.postingsService.getRecommended(person);
   }
 
   @Get('company/:companyId')
