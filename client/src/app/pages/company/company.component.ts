@@ -1,20 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Observable, combineLatest, filter, map, tap } from 'rxjs';
 import { EditCompanyComponent } from 'src/app/components/edit-company/edit-company.component';
 import { Company, Location, CompanyUpdateDto, User } from 'src/app/models';
 import { DIALOG_DEFAULT } from 'src/app/shared/constants';
 import { UserType } from 'src/app/shared/enums';
 import { filterNull, getLocationString, getUserImageUrl, getUserType } from 'src/app/shared/helpers';
-import { selectUserAndCompany, selectUserAndPerson } from 'src/app/state/app.selectors';
+import { selectUserAndCompany } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
-import { companiesActions, fromCompanies } from 'src/app/state/companies';
-import { postingsActions } from 'src/app/state/postings';
-import { fromUser, userActions } from 'src/app/state/user';
+import { companiesActions } from 'src/app/state/companies';
+import { reviewsActions } from 'src/app/state/reviews';
+import { userActions } from 'src/app/state/user';
 
 @Component({
   selector: 'app-company',
@@ -58,6 +56,8 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.dialogRef) this.dialogRef.destroy();
+
+    this.store.dispatch(reviewsActions.clearReviews());
   }
 
   openEditCompanyDialog(company: Company) {

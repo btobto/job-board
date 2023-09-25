@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { PostingSearchQuery } from 'src/app/models';
@@ -8,12 +9,13 @@ import { searchPipe } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { postingsActions } from 'src/app/state/postings';
 
+@UntilDestroy()
 @Component({
   selector: 'app-postings-search-filters',
   templateUrl: './postings-search-filters.component.html',
   styleUrls: ['./postings-search-filters.component.scss'],
 })
-export class PostingsSearchFiltersComponent implements AfterViewInit, OnDestroy {
+export class PostingsSearchFiltersComponent implements AfterViewInit {
   countries: string[] = COUNTRY_LIST;
 
   filterForm = this.fb.group({
@@ -26,18 +28,12 @@ export class PostingsSearchFiltersComponent implements AfterViewInit, OnDestroy 
     requirements: this.fb.control<string[]>([]),
   });
 
-  valueSub!: Subscription;
-
   constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
 
   ngAfterViewInit(): void {
-    this.valueSub = this.filterForm.valueChanges.pipe(searchPipe()).subscribe((query: PostingSearchQuery) => {
+    this.filterForm.valueChanges.pipe(searchPipe(), untilDestroyed(this)).subscribe((query: PostingSearchQuery) => {
       console.log('posting', query);
       this.store.dispatch(postingsActions.searchPostings({ query }));
     });
-  }
-
-  ngOnDestroy(): void {
-    this.valueSub.unsubscribe();
   }
 }

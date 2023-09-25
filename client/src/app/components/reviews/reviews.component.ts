@@ -17,7 +17,7 @@ import { ReviewDto } from 'src/app/models/review/review-dto.model';
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss'],
 })
-export class ReviewsComponent implements OnInit, OnDestroy {
+export class ReviewsComponent implements OnInit {
   UserType = UserType;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute, public dialogService: DialogService) {}
@@ -39,10 +39,6 @@ export class ReviewsComponent implements OnInit, OnDestroy {
       );
       this.store.dispatch(reviewsActions.loadPersonReview({ companyId }));
     });
-  }
-
-  ngOnDestroy(): void {
-    this.store.dispatch(reviewsActions.clearReviews());
   }
 
   openCreateReviewDialog(companyId: string) {

@@ -18,3 +18,12 @@ export const COMPANY_ADD_RATING_FIELD = {
 };
 
 export const COMPANY_REMOVE_FIELDS = { hashedPassword: 0, ratingsSum: 0 };
+
+export const POSTING_REMOVE_WEIGHTS = {
+  skillsMatch: 0,
+  countryMatch: 0,
+  cityMatch: 0,
+  remoteMatch: 0,
+  positionMatch: 0,
+  totalWeight: 0,
+};

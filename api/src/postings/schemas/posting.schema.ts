@@ -9,7 +9,7 @@ import { UserType } from 'src/common/enums';
 export type PostingDocument = HydratedDocument<Posting>;
 
 @Schema({
-  toObject: {
+  toJSON: {
     transform: (doc, ret, options) => {
       delete ret.applicants;
       return ret;

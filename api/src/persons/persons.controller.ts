@@ -16,9 +16,10 @@ import {
 import { ParseObjectIdPipe } from '../common/pipes';
 import { Person } from './schemas';
 import { PersonsService } from './persons.service';
-import { Public } from 'src/auth/decorators';
-import { ResourceOwhershipGuard } from 'src/auth/guards';
+import { ActiveUser, Public } from 'src/auth/decorators';
+import { ResourceOwhershipGuard, RoleGuard } from 'src/auth/guards';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserType } from 'src/common/enums';
 @Controller('persons')
 export class PersonsController {
   constructor(private personsService: PersonsService) {}
@@ -26,7 +27,6 @@ export class PersonsController {
   @Post('search')
   @HttpCode(HttpStatus.OK)
   async search(@Body() queryDto: PersonSearchQueryDto): Promise<Person[]> {
-    console.log(queryDto);
     return await this.personsService.search(queryDto);
   }
 
@@ -45,14 +45,14 @@ export class PersonsController {
   }
 
   @Patch(':id/image')
-  @UseGuards(ResourceOwhershipGuard)
+  @UseGuards(ResourceOwhershipGuard, RoleGuard(UserType.Person))
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(
-    @Param('id', ParseObjectIdPipe) id: string,
+    @ActiveUser() person: Person,
     @UploadedFile()
     image: Express.Multer.File,
   ) {
-    return await this.personsService.uploadImage(id, image);
+    return await this.personsService.uploadImage(person, image);
   }
 
   @Delete(':id')

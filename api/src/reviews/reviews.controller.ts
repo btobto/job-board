@@ -31,10 +31,7 @@ export class ReviewsController {
     @Param('companyId', ParseObjectIdPipe) companyId: string,
     @ActiveUser('_id') personId: string,
   ) {
-    return await this.reviewsService.findPersonReviewForCompany(
-      companyId,
-      personId,
-    );
+    return await this.reviewsService.findPersonReviewForCompany(companyId, personId);
   }
 
   @Get(':companyId')

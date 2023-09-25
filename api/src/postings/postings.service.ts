@@ -1,11 +1,15 @@
 import { PostingCreateDto, PostingSearchQueryDto, PostingUpdateDto } from './dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { ClientSession, Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
 import { Posting, PostingDocument } from './schemas';
 import { Person } from 'src/persons/schemas';
 import { PersonsService } from 'src/persons/persons.service';
-import { COMPANY_REMOVE_FIELDS, COMPANY_ADD_RATING_FIELD } from 'src/common/constants';
+import {
+  COMPANY_REMOVE_FIELDS,
+  COMPANY_ADD_RATING_FIELD,
+  POSTING_REMOVE_WEIGHTS,
+} from 'src/common/constants';
 import { inspect } from 'util';
 
 @Injectable()
@@ -123,11 +127,8 @@ export class PostingsService {
       })
       .unwind('$company')
       .sort({ totalWeight: -1, 'company.rating': -1 })
+      .project({ ...POSTING_REMOVE_WEIGHTS, applicants: 0 })
       .exec();
-    // .then((postings) => {
-    //   console.log(postings.map((p) => p.totalWeight));
-    //   return postings;
-    // });
   }
 
   create(companyId: string, dto: PostingCreateDto): Promise<Posting> {

@@ -54,15 +54,14 @@ export class CompaniesService {
       .exec();
   }
 
-  async uploadImage(id: string, image: Express.Multer.File): Promise<Company> {
-    const company = await this.companyModel.findById(id).orFail().exec();
+  async uploadImage(company: Company, image: Express.Multer.File): Promise<Company> {
     if (company.imagePath) {
       await unlink(company.imagePath);
     }
 
     return this.companyModel
       .findByIdAndUpdate(
-        id,
+        company._id,
         { imagePath: `${image.destination}/${image.filename}` },
         { new: true },
       )

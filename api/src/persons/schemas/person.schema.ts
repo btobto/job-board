@@ -11,7 +11,7 @@ export type PersonDocument = HydratedDocument<Person>;
 
 @Schema({
   collection: 'persons',
-  toObject: {
+  toJSON: {
     transform: (doc, ret, options) => {
       delete ret.hashedPassword;
       return ret;

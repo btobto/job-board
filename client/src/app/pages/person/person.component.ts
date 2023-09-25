@@ -77,13 +77,13 @@ export class PersonComponent implements OnInit, OnDestroy {
     const positions: string[] = [];
 
     for (let job of person.prevExperience) {
-      if (job.yearTo) {
-        positions.push(`${job.position} @ ${job.companyName}`);
+      if (!job.yearTo) {
+        positions.push(`${job.position} at ${job.companyName}`);
       }
     }
     for (let education of person.education) {
-      if (education.yearTo) {
-        positions.push(`Student @ ${education.school}`);
+      if (!education.yearTo) {
+        positions.push(`Student at ${education.school}`);
       }
     }
 

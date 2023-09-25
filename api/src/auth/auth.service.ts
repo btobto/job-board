@@ -22,19 +22,13 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string, userType: UserType) {
-    const user = await this.connection
-      .model(userType)
-      .findOne({ email })
-      .exec();
+    const user = await this.connection.model(userType).findOne({ email }).exec();
 
-    if (
-      !user ||
-      !(await this.hashingService.compare(password, user.hashedPassword))
-    ) {
+    if (!user || !(await this.hashingService.compare(password, user.hashedPassword))) {
       return null;
     }
 
-    return user.toObject();
+    return user.toJSON();
   }
 
   login(user: Omit<User, 'hashedPassword'>, userType: UserType) {
@@ -59,7 +53,7 @@ export class AuthService {
         ...dto,
         hashedPassword,
       })
-      .then((doc) => doc.toObject());
+      .then((doc) => doc.toJSON());
 
     return this.login(user, userType);
   }

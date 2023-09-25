@@ -7,9 +7,7 @@ import { unlink } from 'fs/promises';
 
 @Injectable()
 export class PersonsService {
-  constructor(
-    @InjectModel(Person.name) private personModel: Model<PersonDocument>,
-  ) {}
+  constructor(@InjectModel(Person.name) private personModel: Model<PersonDocument>) {}
 
   find(id: string): Promise<Person> {
     return this.personModel.findById(id).orFail().exec();
@@ -45,15 +43,14 @@ export class PersonsService {
     return query.limit(10).exec();
   }
 
-  async uploadImage(id: string, image: Express.Multer.File): Promise<Person> {
-    const person = await this.personModel.findById(id).orFail().exec();
+  async uploadImage(person: Person, image: Express.Multer.File): Promise<Person> {
     if (person.imagePath) {
       await unlink(person.imagePath);
     }
 
     return this.personModel
       .findByIdAndUpdate(
-        id,
+        person._id,
         { imagePath: `${image.destination}/${image.filename}` },
         { new: true },
       )
@@ -62,10 +59,7 @@ export class PersonsService {
   }
 
   update(id: string, dto: PersonUpdateDto): Promise<Person> {
-    return this.personModel
-      .findByIdAndUpdate(id, dto, { new: true })
-      .orFail()
-      .exec();
+    return this.personModel.findByIdAndUpdate(id, dto, { new: true }).orFail().exec();
   }
 
   async delete(id: string) {

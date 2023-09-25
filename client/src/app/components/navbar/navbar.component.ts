@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
@@ -8,20 +9,23 @@ import { AppState } from 'src/app/state/app.state';
 import { authActions, fromAuth } from 'src/app/state/auth';
 import { fromUser } from 'src/app/state/user';
 
+@UntilDestroy()
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit, OnDestroy {
-  userSub!: Subscription;
+export class NavbarComponent implements OnInit {
   user!: User;
   items: MenuItem[] = [];
 
   constructor(private store: Store<AppState>, private confirmationService: ConfirmationService) {}
 
   ngOnInit(): void {
-    this.userSub = this.store.select(fromUser.selectUser).subscribe((user) => (this.user = user!));
+    this.store
+      .select(fromUser.selectUser)
+      .pipe(untilDestroyed(this))
+      .subscribe((user) => (this.user = user!));
 
     this.items = [
       {
@@ -46,10 +50,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         ],
       },
     ];
-  }
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
   }
 
   logout() {

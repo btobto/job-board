@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { Subscription, filter, tap } from 'rxjs';
 import { Company, CompanyRegister, Location } from 'src/app/models';
@@ -14,12 +15,13 @@ import { removeEmptyValuesFromObject } from 'src/app/shared/helpers';
 import { AppState } from 'src/app/state/app.state';
 import { authActions } from 'src/app/state/auth';
 
+@UntilDestroy()
 @Component({
   selector: 'app-register-company',
   templateUrl: './register-company.component.html',
   styleUrls: ['./register-company.component.scss'],
 })
-export class RegisterCompanyComponent implements OnInit, OnDestroy {
+export class RegisterCompanyComponent implements OnInit {
   constructor(private store: Store<AppState>, private fb: NonNullableFormBuilder) {}
 
   registerForm = this.fb.group({
@@ -32,23 +34,19 @@ export class RegisterCompanyComponent implements OnInit, OnDestroy {
     website: ['', [Validators.required, Validators.pattern(URL_REGEX)]],
     locations: this.fb.array([this.createLocationGroup()]),
   });
-  locationValuesSub!: Subscription;
 
   ngOnInit(): void {
-    this.locationValuesSub = this.locations.valueChanges
+    this.locations.valueChanges
       .pipe(
         filter((locationsValues: Location[]) => locationsValues.length > 1),
-        tap(console.log)
+        tap(console.log),
+        untilDestroyed(this)
       )
       .subscribe((locationsValues: Location[]) =>
         locationsValues.slice(0, -1).forEach((loc, i) => {
           if (this.isFormGroupEmpty(loc)) this.locations.removeAt(i);
         })
       );
-  }
-
-  ngOnDestroy(): void {
-    this.locationValuesSub.unsubscribe();
   }
 
   onSubmit() {

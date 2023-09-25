@@ -8,7 +8,6 @@ import { PersonsModule } from './persons/persons.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards';
-import { DocumentToObjectInterceptor } from './common/interceptors';
 import { MongooseConfigService } from './config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -37,10 +36,6 @@ import { FILE_UPLOAD_DEST } from './common/constants';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: DocumentToObjectInterceptor,
     },
   ],
 })

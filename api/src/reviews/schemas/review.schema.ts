@@ -8,7 +8,7 @@ import { UserType } from 'src/common/enums';
 export type ReviewDocument = HydratedDocument<Review>;
 
 @Schema({
-  toObject: {
+  toJSON: {
     transform: (doc, ret, opts) => {
       delete ret.person;
       return ret;

@@ -6,18 +6,16 @@ import {
 } from '@nestjs/common';
 import { Observable, map, tap } from 'rxjs';
 import { USER_TYPE_KEY } from '../../common/constants';
-import { JwtService } from '@nestjs/jwt';
 import { UserType } from '../../common/enums';
-import mongoose, { Document } from 'mongoose';
-import { Posting } from 'src/postings/schemas';
 import { Reflector } from '@nestjs/core';
+import { shouldSkipInterceptor } from 'src/common/helpers';
 
-export const POSTING_INTERCEPTOR_KEY = 'postingInterceptor';
+export const POSTINGS_INTERCEPTOR_KEY = 'postingInterceptor';
 
 function appendApplied(userId: string, posting: any) {
   const applicants = posting.applicants;
   return {
-    ...posting.toObject(),
+    ...posting.toJSON(),
     applied: applicants.map((id) => id.toString()).includes(userId),
   };
 }
@@ -27,7 +25,7 @@ export class PostingsInterceptor implements NestInterceptor {
   constructor(private reflector: Reflector) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    if (this.shouldSkip(context)) {
+    if (shouldSkipInterceptor(this.reflector, context, POSTINGS_INTERCEPTOR_KEY)) {
       // console.log('Skipping postings interceptor...');
       return next.handle();
     }
@@ -50,13 +48,5 @@ export class PostingsInterceptor implements NestInterceptor {
       }),
       // tap(console.log),
     );
-  }
-
-  shouldSkip(context: ExecutionContext): boolean {
-    const skip = this.reflector.getAllAndOverride<boolean>(
-      POSTING_INTERCEPTOR_KEY,
-      [context.getHandler(), context.getClass()],
-    );
-    return skip === true;
   }
 }

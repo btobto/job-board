@@ -7,6 +7,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { USER_TYPE_KEY } from 'src/common/constants';
 import { PersonsService } from 'src/persons/persons.service';
 import { JwtPayload } from '../models';
+import { UserType } from 'src/common/enums';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -23,16 +24,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(req: Request, payload: JwtPayload) {
-    req[USER_TYPE_KEY] = payload[USER_TYPE_KEY];
+    this.appendUserTypeToRequest(req, payload[USER_TYPE_KEY]);
 
     return await this.connection
       .model(payload[USER_TYPE_KEY])
       .findById(payload['sub'])
       .exec()
       .then((doc) => {
-        const user = doc.toObject();
+        const user = doc.toJSON();
         if (user._id) user._id = user._id.toHexString();
         return user;
       });
+  }
+
+  appendUserTypeToRequest(req: Request, type: UserType) {
+    req[USER_TYPE_KEY] = type;
   }
 }

@@ -13,26 +13,19 @@ export class ReviewsService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  create(
-    companyId: string,
-    personId: string,
-    dto: ReviewCreateDto,
-  ): Promise<Review> {
-    return transactionHandler(
-      this.connection,
-      async (session: ClientSession) => {
-        return this.reviewModel.create(
-          [
-            {
-              ...dto,
-              company: companyId,
-              person: personId,
-            },
-          ],
-          { session },
-        );
-      },
-    ).then((r) => r[0]);
+  create(companyId: string, personId: string, dto: ReviewCreateDto): Promise<Review> {
+    return transactionHandler(this.connection, async (session: ClientSession) => {
+      return this.reviewModel.create(
+        [
+          {
+            ...dto,
+            company: companyId,
+            person: personId,
+          },
+        ],
+        { session },
+      );
+    }).then((r) => r[0]);
   }
 
   findPersonReviewForCompany(companyId: string, personId: string) {
@@ -65,7 +58,7 @@ export class ReviewsService {
       .exec();
 
     return {
-      data: reviews.map((r) => r.toObject()),
+      data: reviews.map((r) => r.toJSON()),
       page: page,
       take: take,
       totalCount: total,
@@ -73,11 +66,7 @@ export class ReviewsService {
     };
   }
 
-  update(
-    reviewId: string,
-    personId: string,
-    dto: ReviewUpdateDto,
-  ): Promise<Review> {
+  update(reviewId: string, personId: string, dto: ReviewUpdateDto): Promise<Review> {
     return transactionHandler(this.connection, async (session) => {
       const now = new Date();
 

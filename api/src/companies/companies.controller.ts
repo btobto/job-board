@@ -12,17 +12,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
-import { ResourceOwhershipGuard } from 'src/auth/guards';
+import { ResourceOwhershipGuard, RoleGuard } from 'src/auth/guards';
 import { ParseObjectIdPipe } from '../common/pipes';
 import { CompaniesService } from './companies.service';
-import {
-  CompanyCreateDto,
-  CompanySearchQueryDto,
-  CompanyUpdateDto,
-  Rating,
-} from './dto';
+import { CompanyCreateDto, CompanySearchQueryDto, CompanyUpdateDto, Rating } from './dto';
 import { Company } from './schemas';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserType } from 'src/common/enums';
+import { ActiveUser } from 'src/auth/decorators';
 
 @Controller('companies')
 export class CompaniesController {
@@ -31,7 +28,6 @@ export class CompaniesController {
   @Post('search')
   @HttpCode(HttpStatus.OK)
   async search(@Body() queryDto: CompanySearchQueryDto): Promise<Company[]> {
-    console.log(queryDto);
     return await this.companiesService.search(queryDto);
   }
 
@@ -41,9 +37,7 @@ export class CompaniesController {
   }
 
   @Get(':id/rating')
-  async getCompanyRating(
-    @Param('id', ParseObjectIdPipe) id: string,
-  ): Promise<Rating> {
+  async getCompanyRating(@Param('id', ParseObjectIdPipe) id: string): Promise<Rating> {
     return await this.companiesService.getRating(id);
   }
 
@@ -62,14 +56,14 @@ export class CompaniesController {
   }
 
   @Patch(':id/image')
-  @UseGuards(ResourceOwhershipGuard)
+  @UseGuards(ResourceOwhershipGuard, RoleGuard(UserType.Company))
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(
-    @Param('id', ParseObjectIdPipe) id: string,
+    @ActiveUser() company: Company,
     @UploadedFile()
     image: Express.Multer.File,
   ) {
-    return await this.companiesService.uploadImage(id, image);
+    return await this.companiesService.uploadImage(company, image);
   }
 
   @Delete(':id')

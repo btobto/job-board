@@ -5,10 +5,9 @@ import { Location, LocationSchema } from '../../common/schemas';
 export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema({
-  toObject: {
+  toJSON: {
     transform: (doc, ret, options) => {
-      const rating =
-        ret.ratingsCount === 0 ? 0 : ret.ratingsSum / ret.ratingsCount;
+      const rating = ret.ratingsCount === 0 ? 0 : ret.ratingsSum / ret.ratingsCount;
 
       delete ret.ratingsSum;
       delete ret.hashedPassword;

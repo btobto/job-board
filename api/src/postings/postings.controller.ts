@@ -19,7 +19,7 @@ import { PostingsService } from './postings.service';
 import { Posting } from './schemas';
 import { ActiveUser } from 'src/auth/decorators';
 import {
-  POSTING_INTERCEPTOR_KEY as POSTINGS_INTERCEPTOR_KEY,
+  POSTINGS_INTERCEPTOR_KEY as POSTINGS_INTERCEPTOR_KEY,
   PostingsInterceptor,
 } from './interceptors/postings.interceptor';
 import mongoose, { mongo } from 'mongoose';
